@@ -1,0 +1,185 @@
+{
+  "model_name": "TinyDepthwiseSeparableCnn",
+  "accuracy": 0.9168646080760094,
+  "macro_f1": 0.9173051875969983,
+  "weighted_f1": 0.9168493619321423,
+  "test_samples": 2947,
+  "class_names": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "classification_report": {
+    "WALKING": {
+      "precision": 0.9856850715746421,
+      "recall": 0.9717741935483871,
+      "f1-score": 0.9786802030456853,
+      "support": 496.0
+    },
+    "WALKING_UPSTAIRS": {
+      "precision": 0.9570815450643777,
+      "recall": 0.9469214437367304,
+      "f1-score": 0.951974386339381,
+      "support": 471.0
+    },
+    "WALKING_DOWNSTAIRS": {
+      "precision": 0.9212962962962963,
+      "recall": 0.9476190476190476,
+      "f1-score": 0.9342723004694836,
+      "support": 420.0
+    },
+    "SITTING": {
+      "precision": 0.8272921108742004,
+      "recall": 0.790224032586558,
+      "f1-score": 0.8083333333333333,
+      "support": 491.0
+    },
+    "STANDING": {
+      "precision": 0.8140794223826715,
+      "recall": 0.8477443609022557,
+      "f1-score": 0.8305709023941068,
+      "support": 532.0
+    },
+    "LAYING": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 537.0
+    },
+    "accuracy": 0.9168646080760094,
+    "macro avg": {
+      "precision": 0.9175724076986981,
+      "recall": 0.9173805130654965,
+      "f1-score": 0.9173051875969983,
+      "support": 2947.0
+    },
+    "weighted avg": {
+      "precision": 0.9171769008542934,
+      "recall": 0.9168646080760094,
+      "f1-score": 0.9168493619321423,
+      "support": 2947.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      482,
+      1,
+      13,
+      0,
+      0,
+      0
+    ],
+    [
+      4,
+      446,
+      21,
+      0,
+      0,
+      0
+    ],
+    [
+      3,
+      19,
+      398,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      388,
+      103,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      81,
+      451,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      537
+    ]
+  ],
+  "model_info": {
+    "model_name": "TinyDepthwiseSeparableCnn",
+    "baseline_role": "Lightweight TinyML-Oriented Baseline",
+    "input_shape": [
+      128,
+      6
+    ],
+    "output_classes": [
+      "WALKING",
+      "WALKING_UPSTAIRS",
+      "WALKING_DOWNSTAIRS",
+      "SITTING",
+      "STANDING",
+      "LAYING"
+    ],
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "learning_rate_decay": 0.01,
+    "batch_size": 50,
+    "epochs_requested": 40,
+    "early_stopping": {
+      "monitor": "val_loss",
+      "patience": 8
+    },
+    "loss": "cross_entropy",
+    "normalization": "per-channel standardization fit on training split only",
+    "trainable_parameters": 1786,
+    "keras_model_parameters": 1922,
+    "device": "cpu",
+    "best_epoch": 9,
+    "best_val_loss": 0.13987469673156738,
+    "keras_model_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\lightweight\\models\\lightweight_tiny_cnn.keras",
+    "tflite_size_bytes": 13460,
+    "dynamic_range_tflite_size_bytes": 13460,
+    "host_latency": {
+      "mean_ms": 62.650354998913826,
+      "median_ms": 60.56689999240916,
+      "p95_ms": 85.6297549988085,
+      "runs": 20,
+      "device_note": "Host CPU Keras predict latency; not an Arduino latency claim."
+    }
+  },
+  "top_confusion_pairs": [
+    {
+      "true": "SITTING",
+      "predicted": "STANDING",
+      "count": 103
+    },
+    {
+      "true": "STANDING",
+      "predicted": "SITTING",
+      "count": 81
+    },
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 21
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 19
+    },
+    {
+      "true": "WALKING",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 13
+    }
+  ]
+}

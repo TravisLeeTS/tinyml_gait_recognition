@@ -1,0 +1,150 @@
+{
+  "model_name": "CNN-BiGRU",
+  "accuracy": 0.8764845605700713,
+  "macro_f1": 0.8740358125466215,
+  "weighted_f1": 0.8769322465783563,
+  "test_samples": 2947,
+  "class_names": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "classification_report": {
+    "WALKING": {
+      "precision": 0.8324324324324325,
+      "recall": 0.9314516129032258,
+      "f1-score": 0.879162702188392,
+      "support": 496.0
+    },
+    "WALKING_UPSTAIRS": {
+      "precision": 0.9897959183673469,
+      "recall": 0.8237791932059448,
+      "f1-score": 0.899188876013905,
+      "support": 471.0
+    },
+    "WALKING_DOWNSTAIRS": {
+      "precision": 0.7909090909090909,
+      "recall": 0.8285714285714286,
+      "f1-score": 0.8093023255813954,
+      "support": 420.0
+    },
+    "SITTING": {
+      "precision": 0.8280922431865828,
+      "recall": 0.8044806517311609,
+      "f1-score": 0.8161157024793388,
+      "support": 491.0
+    },
+    "STANDING": {
+      "precision": 0.8296703296703297,
+      "recall": 0.8515037593984962,
+      "f1-score": 0.8404452690166976,
+      "support": 532.0
+    },
+    "LAYING": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 537.0
+    },
+    "accuracy": 0.8764845605700713,
+    "macro avg": {
+      "precision": 0.8784833357609637,
+      "recall": 0.8732977743017094,
+      "f1-score": 0.8740358125466215,
+      "support": 2947.0
+    },
+    "weighted avg": {
+      "precision": 0.8809772952183754,
+      "recall": 0.8764845605700713,
+      "f1-score": 0.8769322465783563,
+      "support": 2947.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      462,
+      0,
+      28,
+      2,
+      4,
+      0
+    ],
+    [
+      20,
+      388,
+      61,
+      0,
+      2,
+      0
+    ],
+    [
+      67,
+      3,
+      348,
+      1,
+      1,
+      0
+    ],
+    [
+      6,
+      1,
+      3,
+      395,
+      86,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      79,
+      453,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      537
+    ]
+  ],
+  "model_info": {
+    "best_epoch": 8,
+    "best_val_loss": 0.24520421028137207,
+    "paper_role": "level-0 learner",
+    "keras_model_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\reproduction\\models\\cnn_bigru.keras",
+    "keras_model_parameters": 1323730
+  },
+  "top_confusion_pairs": [
+    {
+      "true": "SITTING",
+      "predicted": "STANDING",
+      "count": 86
+    },
+    {
+      "true": "STANDING",
+      "predicted": "SITTING",
+      "count": 79
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING",
+      "count": 67
+    },
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 61
+    },
+    {
+      "true": "WALKING",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 28
+    }
+  ]
+}
