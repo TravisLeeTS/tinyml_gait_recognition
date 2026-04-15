@@ -10,6 +10,8 @@ Track: B, open/public dataset. Primary benchmark: UCI HAR. Secondary validation 
 
 The core task is six-class human activity recognition from wearable inertial signals:
 
+Table 1. UCI HAR class definitions.
+
 | Class | Definition |
 |---|---|
 | WALKING | Subject walks on level ground while wearing the source phone at the waist. |
@@ -27,6 +29,8 @@ WISDM Activity Prediction v1.1 is secondary validation and domain-gap support. T
 
 UCI HAR split used in this package:
 
+Table 2. UCI HAR train/validation/test class distribution.
+
 | Class | Train | Val | Test | Total |
 |---|---:|---:|---:|---:|
 | WALKING | 888 | 338 | 496 | 1722 |
@@ -41,6 +45,8 @@ The test set is the official UCI subject-disjoint test split with 2,947 windows 
 WISDM raw row counts are Walking 424,398, Jogging 342,179, Upstairs 122,869, Downstairs 100,427, Sitting 59,939, and Standing 48,395. These are not split into the six-class UCI train/validation/test benchmark because WISDM is secondary validation data with a different label taxonomy and sensor set.
 
 ## R2 Data Card
+
+Table 3. Track B data card.
 
 | Field | Value |
 |---|---|
@@ -80,12 +86,16 @@ Baseline B, Lightweight TinyML-Oriented Baseline: a compact TensorFlow/Keras 1D 
 
 The held-out test set is the official UCI HAR test split with 2,947 windows.
 
+Table 4. Held-out UCI HAR test-set summary.
+
 | Baseline | Run setting | Accuracy | Macro F1 | Weighted F1 |
 |---|---|---:|---:|---:|
 | Paper Reproduction Baseline | 20-epoch bounded TensorFlow run, fast XGBoost grid | 0.9135 | 0.9128 | 0.9137 |
 | Lightweight TinyML-Oriented Baseline | 40 epochs, patience 8 | 0.9169 | 0.9173 | 0.9168 |
 
 Paper reproduction per-class metrics:
+
+Table 5. Paper reproduction baseline per-class held-out metrics.
 
 | Class | Precision | Recall | F1 | Support |
 |---|---:|---:|---:|---:|
@@ -97,6 +107,8 @@ Paper reproduction per-class metrics:
 | LAYING | 1.0000 | 1.0000 | 1.0000 | 537 |
 
 Lightweight per-class metrics:
+
+Table 6. Lightweight TinyML baseline per-class held-out metrics.
 
 | Class | Precision | Recall | F1 | Support |
 |---|---:|---:|---:|---:|
@@ -111,7 +123,11 @@ The saved confusion matrices and per-class CSV files are under `outputs/lightwei
 
 ![Paper reproduction confusion matrix](../outputs/reproduction/figures/paper_reproduction_stacking_confusion_matrix.png)
 
+Figure 1. Paper reproduction stacking confusion matrix on the held-out UCI HAR test set.
+
 ![Lightweight TinyML confusion matrix](../outputs/lightweight/figures/lightweight_tiny_cnn_confusion_matrix.png)
+
+Figure 2. Lightweight TinyML baseline confusion matrix on the held-out UCI HAR test set.
 
 TinyML efficiency status: the lightweight Keras model has 1,922 parameters and the generated TensorFlow Lite flatbuffer is 13,460 bytes. The current host CPU Keras latency proxy is 62.65 ms mean over 20 runs, which is useful only for regression tracking before Arduino timing; it is not an on-device latency claim.
 
@@ -130,6 +146,10 @@ The paper reproduction baseline remains the offline reference. The deployable pa
 Concrete Arduino data collection plan: from April 18 to April 24, 2026, collect accelerometer and gyroscope streams from Arduino Nano 33 BLE Sense at 50 Hz using the same six UCI classes. Use 2.56 s windows with 50% overlap. Collect from 3 to 5 users in at least 2 environments, targeting at least 50 labelled windows per class after segmentation. Place the board consistently at the waist or in a fixed pouch/pocket. If the Arduino data shows a large domain gap, fall back to accelerometer-only magnitude and per-channel calibration experiments before retraining a final quantized model.
 
 Robustness tests for M3: compare full accelerometer+gyroscope input against accelerometer-only input, measure latency on-device, record model size and RAM usage, and evaluate Arduino-collected holdout data separately from public UCI/WISDM data.
+
+## Ethics & Limitations
+
+This M2 work uses public human-activity datasets and does not claim medical, safety, or identity-inference capability. The main limitations are public-data domain shift, waist-smartphone collection rather than Arduino Nano 33 BLE Sense hardware, inherited UCI preprocessing, WISDM label mismatch, and possible performance degradation under different users, placements, clothes, pockets, or environments. The M3 Arduino collection should use voluntary participants, minimal personally identifying metadata, consistent labels, and separate public-dataset versus Arduino-heldout reporting.
 
 ## Deliverables
 

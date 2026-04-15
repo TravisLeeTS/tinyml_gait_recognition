@@ -163,6 +163,8 @@ The notebook imports `src.training.experiment_lab.run_keras_architecture`, so mo
 ## Report Files
 
 - `docs/milestone2_report.md`: PDF-ready M2 report draft.
+- `docs/milestone2_report.docx`: professional Word report for Milestone 2 submission/review.
+- `docs/milestone2_report.pdf`: 2-4 page PDF report generated from the report draft.
 - `docs/reproduction_notes.md`: exact vs approximate reproduction choices and data-access notes.
 
 ## Arduino / PlatformIO Starter

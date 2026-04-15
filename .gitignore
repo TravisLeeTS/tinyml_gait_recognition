@@ -19,6 +19,7 @@ outputs/**/*.pt
 outputs/**/*.joblib
 outputs/**/*.npy
 docs/*_render.html
+gh_auth_*.txt
 
 # Keep folder structure visible.
 !data/raw/.gitkeep
