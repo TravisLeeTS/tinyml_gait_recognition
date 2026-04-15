@@ -12,12 +12,22 @@ This repository contains a TinyML human activity recognition implementation pack
 
 Current status: The package is runnable with TensorFlow/Keras training code, generated UCI HAR held-out metrics, confusion matrices, dataset inspection outputs, and a PDF-ready report draft. The paper reproduction run included here is a bounded CPU reproduction artifact; the closer 64-epoch reproduction command is documented below.
 
-## What Is Implemented
+## Phase Framework
 
-Two baselines are intentionally kept separate:
+| Phase | Title | Objective | Main Change | Evaluation Focus |
+|---|---|---|---|---|
+| 1 | Rebuilding the Paper Baseline | Reproduce the reference HGAR pipeline as closely as feasible to establish a strong upper-bound baseline. | No intentional simplification. | Accuracy |
+| 2 | Lightweight Model Screening | Compare a small set of TinyML-friendly models under the same data pipeline and sensor setup, then select one winner. | Architecture only. | Accuracy + Latency |
+| 3 (Optional) | Eco-Mode Sensor Ablation | Test whether accelerometer-only sensing is worthwhile after a lightweight model is chosen. | Sensor configuration only. | Energy + Accuracy |
+| 4 | Quantized Edge Deployment | Deploy the selected final model on Arduino using TFLM and evaluate real edge performance. | INT8 quantization and on-device implementation. | Energy + Accuracy + Latency |
 
-- Paper Reproduction Baseline: offline reference baseline under `outputs/reproduction/`. It implements the Sensors Journal stacking design in TensorFlow/Keras with five level-0 hybrid learners: ConvLSTM, CNN-GRU, CNN-BiGRU, CNN-BiLSTM, CNN-LSTM, plus XGBoost as the level-1 meta-learner. This is not intended for direct Arduino deployment.
-- Lightweight TinyML-Oriented Baseline: compact depthwise-separable 1D CNN under `outputs/lightweight/`. This is the edge deployment path for later quantization and Arduino testing.
+Current round scope: Phase 1 and Phase 2 are implemented in this repository. Phase 3 and Phase 4 are planned for the next round.
+
+Phase 1, Rebuilding the Paper Baseline, is implemented under `outputs/reproduction/` with five level-0 hybrid learners (ConvLSTM, CNN-GRU, CNN-BiGRU, CNN-BiLSTM, CNN-LSTM) and XGBoost as the level-1 meta-learner.
+
+Phase 2, Lightweight Model Screening, is intentionally narrow in scope to avoid over-expanding the study. The shortlist is depthwise separable CNN, compact CNN-GRU, and small TCN-style architectures under the same pipeline. Knowledge distillation is intentionally excluded from the core proposal.
+
+Phase 4 is planned to use post-training quantization (INT8) as the main compression strategy for deployment.
 
 Primary dataset:
 
@@ -35,12 +45,13 @@ data/
   interim/
   processed/
 docs/
-  report.md
-  report.docx
-  report.pdf
+  phase1_phase2_report.md
+  phase1_phase2_report.docx
+  phase1_phase2_report.pdf
   figures/
   tables/
 notebooks/
+  phase2_model_screening_lab.ipynb
 src/
   config.py
   data/
@@ -87,7 +98,7 @@ Outputs:
 - `docs/tables/uci_har_class_counts.csv`
 - `docs/tables/wisdm_classic_raw_counts.csv`
 
-## Train Lightweight Baseline
+## Phase 2: Lightweight Model Screening
 
 Reportable run used for the current artifact:
 
@@ -106,7 +117,7 @@ Outputs:
 - `outputs/lightweight/figures/lightweight_tiny_cnn_confusion_matrix.png`
 - `outputs/lightweight/logs/lightweight_training_history.csv`
 
-Current UCI HAR held-out test result:
+Current selected Phase 2 winner result on UCI HAR held-out test set:
 
 - Accuracy: 0.9169
 - Macro F1: 0.9173
@@ -115,7 +126,7 @@ Current UCI HAR held-out test result:
 - TFLite size: 13,460 bytes
 - Host CPU Keras predict latency proxy: mean 62.65 ms over 20 runs. This is not an Arduino latency claim.
 
-## Train Paper Reproduction Baseline
+## Phase 1: Rebuilding the Paper Baseline
 
 Bounded run used for the current artifact:
 
@@ -145,27 +156,27 @@ Current bounded UCI HAR held-out test result:
 
 This bounded run is a working reproduction artifact. For the closest paper-style run, use the 64-epoch command and the full XGBoost grid.
 
-## Notebook Model Lab
+## Phase 2 Notebook Lab
 
 Use the notebook when multiple collaborators want to compare architecture ideas without touching preprocessing code:
 
 ```text
-notebooks/model_lab.ipynb
+notebooks/phase2_model_screening_lab.ipynb
 ```
 
 Launch it with:
 
 ```powershell
-jupyter lab notebooks/model_lab.ipynb
+jupyter lab notebooks/phase2_model_screening_lab.ipynb
 ```
 
 The notebook imports `src.training.experiment_lab.run_keras_architecture`, so model designers only provide a Keras model-builder function. The helper keeps the same UCI HAR loading, subject-aware validation split, train-only normalization, held-out test metrics, confusion matrix, TFLite size, and host latency measurement.
 
 ## Project Documentation
 
-- `docs/report.md`: editable project report draft in Markdown.
-- `docs/report.docx`: editable Word version of the project report.
-- `docs/report.pdf`: exported PDF version of the project report.
+- `docs/phase1_phase2_report.md`: editable Phase 1-2 project report draft in Markdown.
+- `docs/phase1_phase2_report.docx`: editable Word version of the Phase 1-2 report.
+- `docs/phase1_phase2_report.pdf`: exported PDF version of the Phase 1-2 report.
 - `docs/tables/`: dataset inspection tables and class-count summaries.
 - `outputs/lightweight/` and `outputs/reproduction/`: generated models, metrics, logs, and figures.
 
@@ -181,4 +192,4 @@ Main firmware file:
 
 - `src/main.cpp`
 
-The next phase plan is to collect real Arduino Nano 33 BLE Sense accelerometer and gyroscope data at 50 Hz, segment into 2.56 s windows with 50% overlap, and evaluate the lightweight model path under quantization and on-device latency constraints.
+Next-round plan: run Phase 3 optional eco-mode sensor ablation (accelerometer-only check), then execute Phase 4 quantized edge deployment with INT8 post-training quantization and on-device TFLM evaluation on Arduino Nano 33 BLE Sense.

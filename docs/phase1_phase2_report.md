@@ -1,10 +1,19 @@
-# Project Report Draft
+# Phase 1 and Phase 2 Report Draft
 
 Project: Energy-Efficient Human Activity Recognition on the Edge
 
 Team: Lee Ting Sen (B00103724), Khalifa Alshamsi (B00078654), Vineetha Addanki (G00111196).
 
 Track: B, open/public dataset. Primary benchmark: UCI HAR. Secondary validation dataset: Fordham WISDM Activity Prediction v1.1.
+
+## Phase Scope and Alignment
+
+| Phase | Title | Objective | Main Change | Evaluation Focus | Status |
+|---|---|---|---|---|---|
+| 1 | Rebuilding the Paper Baseline | Reproduce the reference HGAR pipeline as closely as feasible to establish a strong upper-bound baseline. | No intentional simplification. | Accuracy | Implemented |
+| 2 | Lightweight Model Screening | Compare a small set of TinyML-friendly models under the same data pipeline and sensor setup, then select one winner. | Architecture only. | Accuracy + Latency | Implemented |
+| 3 (Optional) | Eco-Mode Sensor Ablation | Test whether accelerometer-only sensing is worthwhile after a lightweight model is chosen. | Sensor configuration only. | Energy + Accuracy | Next round |
+| 4 | Quantized Edge Deployment | Deploy the selected final model on Arduino using TFLM and evaluate real edge performance. | INT8 quantization and on-device implementation. | Energy + Accuracy + Latency | Next round |
 
 ## R1 Dataset Description
 
@@ -66,7 +75,7 @@ Table 3. Track B data card.
 | Original recording equipment | UCI HAR: Samsung Galaxy S II waist smartphone; WISDM classic: smartphone accelerometer data from Fordham WISDM release |
 | Known limitations | UCI HAR is smartphone-waist data and already preprocessed; WISDM lacks LAYING and is accelerometer-only |
 | Domain gap vs Arduino | Different IMU, placement, sampling clock, preprocessing, noise, and body/device attachment |
-| Arduino M3 plan | Collect Nano 33 BLE Sense accelerometer + gyroscope data at 50 Hz, 2.56 s windows, 50% overlap, 3 to 5 users, 2 environments, target at least 50 labelled windows per class |
+| Phase 3 and 4 next-round plan | Collect Nano 33 BLE Sense accelerometer + gyroscope data at 50 Hz, 2.56 s windows, 50% overlap, 3 to 5 users, 2 environments, target at least 50 labelled windows per class, then perform INT8 post-training quantization and on-device TFLM evaluation |
 
 WISDM timestamp audit found irregular effective sampling despite the nominal 20 Hz rate. Median effective rate was about 20.00 Hz, but rounded dt modes included 50 ms, 40 ms, 80 ms, 100 ms, and 60 ms; 145,865 dt values exceeded the median plus 5 IQR threshold. WISDM is therefore not treated as directly interchangeable with UCI HAR.
 
@@ -76,11 +85,11 @@ For UCI HAR, the code loads the standard inertial signal rows: total acceleratio
 
 For WISDM classic, the code parses semicolon-delimited raw rows, extracts subject, activity, timestamp, and x/y/z acceleration, converts the raw acceleration scale using the WISDM about-file statement that 10 equals 1g, audits timestamp dt distributions, and can regularize each subject/activity stream to 20 Hz before fixed-window segmentation. WISDM class taxonomy is preserved; Jogging is not forced into UCI HAR and LAYING is not invented.
 
-## R4 Baseline Models
+## R4 Phase-Aligned Model Design
 
-Baseline A, Paper Reproduction Baseline: offline reference only, not intended for direct Arduino deployment. It implements five TensorFlow/Keras level-0 hybrid learners: ConvLSTM, CNN-GRU, CNN-BiGRU, CNN-BiLSTM, and CNN-LSTM. The stacked level-1 learner is XGBoost. Input shape is `[128, 6]`; output is six activity classes. Training uses sparse categorical cross-entropy, Adam, learning rate 0.001, inverse-time decay 0.01, batch size 50, early stopping on validation loss, and an XGBoost grid search with 5-fold CV.
+Phase 1, Rebuilding the Paper Baseline: offline reference only, not intended for direct Arduino deployment. It rebuilds the paper-inspired stacking framework with five TensorFlow/Keras level-0 hybrid learners (ConvLSTM, CNN-GRU, CNN-BiGRU, CNN-BiLSTM, and CNN-LSTM). The stacked level-1 learner is XGBoost. Input shape is `[128, 6]`; output is six activity classes. Training uses sparse categorical cross-entropy, Adam, learning rate 0.001, inverse-time decay 0.01, batch size 50, early stopping on validation loss, and an XGBoost grid search with 5-fold CV.
 
-Baseline B, Lightweight TinyML-Oriented Baseline: a compact TensorFlow/Keras 1D depthwise-separable CNN with 1,922 total Keras parameters. Input shape is `[128, 6]`; output is six softmax probabilities. It uses sparse categorical cross-entropy, Adam, learning rate 0.001, inverse-time decay 0.01, batch size 50, and early stopping. The saved TFLite model is 13,460 bytes, making this the practical M3 path.
+Phase 2, Lightweight Model Screening: the architecture search is intentionally narrow to avoid over-expanding variables in one round. Candidate family includes a depthwise separable CNN, a compact CNN-GRU, and a small TCN-style design under the same pipeline and sensor setup. The current selected winner in this artifact is a compact TensorFlow/Keras 1D depthwise-separable CNN with 1,922 total Keras parameters. Input shape is `[128, 6]`; output is six softmax probabilities. It uses sparse categorical cross-entropy, Adam, learning rate 0.001, inverse-time decay 0.01, batch size 50, and early stopping. Knowledge distillation is intentionally excluded from the core proposal. The saved TFLite model is 13,460 bytes.
 
 ## R5 Held-Out Test Results
 
@@ -88,10 +97,10 @@ The held-out test set is the official UCI HAR test split with 2,947 windows.
 
 Table 4. Held-out UCI HAR test-set summary.
 
-| Baseline | Run setting | Accuracy | Macro F1 | Weighted F1 |
+| Phase | Run setting | Accuracy | Macro F1 | Weighted F1 |
 |---|---|---:|---:|---:|
-| Paper Reproduction Baseline | 20-epoch bounded TensorFlow run, fast XGBoost grid | 0.9135 | 0.9128 | 0.9137 |
-| Lightweight TinyML-Oriented Baseline | 40 epochs, patience 8 | 0.9169 | 0.9173 | 0.9168 |
+| Phase 1: Rebuilding the Paper Baseline | 20-epoch bounded TensorFlow run, fast XGBoost grid | 0.9135 | 0.9128 | 0.9137 |
+| Phase 2: Lightweight Model Screening (selected winner: depthwise-separable CNN) | 40 epochs, patience 8 | 0.9169 | 0.9173 | 0.9168 |
 
 Paper reproduction per-class metrics:
 
@@ -127,7 +136,7 @@ Figure 1. Paper reproduction stacking confusion matrix on the held-out UCI HAR t
 
 ![Lightweight TinyML confusion matrix](../outputs/lightweight/figures/lightweight_tiny_cnn_confusion_matrix.png)
 
-Figure 2. Lightweight TinyML baseline confusion matrix on the held-out UCI HAR test set.
+Figure 2. Phase 2 selected lightweight model confusion matrix on the held-out UCI HAR test set.
 
 TinyML efficiency status: the lightweight Keras model has 1,922 parameters and the generated TensorFlow Lite flatbuffer is 13,460 bytes. The current host CPU Keras latency proxy is 62.65 ms mean over 20 runs, which is useful only for regression tracking before Arduino timing; it is not an on-device latency claim.
 
@@ -137,15 +146,15 @@ Top lightweight confusion pairs after the static-posture fix were SITTING to STA
 
 Top paper-reproduction confusion pairs after the TensorFlow refactor were STANDING to SITTING (101), WALKING to WALKING_DOWNSTAIRS (43), SITTING to STANDING (38), WALKING_UPSTAIRS to WALKING_DOWNSTAIRS (27), and SITTING to WALKING_UPSTAIRS (22). This is a major improvement over the earlier body-acceleration-only view; however, the run is still bounded to 20 epochs and uses a fast XGBoost grid, so it should not be claimed as the final paper-match run.
 
-For M3, the main error-reduction work should focus on static posture separation, accelerometer-only ablations, and Arduino domain validation. WISDM also shows timestamp irregularity and lacks LAYING, so it should be used for secondary accelerometer robustness only, not as a direct six-class UCI replacement.
+For the next round (Phase 3 and Phase 4), the main error-reduction work should focus on static posture separation, optional accelerometer-only ablations, and Arduino domain validation. WISDM also shows timestamp irregularity and lacks LAYING, so it should be used for secondary accelerometer robustness only, not as a direct six-class UCI replacement.
 
-## R7 Updated Plan for M3
+## R7 Next-Round Plan (Phase 3 and Phase 4)
 
-The paper reproduction baseline remains the offline reference. The deployable path will use the lightweight depthwise-separable 1D CNN, then quantize it and port it toward TensorFlow Lite Micro or an equivalent C/C++ inference path for Arduino Nano 33 BLE Sense. This preserves the revised Milestone 1 scope: UCI HAR is the primary benchmark, WISDM is secondary validation/domain-gap evidence, and the deployable model path prioritizes TensorFlow Lite/TFLM over non-deployable stacking models.
+The paper reproduction baseline remains the offline reference. The deployable path will use the selected Phase 2 lightweight model, then apply post-training quantization (INT8) and port it toward TensorFlow Lite Micro or an equivalent C/C++ inference path for Arduino Nano 33 BLE Sense. UCI HAR remains the primary benchmark, WISDM remains secondary validation/domain-gap evidence, and the deployable path prioritizes TensorFlow Lite/TFLM over non-deployable stacking models.
 
 Concrete Arduino data collection plan: from April 18 to April 24, 2026, collect accelerometer and gyroscope streams from Arduino Nano 33 BLE Sense at 50 Hz using the same six UCI classes. Use 2.56 s windows with 50% overlap. Collect from 3 to 5 users in at least 2 environments, targeting at least 50 labelled windows per class after segmentation. Place the board consistently at the waist or in a fixed pouch/pocket. If the Arduino data shows a large domain gap, fall back to accelerometer-only magnitude and per-channel calibration experiments before retraining a final quantized model.
 
-Robustness tests for M3: compare full accelerometer+gyroscope input against accelerometer-only input, measure latency on-device, record model size and RAM usage, and evaluate Arduino-collected holdout data separately from public UCI/WISDM data.
+Phase 3 and Phase 4 robustness tests: compare full accelerometer+gyroscope input against accelerometer-only input, measure latency on-device, record model size and RAM usage, and evaluate Arduino-collected holdout data separately from public UCI/WISDM data.
 
 ## Ethics & Limitations
 

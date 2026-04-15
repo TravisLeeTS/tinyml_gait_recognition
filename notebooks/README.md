@@ -1,6 +1,6 @@
 # Notebooks
 
-Use `model_lab.ipynb` to compare TensorFlow/Keras model architectures without copying preprocessing or metric code into notebook cells.
+Use `phase2_model_screening_lab.ipynb` to compare TinyML-friendly TensorFlow/Keras architectures without copying preprocessing or metric code into notebook cells.
 
 The intended workflow is:
 
