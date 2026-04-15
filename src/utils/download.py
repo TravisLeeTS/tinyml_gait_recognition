@@ -15,7 +15,7 @@ def download_first_available(urls: list[str], destination: Path, timeout: int = 
     errors: list[str] = []
     for url in urls:
         try:
-            request = Request(url, headers={"User-Agent": "tinyml-m2-repro/1.0"})
+            request = Request(url, headers={"User-Agent": "tinyml-har-repro/1.0"})
             with urlopen(request, timeout=timeout) as response:
                 if getattr(response, "status", 200) >= 400:
                     raise RuntimeError(f"HTTP {response.status}")

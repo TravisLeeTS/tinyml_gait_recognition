@@ -1,10 +1,10 @@
 # AGENTS.md
 
 ## Project
-TinyML Milestone 2: Energy-Efficient Human Activity Recognition on the Edge
+TinyML: Energy-Efficient Human Activity Recognition on the Edge
 
 ## Source priority
-1. Project_Milestone2_Handout.pdf
+1. Project_Handout.pdf
 2. Revised_Milestone_1_Proposal_v2.docx
 3. Efficient_Human_Gait_Activity_Recognition_Based_on_Sensor_Fusion_and_Intelligent_Stacking_Framework.pdf
 4. Preparing WISDM and UCI HAR for Gait Activity Recognition.pdf
@@ -31,7 +31,7 @@ Build a smaller model path suitable for later M3 deployment or quantization.
 This does not replace the reproduction baseline.
 
 ## Non-negotiable rules
-- Milestone 2 handout is the grading source of truth.
+- The project handout is the grading source of truth.
 - Do not fabricate dataset metadata, licenses, paper details, or results.
 - If the paper is ambiguous, document assumptions explicitly.
 - Use deterministic seeds and relative paths only.

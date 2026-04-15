@@ -1,4 +1,4 @@
-# TinyML HAR Milestone 2 Package
+# TinyML HAR Package
 
 Project: Energy-Efficient Human Activity Recognition on the Edge
 
@@ -8,16 +8,16 @@ Team:
 - Khalifa Alshamsi, B00078654
 - Vineetha Addanki, G00111196
 
-This repository now contains the Milestone 2 implementation package for a TinyML human activity recognition project targeting Arduino Nano 33 BLE Sense in M3. The current M2 benchmark is Track B: public/open datasets.
+This repository contains a TinyML human activity recognition implementation package targeting Arduino Nano 33 BLE Sense for edge deployment. The current benchmark track uses public/open datasets.
 
-Current status: Milestone 2 implementation package is runnable with TensorFlow/Keras training code, generated UCI HAR held-out metrics, confusion matrices, dataset inspection outputs, and a PDF-ready report draft. The paper reproduction run included here is a bounded CPU reproduction artifact; the closer 64-epoch reproduction command is documented below.
+Current status: The package is runnable with TensorFlow/Keras training code, generated UCI HAR held-out metrics, confusion matrices, dataset inspection outputs, and a PDF-ready report draft. The paper reproduction run included here is a bounded CPU reproduction artifact; the closer 64-epoch reproduction command is documented below.
 
 ## What Is Implemented
 
 Two baselines are intentionally kept separate:
 
 - Paper Reproduction Baseline: offline reference baseline under `outputs/reproduction/`. It implements the Sensors Journal stacking design in TensorFlow/Keras with five level-0 hybrid learners: ConvLSTM, CNN-GRU, CNN-BiGRU, CNN-BiLSTM, CNN-LSTM, plus XGBoost as the level-1 meta-learner. This is not intended for direct Arduino deployment.
-- Lightweight TinyML-Oriented Baseline: compact depthwise-separable 1D CNN under `outputs/lightweight/`. This is the M3 deployment path for later quantization and Arduino testing.
+- Lightweight TinyML-Oriented Baseline: compact depthwise-separable 1D CNN under `outputs/lightweight/`. This is the edge deployment path for later quantization and Arduino testing.
 
 Primary dataset:
 
@@ -35,8 +35,6 @@ data/
   interim/
   processed/
 docs/
-  milestone2_report.md
-  reproduction_notes.md
   figures/
   tables/
 notebooks/
@@ -60,7 +58,7 @@ Use Python 3.12 in the current environment, then install pinned dependencies:
 
 ```powershell
 python -m pip install -r requirements.txt
-python -m ipykernel install --user --name tinyml-m2 --display-name "TinyML M2 TensorFlow"
+python -m ipykernel install --user --name tinyml-har --display-name "TinyML HAR TensorFlow"
 ```
 
 TensorFlow 2.18.0 and Keras 3.8.0 are pinned for model training and TensorFlow Lite conversion. TensorFlow runs on CPU in this Windows environment.
@@ -88,7 +86,7 @@ Outputs:
 
 ## Train Lightweight Baseline
 
-Reportable run used for the current M2 artifact:
+Reportable run used for the current artifact:
 
 ```powershell
 python -m src.training.train_lightweight --epochs 40 --patience 8 --device cpu
@@ -116,7 +114,7 @@ Current UCI HAR held-out test result:
 
 ## Train Paper Reproduction Baseline
 
-Bounded run used for the current M2 artifact:
+Bounded run used for the current artifact:
 
 ```powershell
 python -m src.training.train_reproduction --epochs 20 --patience 5 --device cpu --normalization standard --fast-xgb-grid
@@ -149,23 +147,21 @@ This bounded run is a working reproduction artifact. For the closest paper-style
 Use the notebook when multiple collaborators want to compare architecture ideas without touching preprocessing code:
 
 ```text
-notebooks/m2_model_lab.ipynb
+notebooks/model_lab.ipynb
 ```
 
 Launch it with:
 
 ```powershell
-jupyter lab notebooks/m2_model_lab.ipynb
+jupyter lab notebooks/model_lab.ipynb
 ```
 
 The notebook imports `src.training.experiment_lab.run_keras_architecture`, so model designers only provide a Keras model-builder function. The helper keeps the same UCI HAR loading, subject-aware validation split, train-only normalization, held-out test metrics, confusion matrix, TFLite size, and host latency measurement.
 
-## Report Files
+## Project Documentation
 
-- `docs/milestone2_report.md`: PDF-ready M2 report draft.
-- `docs/milestone2_report.docx`: professional Word report for Milestone 2 submission/review.
-- `docs/milestone2_report.pdf`: 2-4 page PDF report generated from the report draft.
-- `docs/reproduction_notes.md`: exact vs approximate reproduction choices and data-access notes.
+- `docs/tables/`: dataset inspection tables and class-count summaries.
+- `outputs/lightweight/` and `outputs/reproduction/`: generated models, metrics, logs, and figures.
 
 ## Arduino / PlatformIO Starter
 
@@ -179,4 +175,4 @@ Main firmware file:
 
 - `src/main.cpp`
 
-The M3 plan is to collect real Arduino Nano 33 BLE Sense accelerometer and gyroscope data at 50 Hz, segment into 2.56 s windows with 50% overlap, and evaluate the lightweight model path under quantization and on-device latency constraints.
+The next phase plan is to collect real Arduino Nano 33 BLE Sense accelerometer and gyroscope data at 50 Hz, segment into 2.56 s windows with 50% overlap, and evaluate the lightweight model path under quantization and on-device latency constraints.

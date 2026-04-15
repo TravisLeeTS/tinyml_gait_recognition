@@ -1,6 +1,6 @@
 # Notebooks
 
-Use `m2_model_lab.ipynb` to compare TensorFlow/Keras model architectures without copying preprocessing or metric code into notebook cells.
+Use `model_lab.ipynb` to compare TensorFlow/Keras model architectures without copying preprocessing or metric code into notebook cells.
 
 The intended workflow is:
 
