@@ -35,6 +35,9 @@ data/
   interim/
   processed/
 docs/
+  report.md
+  report.docx
+  report.pdf
   figures/
   tables/
 notebooks/
@@ -160,6 +163,9 @@ The notebook imports `src.training.experiment_lab.run_keras_architecture`, so mo
 
 ## Project Documentation
 
+- `docs/report.md`: editable project report draft in Markdown.
+- `docs/report.docx`: editable Word version of the project report.
+- `docs/report.pdf`: exported PDF version of the project report.
 - `docs/tables/`: dataset inspection tables and class-count summaries.
 - `outputs/lightweight/` and `outputs/reproduction/`: generated models, metrics, logs, and figures.
 
