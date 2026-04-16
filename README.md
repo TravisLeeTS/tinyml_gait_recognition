@@ -98,34 +98,6 @@ Outputs:
 - `docs/tables/uci_har_class_counts.csv`
 - `docs/tables/wisdm_classic_raw_counts.csv`
 
-## Phase 2: Lightweight Model Screening
-
-Reportable run used for the current artifact:
-
-```powershell
-python -m src.training.train_lightweight --epochs 40 --patience 8 --device cpu
-```
-
-Outputs:
-
-- `outputs/lightweight/models/lightweight_tiny_cnn.keras`
-- `outputs/lightweight/models/lightweight_tiny_cnn.tflite`
-- `outputs/lightweight/models/lightweight_tiny_cnn_dynamic_range.tflite`
-- `outputs/lightweight/metrics/lightweight_tiny_cnn_metrics.json`
-- `outputs/lightweight/metrics/lightweight_tiny_cnn_per_class_metrics.csv`
-- `outputs/lightweight/metrics/lightweight_tiny_cnn_confusion_matrix.csv`
-- `outputs/lightweight/figures/lightweight_tiny_cnn_confusion_matrix.png`
-- `outputs/lightweight/logs/lightweight_training_history.csv`
-
-Current selected Phase 2 winner result on UCI HAR held-out test set:
-
-- Accuracy: 0.9169
-- Macro F1: 0.9173
-- Test windows: 2,947
-- Keras parameters: 1,922
-- TFLite size: 13,460 bytes
-- Host CPU Keras predict latency proxy: mean 62.65 ms over 20 runs. This is not an Arduino latency claim.
-
 ## Phase 1: Rebuilding the Paper Baseline
 
 Bounded run used for the current artifact:
@@ -155,6 +127,34 @@ Current bounded UCI HAR held-out test result:
 - Test windows: 2,947
 
 This bounded run is a working reproduction artifact. For the closest paper-style run, use the 64-epoch command and the full XGBoost grid.
+
+## Phase 2: Lightweight Model Screening
+
+Reportable run used for the current artifact:
+
+```powershell
+python -m src.training.train_lightweight --epochs 40 --patience 8 --device cpu
+```
+
+Outputs:
+
+- `outputs/lightweight/models/lightweight_tiny_cnn.keras`
+- `outputs/lightweight/models/lightweight_tiny_cnn.tflite`
+- `outputs/lightweight/models/lightweight_tiny_cnn_dynamic_range.tflite`
+- `outputs/lightweight/metrics/lightweight_tiny_cnn_metrics.json`
+- `outputs/lightweight/metrics/lightweight_tiny_cnn_per_class_metrics.csv`
+- `outputs/lightweight/metrics/lightweight_tiny_cnn_confusion_matrix.csv`
+- `outputs/lightweight/figures/lightweight_tiny_cnn_confusion_matrix.png`
+- `outputs/lightweight/logs/lightweight_training_history.csv`
+
+Current selected Phase 2 winner result on UCI HAR held-out test set:
+
+- Accuracy: 0.9169
+- Macro F1: 0.9173
+- Test windows: 2,947
+- Keras parameters: 1,922
+- TFLite size: 13,460 bytes
+- Host CPU Keras predict latency proxy: mean 62.65 ms over 20 runs. This is not an Arduino latency claim.
 
 ## Phase 2 Notebook Lab
 
