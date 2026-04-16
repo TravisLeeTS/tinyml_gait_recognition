@@ -173,7 +173,6 @@ jupyter lab notebooks/phase2_model_screening_lab.ipynb
 The notebook imports `src.training.experiment_lab.run_keras_architecture`, so model designers only provide a Keras model-builder function. The helper keeps the same UCI HAR loading, subject-aware validation split, train-only normalization, held-out test metrics, confusion matrix, TFLite size, and host latency measurement.
 
 ## Project Documentation
-
 - `docs/tables/`: dataset inspection tables and class-count summaries.
 - `outputs/lightweight/` and `outputs/reproduction/`: generated models, metrics, logs, and figures.
 
