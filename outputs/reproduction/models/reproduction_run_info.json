@@ -1,0 +1,39 @@
+{
+  "baseline_role": "Paper Reproduction Baseline",
+  "baseline_description": "Offline reference baseline; not intended for direct Arduino deployment.",
+  "framework": "TensorFlow/Keras implementation of paper-specified model families",
+  "paper_framework": "TensorFlow 2.9 reported by paper",
+  "input_shape": [
+    128,
+    6
+  ],
+  "output_classes": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "models": [
+    "ConvLSTM",
+    "CNN-GRU",
+    "CNN-BiGRU",
+    "CNN-BiLSTM",
+    "CNN-LSTM"
+  ],
+  "optimizer": "Adam",
+  "learning_rate": 0.001,
+  "learning_rate_decay": 0.01,
+  "batch_size": 50,
+  "epochs_requested": 20,
+  "early_stopping": {
+    "monitor": "val_loss",
+    "patience": 5
+  },
+  "loss": "cross_entropy",
+  "normalization": "standard",
+  "subsequences": 4,
+  "xgboost_meta_learner": "GridSearchCV with 5-fold CV on validation-stack predictions",
+  "device": "cpu"
+}

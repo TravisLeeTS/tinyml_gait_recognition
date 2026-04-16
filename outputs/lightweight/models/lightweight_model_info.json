@@ -1,0 +1,30 @@
+{
+  "model_name": "TinyDepthwiseSeparableCnn",
+  "baseline_role": "Lightweight TinyML-Oriented Baseline",
+  "input_shape": [
+    128,
+    6
+  ],
+  "output_classes": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "optimizer": "Adam",
+  "learning_rate": 0.001,
+  "learning_rate_decay": 0.01,
+  "batch_size": 50,
+  "epochs_requested": 40,
+  "early_stopping": {
+    "monitor": "val_loss",
+    "patience": 8
+  },
+  "loss": "cross_entropy",
+  "normalization": "per-channel standardization fit on training split only",
+  "trainable_parameters": 1786,
+  "keras_model_parameters": 1922,
+  "device": "cpu"
+}
