@@ -10,7 +10,9 @@ Team:
 
 This repository contains a TinyML human activity recognition implementation package targeting Arduino Nano 33 BLE Sense for edge deployment. The current benchmark track uses public/open datasets.
 
-Current status: The package is runnable with TensorFlow/Keras training code, generated UCI HAR held-out metrics, confusion matrices, dataset inspection outputs, and a PDF-ready report draft. The paper reproduction run included here is a bounded CPU reproduction artifact; the closer 64-epoch reproduction command is documented below.
+Current status: The package is runnable with TensorFlow/Keras training code, generated UCI HAR held-out metrics, confusion matrices, and dataset inspection outputs. The paper reproduction run included here is a bounded CPU reproduction artifact; the closer 64-epoch reproduction command is documented below.
+
+For the detailed Milestone 2 handout-aligned explanation, including D2, D3, D4, preprocessing, and the reason raw datasets are downloaded by code instead of committed to Git, see `README_MILESTONE2.md`.
 
 ## Phase Framework
 
@@ -25,7 +27,7 @@ Current round scope: Phase 1 and Phase 2 are implemented in this repository. Pha
 
 Phase 1, Rebuilding the Paper Baseline, is implemented under `outputs/reproduction/` with five level-0 hybrid learners (ConvLSTM, CNN-GRU, CNN-BiGRU, CNN-BiLSTM, CNN-LSTM) and XGBoost as the level-1 meta-learner.
 
-Phase 2, Lightweight Model Screening, is intentionally narrow in scope to avoid over-expanding the study. The shortlist is depthwise separable CNN, compact CNN-GRU, and small TCN-style architectures under the same pipeline. 
+Phase 2, Lightweight Model Screening, is intentionally narrow in scope to avoid over-expanding the study. The shortlist is depthwise separable CNN, compact CNN-GRU, and small TCN-style architectures under the same pipeline.
 
 Phase 4 is planned to use post-training quantization (INT8) as the main compression strategy for deployment.
 
@@ -45,10 +47,6 @@ data/
   interim/
   processed/
 docs/
-  phase1_phase2_report.md
-  phase1_phase2_report.docx
-  phase1_phase2_report.pdf
-  figures/
   tables/
 notebooks/
   phase2_model_screening_lab.ipynb
@@ -173,6 +171,8 @@ jupyter lab notebooks/phase2_model_screening_lab.ipynb
 The notebook imports `src.training.experiment_lab.run_keras_architecture`, so model designers only provide a Keras model-builder function. The helper keeps the same UCI HAR loading, subject-aware validation split, train-only normalization, held-out test metrics, confusion matrix, TFLite size, and host latency measurement.
 
 ## Project Documentation
+
+- `README_MILESTONE2.md`: handout-aligned Milestone 2 explanation and D2/D3/D4 mapping.
 - `docs/tables/`: dataset inspection tables and class-count summaries.
 - `outputs/lightweight/` and `outputs/reproduction/`: generated models, metrics, logs, and figures.
 
