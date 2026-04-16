@@ -9,7 +9,7 @@ Team:
 - Vineetha Addanki, G00111196
 
 > **Milestone 2 grading note:**  
-> This file is the detailed Milestone 2 README. Please read it together with the general [`README.md`](README.md). The general README gives the project overview, while this file follows the Milestone 2 handout structure and explains D2, D3, D4, dataset handling, preprocessing, baseline training, held-out evaluation, error analysis, and the M3 Arduino data collection plan. Please also refer to the Milestone 2 handout PDF, if provided separately, as the main grading reference.
+> This file is the detailed Milestone 2 README. Please read it together with the general [`README.md`](README.md). The general README gives the project overview, while this file follows the Milestone 2 handout structure and explains D2, D3, D4, dataset handling, preprocessing, baseline training, held-out evaluation, error analysis, and the M3 Arduino data collection plan. Please also refer to [`tinyml_milestone2.pdf`](tinyml_milestone2.pdf), the Milestone 2 handout PDF, as the main grading reference.
 
 ## Milestone 2 Status
 

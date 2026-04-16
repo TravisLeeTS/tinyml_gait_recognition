@@ -9,7 +9,7 @@ Team:
 - Vineetha Addanki, G00111196
 
 > **Important for Milestone 2 grading:**  
-> This file is the general project README. Please also read [`README_MILESTONE2.md`](README_MILESTONE2.md), which is organized around the Milestone 2 handout and explains D2, D3, D4, preprocessing, dataset download, baseline scripts, held-out test results, and why `x_train/y_train/x_val/x_test` are generated in memory. Please also refer to the Milestone 2 handout PDF, if provided separately, as the main grading reference.
+> This file is the general project README. Please also read [`README_MILESTONE2.md`](README_MILESTONE2.md), which is organized around the Milestone 2 handout and explains D2, D3, D4, preprocessing, dataset download, baseline scripts, held-out test results, and why `x_train/y_train/x_val/x_test` are generated in memory. Please also refer to [`tinyml_milestone2.pdf`](tinyml_milestone2.pdf), the Milestone 2 handout PDF, as the main grading reference.
 
 This repository contains a TinyML human activity recognition implementation package targeting Arduino Nano 33 BLE Sense for edge deployment. The current benchmark track uses public/open datasets.
 
