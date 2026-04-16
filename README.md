@@ -8,11 +8,12 @@ Team:
 - Khalifa Alshamsi, B00078654
 - Vineetha Addanki, G00111196
 
+> **Important for Milestone 2 grading:**  
+> This file is the general project README. Please also read [`README_MILESTONE2.md`](README_MILESTONE2.md), which is organized around the Milestone 2 handout and explains D2, D3, D4, preprocessing, dataset download, baseline scripts, held-out test results, and why `x_train/y_train/x_val/x_test` are generated in memory. Please also refer to the Milestone 2 handout PDF, if provided separately, as the main grading reference.
+
 This repository contains a TinyML human activity recognition implementation package targeting Arduino Nano 33 BLE Sense for edge deployment. The current benchmark track uses public/open datasets.
 
 Current status: The package is runnable with TensorFlow/Keras training code, generated UCI HAR held-out metrics, confusion matrices, and dataset inspection outputs. The paper reproduction run included here is a bounded CPU reproduction artifact; the closer 64-epoch reproduction command is documented below.
-
-For the detailed Milestone 2 handout-aligned explanation, including D2, D3, D4, preprocessing, and the reason raw datasets are downloaded by code instead of committed to Git, see `README_MILESTONE2.md`.
 
 ## Phase Framework
 

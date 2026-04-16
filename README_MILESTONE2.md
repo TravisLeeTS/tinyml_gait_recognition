@@ -8,6 +8,9 @@ Team:
 - Khalifa Alshamsi, B00078654
 - Vineetha Addanki, G00111196
 
+> **Milestone 2 grading note:**  
+> This file is the detailed Milestone 2 README. Please read it together with the general [`README.md`](README.md). The general README gives the project overview, while this file follows the Milestone 2 handout structure and explains D2, D3, D4, dataset handling, preprocessing, baseline training, held-out evaluation, error analysis, and the M3 Arduino data collection plan. Please also refer to the Milestone 2 handout PDF, if provided separately, as the main grading reference.
+
 ## Milestone 2 Status
 
 This repository is the Milestone 2 package for TinyML human activity recognition targeting future Arduino Nano 33 BLE Sense deployment. The current training track uses public/open datasets, so this is a Track B submission: the model is trained and evaluated on a held-out public dataset split at M2, and real Arduino sensor data collection is planned for M3/M4 on-device evaluation.
