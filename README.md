@@ -25,7 +25,7 @@ Current round scope: Phase 1 and Phase 2 are implemented in this repository. Pha
 
 Phase 1, Rebuilding the Paper Baseline, is implemented under `outputs/reproduction/` with five level-0 hybrid learners (ConvLSTM, CNN-GRU, CNN-BiGRU, CNN-BiLSTM, CNN-LSTM) and XGBoost as the level-1 meta-learner.
 
-Phase 2, Lightweight Model Screening, is intentionally narrow in scope to avoid over-expanding the study. The shortlist is depthwise separable CNN, compact CNN-GRU, and small TCN-style architectures under the same pipeline. Knowledge distillation is intentionally excluded from the core proposal.
+Phase 2, Lightweight Model Screening, is intentionally narrow in scope to avoid over-expanding the study. The shortlist is depthwise separable CNN, compact CNN-GRU, and small TCN-style architectures under the same pipeline. 
 
 Phase 4 is planned to use post-training quantization (INT8) as the main compression strategy for deployment.
 

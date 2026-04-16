@@ -41,6 +41,33 @@ def classification_outputs(
     }
 
 
+def per_class_metrics_table(outputs: dict) -> pd.DataFrame:
+    class_names = outputs["class_names"]
+    report = outputs["classification_report"]
+    rows = []
+    for label in class_names + ["macro avg", "weighted avg"]:
+        if label in report:
+            row = {"class": label}
+            row.update(report[label])
+            rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def print_classification_summary(outputs: dict, title: str | None = None) -> None:
+    if title:
+        print(f"\n=== {title} ===")
+
+    print(json.dumps({k: outputs[k] for k in ["accuracy", "macro_f1", "weighted_f1", "test_samples"]}, indent=2))
+
+    table = per_class_metrics_table(outputs).copy()
+    for column in ["precision", "recall", "f1-score"]:
+        table[column] = table[column].map(lambda value: f"{float(value):.4f}")
+    table["support"] = table["support"].map(lambda value: int(value))
+
+    print("\nPer-class metrics:")
+    print(table.to_string(index=False))
+
+
 def save_classification_outputs(
     outputs: dict,
     metrics_dir: Path,
@@ -56,14 +83,7 @@ def save_classification_outputs(
     )
 
     class_names = outputs["class_names"]
-    report = outputs["classification_report"]
-    rows = []
-    for label in class_names + ["macro avg", "weighted avg"]:
-        if label in report:
-            row = {"class": label}
-            row.update(report[label])
-            rows.append(row)
-    pd.DataFrame(rows).to_csv(metrics_dir / f"{prefix}_per_class_metrics.csv", index=False)
+    per_class_metrics_table(outputs).to_csv(metrics_dir / f"{prefix}_per_class_metrics.csv", index=False)
 
     cm = np.asarray(outputs["confusion_matrix"], dtype=int)
     pd.DataFrame(cm, index=class_names, columns=class_names).to_csv(

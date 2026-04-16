@@ -15,7 +15,12 @@ from src.training.tf_common import (
     save_tflite_model,
     train_classifier,
 )
-from src.utils.metrics import classification_outputs, save_classification_outputs, top_confusion_pairs
+from src.utils.metrics import (
+    classification_outputs,
+    print_classification_summary,
+    save_classification_outputs,
+    top_confusion_pairs,
+)
 from src.utils.normalization import SequenceStandardizer
 from src.utils.reproducibility import configure_tensorflow_device, set_global_seed
 
@@ -112,7 +117,7 @@ def main() -> None:
         class_names=data.class_names,
     )
     save_classification_outputs(outputs, metrics_dir, figures_dir, "lightweight_tiny_cnn")
-    print(json.dumps({k: outputs[k] for k in ["accuracy", "macro_f1", "weighted_f1", "test_samples"]}, indent=2))
+    print_classification_summary(outputs, "Lightweight TinyCNN held-out metrics")
 
 
 if __name__ == "__main__":

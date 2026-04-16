@@ -14,7 +14,12 @@ from src.config import DEFAULT_DEVICE, OUTPUTS_DIR, SEED
 from src.data.uci_har import class_count_table, load_uci_har_sequence_dataset
 from src.models.reproduction.keras_models import REPRODUCTION_MODEL_NAMES, build_reproduction_model
 from src.training.tf_common import predict_proba, train_classifier
-from src.utils.metrics import classification_outputs, save_classification_outputs, top_confusion_pairs
+from src.utils.metrics import (
+    classification_outputs,
+    print_classification_summary,
+    save_classification_outputs,
+    top_confusion_pairs,
+)
 from src.utils.normalization import SequenceMinMaxScaler, SequenceStandardizer
 from src.utils.reproducibility import configure_tensorflow_device, set_global_seed
 
@@ -170,6 +175,7 @@ def main() -> None:
             figures_dir,
             f"{model_name.lower().replace('-', '_')}",
         )
+        print_classification_summary(base_output, f"{model_name} held-out metrics")
         base_results.append({k: base_output[k] for k in ["model_name", "accuracy", "macro_f1", "weighted_f1"]})
 
     val_features = np.concatenate(val_stack, axis=1)
@@ -195,7 +201,7 @@ def main() -> None:
     outputs["model_info"] = run_info | {"xgboost": xgb_info, "base_model_results": base_results}
     outputs["top_confusion_pairs"] = top_confusion_pairs(np.asarray(outputs["confusion_matrix"]), data.class_names)
     save_classification_outputs(outputs, metrics_dir, figures_dir, "paper_reproduction_stacking")
-    print(json.dumps({k: outputs[k] for k in ["accuracy", "macro_f1", "weighted_f1", "test_samples"]}, indent=2))
+    print_classification_summary(outputs, "Paper reproduction stacking held-out metrics")
 
 
 if __name__ == "__main__":
