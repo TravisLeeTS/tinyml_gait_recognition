@@ -174,9 +174,6 @@ The notebook imports `src.training.experiment_lab.run_keras_architecture`, so mo
 
 ## Project Documentation
 
-- `docs/phase1_phase2_report.md`: editable Phase 1-2 project report draft in Markdown.
-- `docs/phase1_phase2_report.docx`: editable Word version of the Phase 1-2 report.
-- `docs/phase1_phase2_report.pdf`: exported PDF version of the Phase 1-2 report.
 - `docs/tables/`: dataset inspection tables and class-count summaries.
 - `outputs/lightweight/` and `outputs/reproduction/`: generated models, metrics, logs, and figures.
 
