@@ -1,0 +1,5 @@
+method,accuracy,macro_f1,static_sitting_standing_confusions,notes
+phase2_tiny_ds_cnn_baseline,0.9168646080760094,0.9173051875969983,184,Original Phase 2 selected model.
+gravity_static_classifier_static_subset,0.8711538461538462,0.8683606297624706,201,Only SITTING/STANDING/LAYING test windows.
+phase2_tiny_ds_cnn_plus_gravity_static_rescue,0.9110960298608755,0.9116681298569936,201,Full six-class test set with static predictions replaced by gravity-feature classifier.
+phase2_tiny_ds_cnn_plus_thresholded_gravity_rescue,0.9110960298608755,0.9116681298569936,201,"Same rescue rule, but only when gravity classifier confidence >= 0.50."

@@ -1,0 +1,179 @@
+{
+  "model_name": "ArduinoCsvReplayInt8Tflite",
+  "accuracy": 0.17886178861788618,
+  "macro_f1": 0.0582010582010582,
+  "weighted_f1": 0.06245967221576977,
+  "test_samples": 246,
+  "class_names": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "classification_report": {
+    "WALKING": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 44.0
+    },
+    "WALKING_UPSTAIRS": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 24.0
+    },
+    "WALKING_DOWNSTAIRS": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 24.0
+    },
+    "SITTING": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 44.0
+    },
+    "STANDING": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 66.0
+    },
+    "LAYING": {
+      "precision": 0.21153846153846154,
+      "recall": 1.0,
+      "f1-score": 0.3492063492063492,
+      "support": 44.0
+    },
+    "accuracy": 0.17886178861788618,
+    "macro avg": {
+      "precision": 0.035256410256410256,
+      "recall": 0.16666666666666666,
+      "f1-score": 0.0582010582010582,
+      "support": 246.0
+    },
+    "weighted avg": {
+      "precision": 0.037836147592245156,
+      "recall": 0.17886178861788618,
+      "f1-score": 0.06245967221576977,
+      "support": 246.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      44
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      24
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      24
+    ],
+    [
+      0,
+      38,
+      0,
+      0,
+      0,
+      6
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      66
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      44
+    ]
+  ],
+  "model_info": {
+    "evaluation_role": "offline replay of real Arduino-collected CSV test data",
+    "important_limitation": "This uses real Arduino sensor data, but inference runs on the laptop TFLite interpreter. It does not replace the M3 live on-device 20-trials/class confusion matrix.",
+    "source_dataset_root": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\data\\raw\\arduino_collectdata_v1",
+    "windowed_output": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\data\\processed\\arduino_collectdata_v1_windows_50hz.npz",
+    "sampling_note": "CSV timestamps were resampled to 50 Hz before 128-sample/64-stride windowing.",
+    "normalization": "UCI-HAR training standardizer from lightweight_standardizer.json",
+    "tflite_model": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\deployment\\models\\lightweight_tiny_cnn_int8.tflite",
+    "tflite_metadata": {
+      "input_dtype": "<class 'numpy.int8'>",
+      "output_dtype": "<class 'numpy.int8'>",
+      "input_scale": 0.09212735295295715,
+      "input_zero_point": 2,
+      "output_scale": 0.00390625,
+      "output_zero_point": -128,
+      "ops": [
+        "RESHAPE",
+        "CONV_2D",
+        "DEPTHWISE_CONV_2D",
+        "CONV_2D",
+        "AVERAGE_POOL_2D",
+        "DEPTHWISE_CONV_2D",
+        "CONV_2D",
+        "RESHAPE",
+        "MEAN",
+        "FULLY_CONNECTED",
+        "SOFTMAX"
+      ],
+      "host_delegate_ops": 3
+    }
+  },
+  "top_confusion_pairs": [
+    {
+      "true": "STANDING",
+      "predicted": "LAYING",
+      "count": 66
+    },
+    {
+      "true": "WALKING",
+      "predicted": "LAYING",
+      "count": 44
+    },
+    {
+      "true": "SITTING",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 38
+    },
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "LAYING",
+      "count": 24
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "LAYING",
+      "count": 24
+    },
+    {
+      "true": "SITTING",
+      "predicted": "LAYING",
+      "count": 6
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "model_name": "GravityDirectionStaticPostureProbe",
+  "accuracy": 0.8711538461538462,
+  "macro_f1": 0.8683606297624706,
+  "weighted_f1": 0.8708776796428582,
+  "test_samples": 1560,
+  "class_names": [
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "classification_report": {
+    "SITTING": {
+      "precision": 0.8152173913043478,
+      "recall": 0.7637474541751528,
+      "f1-score": 0.7886435331230284,
+      "support": 491.0
+    },
+    "STANDING": {
+      "precision": 0.7939609236234458,
+      "recall": 0.8402255639097744,
+      "f1-score": 0.8164383561643835,
+      "support": 532.0
+    },
+    "LAYING": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 537.0
+    },
+    "accuracy": 0.8711538461538462,
+    "macro avg": {
+      "precision": 0.8697261049759312,
+      "recall": 0.867991006028309,
+      "f1-score": 0.8683606297624706,
+      "support": 1560.0
+    },
+    "weighted avg": {
+      "precision": 0.8715762503193,
+      "recall": 0.8711538461538462,
+      "f1-score": 0.8708776796428582,
+      "support": 1560.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      375,
+      116,
+      0
+    ],
+    [
+      85,
+      447,
+      0
+    ],
+    [
+      0,
+      0,
+      537
+    ]
+  ],
+  "model_info": {
+    "experiment_role": "Phase 2 posture-feature probe, not the deployable Phase 3 quantized model",
+    "features": [
+      "mean_total_acc_x",
+      "mean_total_acc_y",
+      "mean_total_acc_z",
+      "mean_acc_unit_x",
+      "mean_acc_unit_y",
+      "mean_acc_unit_z",
+      "mean_acc_magnitude"
+    ],
+    "classifier": "LogisticRegression trained only on UCI-HAR train split static windows",
+    "static_classes": [
+      "SITTING",
+      "STANDING",
+      "LAYING"
+    ]
+  }
+}

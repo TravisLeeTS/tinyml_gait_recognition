@@ -1,0 +1,7 @@
+folder_label,uci_label,files,valid_rows,invalid_rows,segments,duration_seconds,median_dt_ms,effective_hz,windows_raw_128_stride64,windows_resampled_50hz_128_stride64
+laying,LAYING,2,2245,0,2,59.927,27.0,37.03703703703704,32,44
+sitting,SITTING,2,2249,0,2,59.925,27.0,37.03703703703704,32,44
+standing,STANDING,2,3397,1,3,89.898,26.25,38.09869375907112,48,66
+walking,WALKING,2,2228,0,2,59.922,26.5,37.749287749287745,32,44
+walk_down,WALKING_DOWNSTAIRS,12,2271,0,12,59.604,26.0,38.46153846153846,12,24
+walk_up,WALKING_UPSTAIRS,12,2272,0,12,59.619,26.0,38.46153846153846,12,24

@@ -1,0 +1,33 @@
+{
+  "comparison_rows": [
+    {
+      "method": "phase2_tiny_ds_cnn_baseline",
+      "accuracy": 0.9168646080760094,
+      "macro_f1": 0.9173051875969983,
+      "static_sitting_standing_confusions": 184,
+      "notes": "Original Phase 2 selected model."
+    },
+    {
+      "method": "gravity_static_classifier_static_subset",
+      "accuracy": 0.8711538461538462,
+      "macro_f1": 0.8683606297624706,
+      "static_sitting_standing_confusions": 201,
+      "notes": "Only SITTING/STANDING/LAYING test windows."
+    },
+    {
+      "method": "phase2_tiny_ds_cnn_plus_gravity_static_rescue",
+      "accuracy": 0.9110960298608755,
+      "macro_f1": 0.9116681298569936,
+      "static_sitting_standing_confusions": 201,
+      "notes": "Full six-class test set with static predictions replaced by gravity-feature classifier."
+    },
+    {
+      "method": "phase2_tiny_ds_cnn_plus_thresholded_gravity_rescue",
+      "accuracy": 0.9110960298608755,
+      "macro_f1": 0.9116681298569936,
+      "static_sitting_standing_confusions": 201,
+      "notes": "Same rescue rule, but only when gravity classifier confidence >= 0.50."
+    }
+  ],
+  "interpretation": "The gravity-direction probe tests whether accelerometer mean direction can help separate static posture classes that were confused in M2."
+}

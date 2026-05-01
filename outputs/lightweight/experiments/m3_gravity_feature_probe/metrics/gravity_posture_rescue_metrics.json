@@ -1,0 +1,150 @@
+{
+  "model_name": "TinyDepthwiseSeparableCnnWithGravityPostureRescue",
+  "accuracy": 0.9110960298608755,
+  "macro_f1": 0.9116681298569936,
+  "weighted_f1": 0.9110175986143706,
+  "test_samples": 2947,
+  "class_names": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "classification_report": {
+    "WALKING": {
+      "precision": 0.9856850715746421,
+      "recall": 0.9717741935483871,
+      "f1-score": 0.9786802030456853,
+      "support": 496.0
+    },
+    "WALKING_UPSTAIRS": {
+      "precision": 0.9570815450643777,
+      "recall": 0.9469214437367304,
+      "f1-score": 0.951974386339381,
+      "support": 471.0
+    },
+    "WALKING_DOWNSTAIRS": {
+      "precision": 0.9212962962962963,
+      "recall": 0.9476190476190476,
+      "f1-score": 0.9342723004694836,
+      "support": 420.0
+    },
+    "SITTING": {
+      "precision": 0.8152173913043478,
+      "recall": 0.7637474541751528,
+      "f1-score": 0.7886435331230284,
+      "support": 491.0
+    },
+    "STANDING": {
+      "precision": 0.7939609236234458,
+      "recall": 0.8402255639097744,
+      "f1-score": 0.8164383561643835,
+      "support": 532.0
+    },
+    "LAYING": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 537.0
+    },
+    "accuracy": 0.9110960298608755,
+    "macro avg": {
+      "precision": 0.9122068713105183,
+      "recall": 0.9117146171648488,
+      "f1-score": 0.9116681298569936,
+      "support": 2947.0
+    },
+    "weighted avg": {
+      "precision": 0.9115332874682378,
+      "recall": 0.9110960298608755,
+      "f1-score": 0.9110175986143706,
+      "support": 2947.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      482,
+      1,
+      13,
+      0,
+      0,
+      0
+    ],
+    [
+      4,
+      446,
+      21,
+      0,
+      0,
+      0
+    ],
+    [
+      3,
+      19,
+      398,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      375,
+      116,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      85,
+      447,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      537
+    ]
+  ],
+  "top_confusion_pairs": [
+    {
+      "true": "SITTING",
+      "predicted": "STANDING",
+      "count": 116
+    },
+    {
+      "true": "STANDING",
+      "predicted": "SITTING",
+      "count": 85
+    },
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 21
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 19
+    },
+    {
+      "true": "WALKING",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 13
+    }
+  ],
+  "model_info": {
+    "experiment_role": "Phase 2 posture-feature probe, not the deployable Phase 3 quantized model",
+    "base_model": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\lightweight\\models\\lightweight_tiny_cnn.keras",
+    "posture_rule": "If the base DS-CNN predicts SITTING, STANDING, or LAYING, replace that static prediction with the gravity-feature static classifier prediction.",
+    "feature_scaler": "StandardScaler fit on UCI-HAR train split gravity features only",
+    "static_classifier": "LogisticRegression"
+  }
+}

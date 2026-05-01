@@ -1,0 +1,33 @@
+source_file,true,windows,correct,accuracy
+laying/30s - l - 1.csv,LAYING,22,22,1.0
+laying/30s - r - 1.csv,LAYING,22,22,1.0
+sitting/30s - l - 1.csv,SITTING,22,0,0.0
+sitting/30s - r - 1.csv,SITTING,22,0,0.0
+standing/30s - l - 1.csv,STANDING,22,0,0.0
+standing/30s - r - 1.csv,STANDING,44,0,0.0
+walk_down/5s - l - 1.csv,WALKING_DOWNSTAIRS,2,0,0.0
+walk_down/5s - l - 2.csv,WALKING_DOWNSTAIRS,2,0,0.0
+walk_down/5s - l - 3.csv,WALKING_DOWNSTAIRS,2,0,0.0
+walk_down/5s - l - 5.csv,WALKING_DOWNSTAIRS,2,0,0.0
+walk_down/5s - l - 6.csv,WALKING_DOWNSTAIRS,2,0,0.0
+walk_down/5s - l -4.csv,WALKING_DOWNSTAIRS,2,0,0.0
+walk_down/5s - r - 1.csv,WALKING_DOWNSTAIRS,2,0,0.0
+walk_down/5s - r - 2.csv,WALKING_DOWNSTAIRS,2,0,0.0
+walk_down/5s - r - 3.csv,WALKING_DOWNSTAIRS,2,0,0.0
+walk_down/5s - r - 4.csv,WALKING_DOWNSTAIRS,2,0,0.0
+walk_down/5s - r - 5.csv,WALKING_DOWNSTAIRS,2,0,0.0
+walk_down/5s - r - 6.csv,WALKING_DOWNSTAIRS,2,0,0.0
+walk_up/5s - l - 1.csv,WALKING_UPSTAIRS,2,0,0.0
+walk_up/5s - l - 2.csv,WALKING_UPSTAIRS,2,0,0.0
+walk_up/5s - l - 3.csv,WALKING_UPSTAIRS,2,0,0.0
+walk_up/5s - l - 5.csv,WALKING_UPSTAIRS,2,0,0.0
+walk_up/5s - l - 6.csv,WALKING_UPSTAIRS,2,0,0.0
+walk_up/5s - l -4.csv,WALKING_UPSTAIRS,2,0,0.0
+walk_up/5s - r - 1.csv,WALKING_UPSTAIRS,2,0,0.0
+walk_up/5s - r - 2.csv,WALKING_UPSTAIRS,2,0,0.0
+walk_up/5s - r - 3.csv,WALKING_UPSTAIRS,2,0,0.0
+walk_up/5s - r - 4.csv,WALKING_UPSTAIRS,2,0,0.0
+walk_up/5s - r - 5.csv,WALKING_UPSTAIRS,2,0,0.0
+walk_up/5s - r - 6.csv,WALKING_UPSTAIRS,2,0,0.0
+walking/30s - l - 1.csv,WALKING,22,0,0.0
+walking/30s - r - 1.csv,WALKING,22,0,0.0

@@ -1,0 +1,33 @@
+path,folder_label,uci_label,pocket,rows_raw,rows_valid,rows_invalid,timestamp_resets,segments,duration_seconds,median_dt_ms,effective_hz,windows_raw_128_stride64,windows_resampled_50hz_128_stride64
+laying/30s - l - 1.csv,laying,LAYING,left,1121,1121,0,0,1,29.97,27.0,37.03703703703704,16,22
+laying/30s - r - 1.csv,laying,LAYING,right,1124,1124,0,0,1,29.957,27.0,37.03703703703704,16,22
+sitting/30s - l - 1.csv,sitting,SITTING,left,1125,1125,0,0,1,29.959,27.0,37.03703703703704,16,22
+sitting/30s - r - 1.csv,sitting,SITTING,right,1124,1124,0,0,1,29.966,27.0,37.03703703703704,16,22
+standing/30s - l - 1.csv,standing,STANDING,left,1132,1132,0,0,1,29.963,26.0,38.46153846153846,16,22
+standing/30s - r - 1.csv,standing,STANDING,right,2266,2265,1,1,2,59.935,26.5,37.735849056603776,32,44
+walk_down/5s - l - 1.csv,walk_down,WALKING_DOWNSTAIRS,left,189,189,0,0,1,4.971,26.0,38.46153846153846,1,2
+walk_down/5s - l - 2.csv,walk_down,WALKING_DOWNSTAIRS,left,190,190,0,0,1,4.975,26.0,38.46153846153846,1,2
+walk_down/5s - l - 3.csv,walk_down,WALKING_DOWNSTAIRS,left,189,189,0,0,1,4.957,26.0,38.46153846153846,1,2
+walk_down/5s - l - 5.csv,walk_down,WALKING_DOWNSTAIRS,left,189,189,0,0,1,4.955,26.0,38.46153846153846,1,2
+walk_down/5s - l - 6.csv,walk_down,WALKING_DOWNSTAIRS,left,189,189,0,0,1,4.963,26.0,38.46153846153846,1,2
+walk_down/5s - l -4.csv,walk_down,WALKING_DOWNSTAIRS,left,188,188,0,0,1,4.971,27.0,37.03703703703704,1,2
+walk_down/5s - r - 1.csv,walk_down,WALKING_DOWNSTAIRS,right,189,189,0,0,1,4.961,26.0,38.46153846153846,1,2
+walk_down/5s - r - 2.csv,walk_down,WALKING_DOWNSTAIRS,right,190,190,0,0,1,4.97,26.0,38.46153846153846,1,2
+walk_down/5s - r - 3.csv,walk_down,WALKING_DOWNSTAIRS,right,190,190,0,0,1,4.97,26.0,38.46153846153846,1,2
+walk_down/5s - r - 4.csv,walk_down,WALKING_DOWNSTAIRS,right,189,189,0,0,1,4.973,26.0,38.46153846153846,1,2
+walk_down/5s - r - 5.csv,walk_down,WALKING_DOWNSTAIRS,right,189,189,0,0,1,4.969,26.0,38.46153846153846,1,2
+walk_down/5s - r - 6.csv,walk_down,WALKING_DOWNSTAIRS,right,190,190,0,0,1,4.969,26.0,38.46153846153846,1,2
+walk_up/5s - l - 1.csv,walk_up,WALKING_UPSTAIRS,left,189,189,0,0,1,4.968,26.0,38.46153846153846,1,2
+walk_up/5s - l - 2.csv,walk_up,WALKING_UPSTAIRS,left,189,189,0,0,1,4.961,26.0,38.46153846153846,1,2
+walk_up/5s - l - 3.csv,walk_up,WALKING_UPSTAIRS,left,188,188,0,0,1,4.962,26.0,38.46153846153846,1,2
+walk_up/5s - l - 5.csv,walk_up,WALKING_UPSTAIRS,left,190,190,0,0,1,4.967,26.0,38.46153846153846,1,2
+walk_up/5s - l - 6.csv,walk_up,WALKING_UPSTAIRS,left,189,189,0,0,1,4.965,26.0,38.46153846153846,1,2
+walk_up/5s - l -4.csv,walk_up,WALKING_UPSTAIRS,left,190,190,0,0,1,4.973,26.0,38.46153846153846,1,2
+walk_up/5s - r - 1.csv,walk_up,WALKING_UPSTAIRS,right,191,191,0,0,1,4.968,26.0,38.46153846153846,1,2
+walk_up/5s - r - 2.csv,walk_up,WALKING_UPSTAIRS,right,191,191,0,0,1,4.976,26.0,38.46153846153846,1,2
+walk_up/5s - r - 3.csv,walk_up,WALKING_UPSTAIRS,right,189,189,0,0,1,4.974,26.0,38.46153846153846,1,2
+walk_up/5s - r - 4.csv,walk_up,WALKING_UPSTAIRS,right,188,188,0,0,1,4.978,27.0,37.03703703703704,1,2
+walk_up/5s - r - 5.csv,walk_up,WALKING_UPSTAIRS,right,189,189,0,0,1,4.967,26.0,38.46153846153846,1,2
+walk_up/5s - r - 6.csv,walk_up,WALKING_UPSTAIRS,right,189,189,0,0,1,4.96,26.0,38.46153846153846,1,2
+walking/30s - l - 1.csv,walking,WALKING,left,1095,1095,0,0,1,29.964,27.0,37.03703703703704,16,22
+walking/30s - r - 1.csv,walking,WALKING,right,1133,1133,0,0,1,29.958,26.0,38.46153846153846,16,22
