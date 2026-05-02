@@ -1,0 +1,10 @@
+{
+  "added_channels": [
+    "mean_acc_unit_x",
+    "mean_acc_unit_y",
+    "mean_acc_unit_z",
+    "mean_acc_magnitude"
+  ],
+  "source": "Computed from raw total_acc_x/y/z before train-stat standardization.",
+  "sequence_encoding": "Repeated across all 128 timesteps so the existing 1D CNN can consume it."
+}

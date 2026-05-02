@@ -17,6 +17,14 @@ This repository is the Milestone 2 package for TinyML human activity recognition
 
 Current status: Milestone 2 baseline training and evaluation are implemented. The repo contains runnable data inspection, preprocessing, training, evaluation, metrics, confusion matrix generation, and README documentation. The full public datasets are intentionally not committed to Git because the archives and extracted raw files are too large for normal repository submission and are fully reproducible from the included code. The commands below download the data automatically and run the pipeline end to end.
 
+M2 feedback follow-up applied in the repository docs:
+
+- The UCI split is described consistently as 5,551 train / 1,801 validation / 2,947 test windows. The validation split is subject-aware and comes only from the official UCI training subjects.
+- WISDM per-class raw counts are surfaced below instead of only storing them in `docs/tables/wisdm_classic_raw_counts.csv`.
+- Layer-level architecture details are listed for the paper-reproduction learners and the lightweight model.
+- The Arduino M3 collection target is reconciled to at least 100 windows per class where feasible.
+- Public dataset archives are ignored by Git and should be regenerated through `python -m src.data.inspect_datasets`; trained model and metric artifacts are present under `outputs/`.
+
 ## Quick Reproduction
 
 From the repository root, use Python 3.12 and install the pinned dependencies:
@@ -94,6 +102,8 @@ Secondary dataset:
 | Input tensor | `[window_count, 128, 6]` |
 | Features extracted | No handcrafted features for neural models; raw sequence windows are fed directly after normalization |
 | Split method | Official UCI train/test split, plus subject-aware validation split from official training data |
+| Split sizes | 5,551 train / 1,801 validation / 2,947 test windows |
+| Split ratio | 53.9% / 17.5% / 28.6% of the 10,299 UCI windows; official test subjects remain held out |
 | Test set | Official UCI HAR test split |
 | Test windows | 2,947 |
 | Number of subjects | 30 total in UCI HAR; official train/test subjects are kept separated |
@@ -117,6 +127,17 @@ Current train/validation/test class counts from the subject-aware split:
 | SITTING | 993 | 293 | 491 | 1777 |
 | STANDING | 1053 | 321 | 532 | 1906 |
 | LAYING | 1076 | 331 | 537 | 1944 |
+
+WISDM classic v1.1 is not merged into the UCI HAR label set, but its raw label distribution is inspected for data-card completeness:
+
+| WISDM Raw Class | Count |
+|---|---:|
+| Walking | 424398 |
+| Jogging | 342179 |
+| Upstairs | 122869 |
+| Downstairs | 100427 |
+| Sitting | 59939 |
+| Standing | 48395 |
 
 ## R3 Preprocessing Pipeline
 
@@ -289,6 +310,27 @@ src/models/reproduction/keras_models.py
 src/models/lightweight/tiny_cnn.py
 ```
 
+Layer-level architecture details:
+
+Paper reproduction baseline:
+
+- Shared input: `[128, 6]`, reshaped to 4 subsequences of 32 timesteps each.
+- ConvLSTM: `ConvLSTM1D(filters=64, kernel_size=3, padding=same, activation=relu, dropout=0.5)` -> dropout 0.5 -> flatten -> dense 100 ReLU -> dropout 0.5 -> dense 6 softmax.
+- CNN-GRU: time-distributed Conv1D 32 kernel 3 ReLU -> dropout 0.5 -> time-distributed Conv1D 128 kernel 3 ReLU -> dropout 0.5 -> max pool 1D size 2 -> flatten -> GRU 100 -> dropout 0.5 -> dense 100 ReLU -> dropout 0.5 -> dense 6 softmax.
+- CNN-BiGRU: same CNN front end as CNN-GRU, with bidirectional GRU 100.
+- CNN-LSTM: time-distributed Conv1D 64 kernel 3 ReLU -> dropout 0.5 -> time-distributed Conv1D 64 kernel 3 ReLU -> dropout 0.5 -> max pool 1D size 2 -> flatten -> LSTM 100 -> dropout 0.5 -> dense 100 ReLU -> dropout 0.5 -> dense 6 softmax.
+- CNN-BiLSTM: same CNN front end as CNN-LSTM, with bidirectional LSTM 100.
+- Stacking meta-learner: XGBoost classifier trained on concatenated class-probability outputs from the five base learners; the bounded run selected `max_depth=2`, `n_estimators=100`, `learning_rate=0.1`, `gamma=0.0`.
+
+Lightweight TinyML-oriented baseline:
+
+- Input `[128, 6]`.
+- Conv1D 12 filters, kernel 3, same padding, no bias -> batch normalization -> ReLU.
+- SeparableConv1D 24 filters, kernel 5, same padding, no bias -> batch normalization -> ReLU -> average pooling size 2.
+- SeparableConv1D 32 filters, kernel 5, same padding, no bias -> batch normalization -> ReLU.
+- Global average pooling -> dense 6 softmax.
+- Current run: 1,922 Keras parameters, 1,786 trainable parameters.
+
 ## R5 Held-Out Test Results
 
 The reported numbers below are from the held-out UCI HAR test set, not training accuracy.
@@ -348,7 +390,7 @@ The main observed failure mode is confusion between static postures, especially 
 M3 next steps:
 
 - Collect real Arduino Nano 33 BLE Sense IMU data to measure the public-dataset-to-Arduino domain gap.
-- Test whether accelerometer-only input is sufficient for an eco-mode variant, while keeping accelerometer plus gyroscope as the main model path.
+- Keep accelerometer plus gyroscope as the main model path for M3; do not split the plan into a separate accelerometer-only sensor-ablation phase.
 - Quantize the lightweight model and evaluate its accuracy, memory size, latency, and energy behavior on-device.
 - Add robustness testing with at least one new user or environment.
 
@@ -363,14 +405,29 @@ Planned M3 collection:
 - Sampling target: match the model pipeline as closely as practical, targeting 50 Hz and 2.56-second windows
 - Windowing target: 128 samples per window with 50% overlap
 - Classes: same six UCI HAR-style classes where feasible: walking, walking upstairs, walking downstairs, sitting, standing, laying
-- Target amount: at least 50 Arduino windows per class for initial M3 testing, with a stretch goal of 100 or more per class
+- Target amount: at least 100 Arduino windows per class where feasible; 128-sample windows with 50% overlap require about 2.2 minutes of clean 50 Hz data per class, so 2.5 minutes per class is the practical collection target
 - Users/environments: at least one user and one indoor environment; more users/environments will be added if time allows
 - Domain adaptation: first evaluate the public-data-trained lightweight model directly, then fine-tune or retrain if the domain gap is too large
 - Fallback plan: if six-class Arduino performance is weak, narrow the M3 scope to a smaller reliable class subset while documenting the limitation
 
+Actual M3 Arduino dataset received and added:
+
+- Location: `data/raw/arduino_collectdata_v1/`
+- Source archive: `TinyML_arduino_collectdata_v1.zip`
+- Files used: CSV files only; unlabeled `.txt` files from the source archive are ignored.
+- Channels: `time_ms`, accelerometer XYZ, gyroscope XYZ, label.
+- Labels collected: walking, walk_up, walk_down, sitting, standing, laying.
+- Pocket variation: left and right pocket captures are present.
+- Exact collection date/environment: not embedded in the files; teammate confirmation is needed before a final report claim.
+- Observed sampling: median about 38.46 Hz, not the intended 50 Hz.
+- Windowed replay dataset: 246 windows after 50 Hz resampling, 128-sample windows, and 64-sample stride.
+- Offline replay result with the current selected INT8 model: accuracy 0.1789 and macro F1 0.0582, indicating a severe public-dataset-to-Arduino domain gap.
+
+This dataset satisfies the requirement to keep real Arduino sensor data for M3 evaluation, but it does not replace the M3 handout requirement for live on-device trials and a live confusion matrix.
+
 ## D2 Dataset V1
 
-The dataset deliverable is reproducible rather than fully committed.
+The public dataset deliverable is reproducible rather than fully committed.
 
 The public dataset files are too large for normal Git submission and can be regenerated exactly by the included scripts. Therefore:
 
@@ -379,6 +436,14 @@ The public dataset files are too large for normal Git submission and can be rege
 - Dataset metadata and count summaries are saved to `outputs/datacards/` and `docs/tables/`.
 - The UCI HAR loader uses relative paths through `src/config.py`.
 - No machine-specific absolute data path is required.
+
+The M3 Arduino CSV collection is stored separately under `data/raw/arduino_collectdata_v1/` and inspected by:
+
+```powershell
+python -m src.data.arduino_collectdata
+```
+
+This importer uses CSV files only and ignores the unlabeled raw `.txt` captures.
 
 D2 evidence in this repo:
 

@@ -1,0 +1,7 @@
+Model,Right-Left Macro F1 Gap,Right Downstairs Recall,Left Downstairs Recall,Right Sitting Recall,Left Sitting Recall,Right Laying Recall,Left Laying Recall
+UCI-only baseline,-0.0008964015879114051,0.0,0.0,0.0,0.0,1.0,1.0
+Arduino-only,-0.2137184873949579,0.3333333333333333,0.8,1.0,1.0,0.0,0.0
+UCI pretrain + V2.1 fine-tune,-0.050459889067932584,0.0,0.4,1.0,1.0,0.0,0.0
+Mixed 6-channel DS-CNN,0.3926686823474657,1.0,0.6,0.9777777777777776,0.0,1.0,0.0
+Mixed focal 6-channel DS-CNN,0.14853535353535346,1.0,0.6,0.0,0.0,1.0,0.0
+Mixed 10-channel gravity DS-CNN,-0.14383638957644185,0.9666666666666668,0.6,0.0,0.0,1.0,1.0

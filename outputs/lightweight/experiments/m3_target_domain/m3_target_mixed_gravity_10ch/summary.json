@@ -1,0 +1,120 @@
+{
+  "run_name": "m3_target_mixed_gravity_10ch",
+  "experiment": "mixed_gravity_10ch",
+  "feature_mode": "gravity_10ch",
+  "input_shape": [
+    128,
+    10
+  ],
+  "channels": [
+    "acc_x",
+    "acc_y",
+    "acc_z",
+    "gyro_x",
+    "gyro_y",
+    "gyro_z",
+    "gravity_dir_x",
+    "gravity_dir_y",
+    "gravity_dir_z",
+    "acc_magnitude"
+  ],
+  "selection_rule": "Prioritize held-out Arduino target-domain validation first; use UCI-HAR official test as source-domain retention second.",
+  "normalization": {
+    "fit_scope": "training/adaptation data only",
+    "standardizer_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\lightweight\\experiments\\m3_target_domain\\m3_target_mixed_gravity_10ch\\models\\m3_target_mixed_gravity_10ch_standardizer.json",
+    "excluded": [
+      "UCI-HAR official test",
+      "Arduino V2 validation split",
+      "future right-pocket live evidence",
+      "future left-pocket live evidence"
+    ]
+  },
+  "data_sources": {
+    "uci_train_windows": 5551,
+    "uci_val_windows": 1801,
+    "uci_test_windows": 2947,
+    "arduino_v2_train_windows": 133,
+    "arduino_v2_val_windows": 103,
+    "arduino_root": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\data\\raw\\arduino_collectdata_v2",
+    "target_val_fraction": 0.25,
+    "uci_loss_weight": 0.3,
+    "arduino_split": "group-aware by source capture file; overlapping windows from the same file stay in the same split",
+    "arduino_v2_train_groups": [
+      "laying/30s - r - 1.txt",
+      "sitting/30s - r - 1.txt",
+      "standing/30s - r - 1.txt",
+      "walk_down/5s - l - 1.txt",
+      "walk_down/5s - l - 2.txt",
+      "walk_down/5s - l - 3.txt",
+      "walk_down/5s - l - 5.txt",
+      "walk_down/5s - r - 1.txt",
+      "walk_down/5s - r - 2.txt",
+      "walk_down/5s - r - 4.txt",
+      "walk_up/5s - l - 1.txt",
+      "walk_up/5s - l - 2.txt",
+      "walk_up/5s - l - 3.txt",
+      "walk_up/5s - l - 4.txt",
+      "walk_up/5s - l - 5.txt",
+      "walk_up/5s - r - 1.txt",
+      "walk_up/5s - r - 4.txt",
+      "walk_up/5s - r - 5.txt",
+      "walking/30s - l - 1.txt"
+    ],
+    "arduino_v2_val_groups": [
+      "laying/30s - l - 1.txt",
+      "sitting/30s - l - 1.txt",
+      "standing/30s - l - 1.txt",
+      "walk_down/5s - r - 3.txt",
+      "walk_down/5s - r - 5.txt",
+      "walk_up/5s - r - 2.txt",
+      "walk_up/5s - r - 3.txt",
+      "walking/30s - r - 1.txt"
+    ]
+  },
+  "artifacts": {
+    "weights_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\lightweight\\experiments\\m3_target_domain\\m3_target_mixed_gravity_10ch\\models\\m3_target_mixed_gravity_10ch.weights.h5",
+    "histories": {
+      "mixed": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\lightweight\\experiments\\m3_target_domain\\m3_target_mixed_gravity_10ch\\logs\\mixed_history.csv"
+    }
+  },
+  "model": {
+    "parameters": 2066,
+    "trainable_parameters": 1930,
+    "loss": "sparse_categorical_crossentropy",
+    "fp32_tflite_size_bytes": 14036,
+    "host_latency_proxy": {
+      "mean_ms": 39.356574999996496,
+      "median_ms": 39.49725000001081,
+      "p95_ms": 41.125989999986245,
+      "runs": 20,
+      "device_note": "Host CPU Keras predict latency; not an Arduino latency claim."
+    }
+  },
+  "metrics": {
+    "uci_test_accuracy": 0.6223277909738717,
+    "uci_test_macro_f1": 0.5981300767809057,
+    "arduino_v2_val_accuracy": 0.2815533980582524,
+    "arduino_v2_val_macro_f1": 0.16428571428571428,
+    "arduino_v2_val_f1_walking": 0.0,
+    "arduino_v2_val_f1_walking_upstairs": 0.2857142857142857,
+    "arduino_v2_val_f1_walking_downstairs": 0.2,
+    "arduino_v2_val_f1_sitting": 0.0,
+    "arduino_v2_val_f1_standing": 0.0,
+    "arduino_v2_val_f1_laying": 0.5
+  },
+  "feature_spec": {
+    "raw_feature_channels": [
+      "acc_x",
+      "acc_y",
+      "acc_z",
+      "gyro_x",
+      "gyro_y",
+      "gyro_z",
+      "gravity_dir_x",
+      "gravity_dir_y",
+      "gravity_dir_z",
+      "acc_magnitude"
+    ],
+    "arduino_reproducibility": "For each 128-sample window, compute mean acc_x/y/z, normalize that vector to gravity_dir_x/y/z, compute acc_magnitude, repeat those four values for all timesteps, then apply the saved 10-channel standardizer."
+  }
+}

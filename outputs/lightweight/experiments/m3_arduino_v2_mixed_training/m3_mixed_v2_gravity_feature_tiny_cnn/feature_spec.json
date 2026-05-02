@@ -1,0 +1,10 @@
+{
+  "added_channels": [
+    "mean_acc_unit_x",
+    "mean_acc_unit_y",
+    "mean_acc_unit_z",
+    "mean_acc_magnitude"
+  ],
+  "source": "Computed from each raw window before standardization.",
+  "deployment_note": "Requires Arduino-side feature generation before this candidate can be deployed."
+}

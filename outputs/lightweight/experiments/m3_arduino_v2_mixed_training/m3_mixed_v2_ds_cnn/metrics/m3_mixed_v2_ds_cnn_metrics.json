@@ -1,0 +1,204 @@
+{
+  "model_name": "m3_mixed_v2_ds_cnn",
+  "accuracy": 0.8971835765184933,
+  "macro_f1": 0.897565822018902,
+  "weighted_f1": 0.8978571840798202,
+  "test_samples": 2947,
+  "class_names": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "classification_report": {
+    "WALKING": {
+      "precision": 0.9933481152993349,
+      "recall": 0.9032258064516129,
+      "f1-score": 0.9461457233368532,
+      "support": 496.0
+    },
+    "WALKING_UPSTAIRS": {
+      "precision": 0.9750566893424036,
+      "recall": 0.9129511677282378,
+      "f1-score": 0.9429824561403509,
+      "support": 471.0
+    },
+    "WALKING_DOWNSTAIRS": {
+      "precision": 0.8232931726907631,
+      "recall": 0.9761904761904762,
+      "f1-score": 0.8932461873638344,
+      "support": 420.0
+    },
+    "SITTING": {
+      "precision": 0.8134490238611713,
+      "recall": 0.7637474541751528,
+      "f1-score": 0.7878151260504201,
+      "support": 491.0
+    },
+    "STANDING": {
+      "precision": 0.8094405594405595,
+      "recall": 0.8703007518796992,
+      "f1-score": 0.8387681159420289,
+      "support": 532.0
+    },
+    "LAYING": {
+      "precision": 0.9885496183206107,
+      "recall": 0.9646182495344506,
+      "f1-score": 0.9764373232799246,
+      "support": 537.0
+    },
+    "accuracy": 0.8971835765184933,
+    "macro avg": {
+      "precision": 0.9005228631591405,
+      "recall": 0.8985056509932715,
+      "f1-score": 0.897565822018902,
+      "support": 2947.0
+    },
+    "weighted avg": {
+      "precision": 0.9021420060316401,
+      "recall": 0.8971835765184933,
+      "f1-score": 0.8978571840798202,
+      "support": 2947.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      448,
+      1,
+      47,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      430,
+      41,
+      0,
+      0,
+      0
+    ],
+    [
+      2,
+      8,
+      410,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      375,
+      109,
+      6
+    ],
+    [
+      1,
+      1,
+      0,
+      67,
+      463,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      19,
+      0,
+      518
+    ]
+  ],
+  "top_confusion_pairs": [
+    {
+      "true": "SITTING",
+      "predicted": "STANDING",
+      "count": 109
+    },
+    {
+      "true": "STANDING",
+      "predicted": "SITTING",
+      "count": 67
+    },
+    {
+      "true": "WALKING",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 47
+    },
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 41
+    },
+    {
+      "true": "LAYING",
+      "predicted": "SITTING",
+      "count": 19
+    }
+  ],
+  "model_info": {
+    "run_name": "m3_mixed_v2_ds_cnn",
+    "experiment": "baseline",
+    "input_note": "128 x 6",
+    "training_role": "M3 deployment-adaptation experiment; not the paper reproduction baseline.",
+    "train_sources": {
+      "uci_har_train_windows": 5551,
+      "arduino_v2_unique_windows": 236,
+      "arduino_repeat": 1,
+      "arduino_v2_effective_training_windows": 236,
+      "total_training_windows": 5787,
+      "arduino_root": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\data\\raw\\arduino_collectdata_v2"
+    },
+    "validation_source": "UCI-HAR subject-aware validation split only",
+    "test_source": "UCI-HAR official test split only",
+    "normalization": "SequenceStandardizer fit on mixed UCI train + Arduino V2 training windows only",
+    "standardizer_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\lightweight\\experiments\\m3_arduino_v2_mixed_training\\m3_mixed_v2_ds_cnn\\models\\m3_mixed_v2_ds_cnn_standardizer.json",
+    "loss": "sparse categorical cross entropy",
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "learning_rate_decay": 0.01,
+    "batch_size": 50,
+    "epochs_requested": 40,
+    "early_stopping": {
+      "monitor": "val_loss",
+      "patience": 8
+    },
+    "best_epoch": 9,
+    "best_val_loss": 0.12663227319717407,
+    "trainable_parameters": 1786,
+    "keras_model_parameters": 1922,
+    "weights_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\lightweight\\experiments\\m3_arduino_v2_mixed_training\\m3_mixed_v2_ds_cnn\\models\\m3_mixed_v2_ds_cnn.weights.h5",
+    "tflite_size_bytes": 13460,
+    "dynamic_range_tflite_size_bytes": 13460,
+    "host_latency": {
+      "mean_ms": 47.63401499949396,
+      "median_ms": 46.640149997983826,
+      "p95_ms": 52.228669999021804,
+      "runs": 20,
+      "device_note": "Host CPU Keras predict latency; not an Arduino latency claim."
+    }
+  },
+  "phase2_baseline_comparison": {
+    "run_name": "m3_mixed_v2_ds_cnn",
+    "accuracy": 0.8971835765184933,
+    "macro_f1": 0.897565822018902,
+    "weighted_f1": 0.8978571840798202,
+    "sitting_to_standing": 109,
+    "standing_to_sitting": 67,
+    "static_confusion_total": 176,
+    "sitting_f1": 0.7878151260504201,
+    "standing_f1": 0.8387681159420289,
+    "phase2_baseline_accuracy": 0.9168646080760094,
+    "phase2_baseline_macro_f1": 0.9173051875969983,
+    "phase2_baseline_weighted_f1": 0.9168493619321423,
+    "phase2_baseline_static_confusion_total": 184,
+    "accuracy_change_vs_phase2": -0.019681031557516104,
+    "macro_f1_change_vs_phase2": -0.019739365578096302,
+    "weighted_f1_change_vs_phase2": -0.0189921778523221,
+    "static_confusion_change_vs_phase2": -8
+  }
+}

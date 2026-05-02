@@ -1,0 +1,214 @@
+{
+  "model_name": "m3_gravity_feature_tiny_cnn",
+  "accuracy": 0.9178825924669155,
+  "macro_f1": 0.9173169383073992,
+  "weighted_f1": 0.9167473368879671,
+  "test_samples": 2947,
+  "class_names": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "classification_report": {
+    "WALKING": {
+      "precision": 0.9763313609467456,
+      "recall": 0.9979838709677419,
+      "f1-score": 0.9870388833499502,
+      "support": 496.0
+    },
+    "WALKING_UPSTAIRS": {
+      "precision": 0.9288702928870293,
+      "recall": 0.9426751592356688,
+      "f1-score": 0.9357218124341412,
+      "support": 471.0
+    },
+    "WALKING_DOWNSTAIRS": {
+      "precision": 0.9458823529411765,
+      "recall": 0.9571428571428572,
+      "f1-score": 0.9514792899408284,
+      "support": 420.0
+    },
+    "SITTING": {
+      "precision": 0.8507109004739336,
+      "recall": 0.7311608961303462,
+      "f1-score": 0.7864184008762322,
+      "support": 491.0
+    },
+    "STANDING": {
+      "precision": 0.8096885813148789,
+      "recall": 0.8796992481203008,
+      "f1-score": 0.8432432432432433,
+      "support": 532.0
+    },
+    "LAYING": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 537.0
+    },
+    "accuracy": 0.9178825924669155,
+    "macro avg": {
+      "precision": 0.9185805814272939,
+      "recall": 0.9181103385994858,
+      "f1-score": 0.9173169383073992,
+      "support": 2947.0
+    },
+    "weighted avg": {
+      "precision": 0.9177068980681667,
+      "recall": 0.9178825924669155,
+      "f1-score": 0.9167473368879671,
+      "support": 2947.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      495,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      4,
+      444,
+      23,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      10,
+      402,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      22,
+      0,
+      359,
+      110,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      63,
+      468,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      537
+    ]
+  ],
+  "top_confusion_pairs": [
+    {
+      "true": "SITTING",
+      "predicted": "STANDING",
+      "count": 110
+    },
+    {
+      "true": "STANDING",
+      "predicted": "SITTING",
+      "count": 63
+    },
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 23
+    },
+    {
+      "true": "SITTING",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 22
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 10
+    }
+  ],
+  "model_info": {
+    "run_name": "m3_gravity_feature_tiny_cnn",
+    "experiment": "gravity_feature",
+    "model_note": "Adds four constant channels per window: mean acceleration unit vector (gx, gy, gz) and mean acceleration magnitude.",
+    "input_shape": [
+      128,
+      10
+    ],
+    "output_classes": [
+      "WALKING",
+      "WALKING_UPSTAIRS",
+      "WALKING_DOWNSTAIRS",
+      "SITTING",
+      "STANDING",
+      "LAYING"
+    ],
+    "normalization": "per-channel standardization fit on training split only",
+    "loss": "sparse categorical cross entropy",
+    "focal_gamma": null,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "learning_rate_decay": 0.01,
+    "batch_size": 50,
+    "epochs_requested": 40,
+    "early_stopping": {
+      "monitor": "val_loss",
+      "patience": 8
+    },
+    "best_epoch": 12,
+    "best_val_loss": 0.1226564273238182,
+    "trainable_parameters": 1930,
+    "keras_model_parameters": 2066,
+    "model_artifact_type": "Keras weights checkpoint; reconstruct with build_tiny_ds_cnn and load_weights.",
+    "weights_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\lightweight\\experiments\\m3_gravity_feature_tiny_cnn\\models\\m3_gravity_feature_tiny_cnn.weights.h5",
+    "runtime_note": "This is a Phase 2 loss/feature experiment. TFLite export and host latency are skipped by default; use src.deployment.quantization_experiment for deployable Phase 3 metrics.",
+    "tflite_size_bytes": 14036,
+    "dynamic_range_tflite_size_bytes": 14036,
+    "host_latency": {
+      "mean_ms": 49.54505500027153,
+      "median_ms": 48.71879999700468,
+      "p95_ms": 52.48290000199631,
+      "runs": 20,
+      "device_note": "Host CPU Keras predict latency; not an Arduino latency claim."
+    }
+  },
+  "feature_spec": {
+    "added_channels": [
+      "mean_acc_unit_x",
+      "mean_acc_unit_y",
+      "mean_acc_unit_z",
+      "mean_acc_magnitude"
+    ],
+    "source": "Computed from raw total_acc_x/y/z before train-stat standardization.",
+    "sequence_encoding": "Repeated across all 128 timesteps so the existing 1D CNN can consume it."
+  },
+  "baseline_comparison": {
+    "run_name": "m3_gravity_feature_tiny_cnn",
+    "accuracy": 0.9178825924669155,
+    "macro_f1": 0.9173169383073992,
+    "weighted_f1": 0.9167473368879671,
+    "sitting_to_standing": 110,
+    "standing_to_sitting": 63,
+    "static_confusion_total": 173,
+    "sitting_f1": 0.7864184008762322,
+    "standing_f1": 0.8432432432432433,
+    "baseline_accuracy": 0.9168646080760094,
+    "baseline_macro_f1": 0.9173051875969983,
+    "baseline_static_confusion_total": 184,
+    "macro_f1_change_vs_baseline": 1.1750710400937336e-05,
+    "static_confusion_change_vs_baseline": -11
+  }
+}

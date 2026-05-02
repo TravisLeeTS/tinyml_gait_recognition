@@ -1,0 +1,28 @@
+{
+  "run_name": "m3_v2_1_mixed_gravity_10ch",
+  "experiment": "mixed_gravity_10ch_v2_1",
+  "feature_mode": "gravity_10ch",
+  "loss": "cross_entropy",
+  "input_shape": [
+    128,
+    10
+  ],
+  "channels": [
+    "acc_x",
+    "acc_y",
+    "acc_z",
+    "gyro_x",
+    "gyro_y",
+    "gyro_z",
+    "gravity_dir_x",
+    "gravity_dir_y",
+    "gravity_dir_z",
+    "acc_magnitude"
+  ],
+  "standardizer_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\deployment\\m3_retrained_with_v2_1\\m3_v2_1_mixed_gravity_10ch\\models\\m3_v2_1_mixed_gravity_10ch_standardizer.json",
+  "weights_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\deployment\\m3_retrained_with_v2_1\\m3_v2_1_mixed_gravity_10ch\\models\\m3_v2_1_mixed_gravity_10ch.weights.h5",
+  "fp32_tflite_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\deployment\\m3_retrained_with_v2_1\\m3_v2_1_mixed_gravity_10ch\\models\\m3_v2_1_mixed_gravity_10ch.tflite",
+  "fp32_tflite_size_bytes": 14036,
+  "parameters": 2066,
+  "trainable_parameters": 1930
+}

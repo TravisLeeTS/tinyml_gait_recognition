@@ -1,0 +1,176 @@
+{
+  "model_name": "m3_v2_1_arduino_only_int8_uci_test",
+  "accuracy": 0.19545300305395316,
+  "macro_f1": 0.10822505286133279,
+  "weighted_f1": 0.11103932415168488,
+  "test_samples": 2947,
+  "class_names": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "classification_report": {
+    "WALKING": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 496.0
+    },
+    "WALKING_UPSTAIRS": {
+      "precision": 0.19422680412371135,
+      "recall": 1.0,
+      "f1-score": 0.32527624309392267,
+      "support": 471.0
+    },
+    "WALKING_DOWNSTAIRS": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 420.0
+    },
+    "SITTING": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 491.0
+    },
+    "STANDING": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 532.0
+    },
+    "LAYING": {
+      "precision": 0.9459459459459459,
+      "recall": 0.19553072625698323,
+      "f1-score": 0.32407407407407407,
+      "support": 537.0
+    },
+    "accuracy": 0.19545300305395316,
+    "macro avg": {
+      "precision": 0.19002879167827622,
+      "recall": 0.19925512104283052,
+      "f1-score": 0.10822505286133279,
+      "support": 2947.0
+    },
+    "weighted avg": {
+      "precision": 0.20341153638114726,
+      "recall": 0.19545300305395316,
+      "f1-score": 0.11103932415168488,
+      "support": 2947.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      0,
+      496,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      471,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      420,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      485,
+      0,
+      0,
+      0,
+      6
+    ],
+    [
+      0,
+      532,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      144,
+      21,
+      191,
+      76,
+      0,
+      105
+    ]
+  ],
+  "top_confusion_pairs": [
+    {
+      "true": "STANDING",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 532
+    },
+    {
+      "true": "WALKING",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 496
+    },
+    {
+      "true": "SITTING",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 485
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 420
+    },
+    {
+      "true": "LAYING",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 191
+    }
+  ],
+  "model_info": {
+    "tflite_model_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\deployment\\m3_retrained_with_v2_1\\models\\m3_v2_1_arduino_only_int8.tflite",
+    "tflite_size_bytes": 10288,
+    "tflite_metadata": {
+      "input_dtype": "<class 'numpy.int8'>",
+      "output_dtype": "<class 'numpy.int8'>",
+      "input_scale": 0.11267625540494919,
+      "input_zero_point": -24,
+      "output_scale": 0.00390625,
+      "output_zero_point": -128,
+      "ops": [
+        "RESHAPE",
+        "CONV_2D",
+        "DEPTHWISE_CONV_2D",
+        "CONV_2D",
+        "AVERAGE_POOL_2D",
+        "DEPTHWISE_CONV_2D",
+        "CONV_2D",
+        "RESHAPE",
+        "MEAN",
+        "FULLY_CONNECTED",
+        "SOFTMAX"
+      ],
+      "host_delegate_ops": 3
+    },
+    "host_tflite_latency": {
+      "mean_ms": 0.017661999736446887,
+      "median_ms": 0.016400001186411828,
+      "p95_ms": 0.020710000899271108,
+      "runs": 50,
+      "device_note": "Host TensorFlow Lite Interpreter latency only; M3 requires Arduino micros() latency."
+    }
+  }
+}

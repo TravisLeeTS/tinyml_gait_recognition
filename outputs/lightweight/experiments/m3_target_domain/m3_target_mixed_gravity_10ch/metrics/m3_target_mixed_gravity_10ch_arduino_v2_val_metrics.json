@@ -1,0 +1,138 @@
+{
+  "model_name": "m3_target_mixed_gravity_10ch_arduino_v2_val",
+  "accuracy": 0.2815533980582524,
+  "macro_f1": 0.16428571428571428,
+  "weighted_f1": 0.1409153952843273,
+  "test_samples": 103,
+  "class_names": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "classification_report": {
+    "WALKING": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 22.0
+    },
+    "WALKING_UPSTAIRS": {
+      "precision": 0.16666666666666666,
+      "recall": 1.0,
+      "f1-score": 0.2857142857142857,
+      "support": 6.0
+    },
+    "WALKING_DOWNSTAIRS": {
+      "precision": 1.0,
+      "recall": 0.1111111111111111,
+      "f1-score": 0.2,
+      "support": 9.0
+    },
+    "SITTING": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 22.0
+    },
+    "STANDING": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 22.0
+    },
+    "LAYING": {
+      "precision": 0.3333333333333333,
+      "recall": 1.0,
+      "f1-score": 0.5,
+      "support": 22.0
+    },
+    "accuracy": 0.2815533980582524,
+    "macro avg": {
+      "precision": 0.25,
+      "recall": 0.35185185185185186,
+      "f1-score": 0.16428571428571428,
+      "support": 103.0
+    },
+    "weighted avg": {
+      "precision": 0.16828478964401294,
+      "recall": 0.2815533980582524,
+      "f1-score": 0.1409153952843273,
+      "support": 103.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      0,
+      22,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      6,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      8,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      22
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      22
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      22
+    ]
+  ],
+  "top_confusion_pairs": [
+    {
+      "true": "WALKING",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 22
+    },
+    {
+      "true": "SITTING",
+      "predicted": "LAYING",
+      "count": 22
+    },
+    {
+      "true": "STANDING",
+      "predicted": "LAYING",
+      "count": 22
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 8
+    }
+  ]
+}

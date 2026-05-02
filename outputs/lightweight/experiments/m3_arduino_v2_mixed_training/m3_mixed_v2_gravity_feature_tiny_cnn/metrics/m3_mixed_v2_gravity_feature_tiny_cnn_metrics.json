@@ -1,0 +1,214 @@
+{
+  "model_name": "m3_mixed_v2_gravity_feature_tiny_cnn",
+  "accuracy": 0.9219545300305395,
+  "macro_f1": 0.9227411285159836,
+  "weighted_f1": 0.9215761655980407,
+  "test_samples": 2947,
+  "class_names": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "classification_report": {
+    "WALKING": {
+      "precision": 0.9646569646569647,
+      "recall": 0.9354838709677419,
+      "f1-score": 0.9498464687819856,
+      "support": 496.0
+    },
+    "WALKING_UPSTAIRS": {
+      "precision": 0.9629629629629629,
+      "recall": 0.9936305732484076,
+      "f1-score": 0.9780564263322884,
+      "support": 471.0
+    },
+    "WALKING_DOWNSTAIRS": {
+      "precision": 0.9272727272727272,
+      "recall": 0.9714285714285714,
+      "f1-score": 0.9488372093023256,
+      "support": 420.0
+    },
+    "SITTING": {
+      "precision": 0.8180039138943248,
+      "recall": 0.8513238289205702,
+      "f1-score": 0.8343313373253493,
+      "support": 491.0
+    },
+    "STANDING": {
+      "precision": 0.8993839835728953,
+      "recall": 0.8233082706766918,
+      "f1-score": 0.8596663395485771,
+      "support": 532.0
+    },
+    "LAYING": {
+      "precision": 0.9612546125461254,
+      "recall": 0.9702048417132216,
+      "f1-score": 0.9657089898053753,
+      "support": 537.0
+    },
+    "accuracy": 0.9219545300305395,
+    "macro avg": {
+      "precision": 0.9222558608176666,
+      "recall": 0.9242299928258674,
+      "f1-score": 0.9227411285159836,
+      "support": 2947.0
+    },
+    "weighted avg": {
+      "precision": 0.9222212023753371,
+      "recall": 0.9219545300305395,
+      "f1-score": 0.9215761655980407,
+      "support": 2947.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      464,
+      3,
+      29,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      468,
+      3,
+      0,
+      0,
+      0
+    ],
+    [
+      4,
+      8,
+      408,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      3,
+      0,
+      418,
+      49,
+      21
+    ],
+    [
+      0,
+      1,
+      0,
+      93,
+      438,
+      0
+    ],
+    [
+      13,
+      3,
+      0,
+      0,
+      0,
+      521
+    ]
+  ],
+  "top_confusion_pairs": [
+    {
+      "true": "STANDING",
+      "predicted": "SITTING",
+      "count": 93
+    },
+    {
+      "true": "SITTING",
+      "predicted": "STANDING",
+      "count": 49
+    },
+    {
+      "true": "WALKING",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 29
+    },
+    {
+      "true": "SITTING",
+      "predicted": "LAYING",
+      "count": 21
+    },
+    {
+      "true": "LAYING",
+      "predicted": "WALKING",
+      "count": 13
+    }
+  ],
+  "model_info": {
+    "run_name": "m3_mixed_v2_gravity_feature_tiny_cnn",
+    "experiment": "gravity_feature",
+    "input_note": "128 x 10",
+    "training_role": "M3 deployment-adaptation experiment; not the paper reproduction baseline.",
+    "train_sources": {
+      "uci_har_train_windows": 5551,
+      "arduino_v2_unique_windows": 236,
+      "arduino_repeat": 1,
+      "arduino_v2_effective_training_windows": 236,
+      "total_training_windows": 5787,
+      "arduino_root": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\data\\raw\\arduino_collectdata_v2"
+    },
+    "validation_source": "UCI-HAR subject-aware validation split only",
+    "test_source": "UCI-HAR official test split only",
+    "normalization": "SequenceStandardizer fit on mixed UCI train + Arduino V2 training windows only",
+    "standardizer_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\lightweight\\experiments\\m3_arduino_v2_mixed_training\\m3_mixed_v2_gravity_feature_tiny_cnn\\models\\m3_mixed_v2_gravity_feature_tiny_cnn_standardizer.json",
+    "loss": "sparse categorical cross entropy",
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "learning_rate_decay": 0.01,
+    "batch_size": 50,
+    "epochs_requested": 40,
+    "early_stopping": {
+      "monitor": "val_loss",
+      "patience": 8
+    },
+    "best_epoch": 32,
+    "best_val_loss": 0.13846585154533386,
+    "trainable_parameters": 1930,
+    "keras_model_parameters": 2066,
+    "weights_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\lightweight\\experiments\\m3_arduino_v2_mixed_training\\m3_mixed_v2_gravity_feature_tiny_cnn\\models\\m3_mixed_v2_gravity_feature_tiny_cnn.weights.h5",
+    "tflite_size_bytes": 14036,
+    "dynamic_range_tflite_size_bytes": 14036,
+    "host_latency": {
+      "mean_ms": 47.970079999868176,
+      "median_ms": 46.98285000267788,
+      "p95_ms": 54.416579998360255,
+      "runs": 20,
+      "device_note": "Host CPU Keras predict latency; not an Arduino latency claim."
+    }
+  },
+  "feature_spec": {
+    "added_channels": [
+      "mean_acc_unit_x",
+      "mean_acc_unit_y",
+      "mean_acc_unit_z",
+      "mean_acc_magnitude"
+    ],
+    "source": "Computed from each raw window before standardization.",
+    "deployment_note": "Requires Arduino-side feature generation before this candidate can be deployed."
+  },
+  "phase2_baseline_comparison": {
+    "run_name": "m3_mixed_v2_gravity_feature_tiny_cnn",
+    "accuracy": 0.9219545300305395,
+    "macro_f1": 0.9227411285159836,
+    "weighted_f1": 0.9215761655980407,
+    "sitting_to_standing": 49,
+    "standing_to_sitting": 93,
+    "static_confusion_total": 142,
+    "sitting_f1": 0.8343313373253493,
+    "standing_f1": 0.8596663395485771,
+    "phase2_baseline_accuracy": 0.9168646080760094,
+    "phase2_baseline_macro_f1": 0.9173051875969983,
+    "phase2_baseline_weighted_f1": 0.9168493619321423,
+    "phase2_baseline_static_confusion_total": 184,
+    "accuracy_change_vs_phase2": 0.005089921954530063,
+    "macro_f1_change_vs_phase2": 0.005435940918985249,
+    "weighted_f1_change_vs_phase2": 0.004726803665898394,
+    "static_confusion_change_vs_phase2": -42
+  }
+}

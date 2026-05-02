@@ -1,0 +1,3 @@
+Condition,Source,Rows,Accuracy,Macro F1,Main Failure
+Right pocket controlled,Live Arduino Serial,125,0.904,0.9089068825910931,WALKING_UPSTAIRS -> WALKING_DOWNSTAIRS
+Left pocket robustness,Live Arduino Serial,91,0.8901098901098901,0.8826443785682917,WALKING_UPSTAIRS -> WALKING_DOWNSTAIRS

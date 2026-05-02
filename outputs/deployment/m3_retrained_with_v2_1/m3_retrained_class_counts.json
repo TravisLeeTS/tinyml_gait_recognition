@@ -1,0 +1,50 @@
+{
+  "v2_train": {
+    "WALKING": 22,
+    "WALKING_UPSTAIRS": 24,
+    "WALKING_DOWNSTAIRS": 21,
+    "SITTING": 22,
+    "STANDING": 22,
+    "LAYING": 22
+  },
+  "v2_grouped_validation": {
+    "WALKING": 22,
+    "WALKING_UPSTAIRS": 6,
+    "WALKING_DOWNSTAIRS": 9,
+    "SITTING": 22,
+    "STANDING": 22,
+    "LAYING": 22
+  },
+  "v2_1_long_before_cap": {
+    "WALKING": 233,
+    "WALKING_UPSTAIRS": 0,
+    "WALKING_DOWNSTAIRS": 0,
+    "SITTING": 233,
+    "STANDING": 233,
+    "LAYING": 233
+  },
+  "v2_1_long_after_cap": {
+    "WALKING": 180,
+    "WALKING_UPSTAIRS": 0,
+    "WALKING_DOWNSTAIRS": 0,
+    "SITTING": 180,
+    "STANDING": 180,
+    "LAYING": 180
+  },
+  "right_60s": {
+    "WALKING": 45,
+    "WALKING_UPSTAIRS": 30,
+    "WALKING_DOWNSTAIRS": 30,
+    "SITTING": 45,
+    "STANDING": 45,
+    "LAYING": 45
+  },
+  "left_30s": {
+    "WALKING": 19,
+    "WALKING_UPSTAIRS": 15,
+    "WALKING_DOWNSTAIRS": 15,
+    "SITTING": 22,
+    "STANDING": 22,
+    "LAYING": 22
+  }
+}

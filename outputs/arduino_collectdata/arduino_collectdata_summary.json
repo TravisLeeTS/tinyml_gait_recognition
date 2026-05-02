@@ -1,0 +1,118 @@
+{
+  "dataset": "arduino_collectdata_v2",
+  "root": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\data\\raw\\arduino_collectdata_v2",
+  "csv_files": 28,
+  "expected_columns": [
+    "time_ms",
+    "ax",
+    "ay",
+    "az",
+    "gx",
+    "gy",
+    "gz",
+    "label"
+  ],
+  "labels": {
+    "walking": "WALKING",
+    "walk_up": "WALKING_UPSTAIRS",
+    "walk_down": "WALKING_DOWNSTAIRS",
+    "sitting": "SITTING",
+    "standing": "STANDING",
+    "laying": "LAYING"
+  },
+  "total_valid_rows": 18208,
+  "total_invalid_rows": 2,
+  "median_effective_hz": 50.0,
+  "class_summary": [
+    {
+      "folder_label": "laying",
+      "uci_label": "LAYING",
+      "files": 2,
+      "valid_rows": 3036,
+      "invalid_rows": 0,
+      "segments": 2,
+      "duration_seconds": 59.953,
+      "median_dt_ms": 20.0,
+      "effective_hz": 50.0,
+      "windows_raw_128_stride64": 44,
+      "windows_resampled_50hz_128_stride64": 44
+    },
+    {
+      "folder_label": "sitting",
+      "uci_label": "SITTING",
+      "files": 2,
+      "valid_rows": 3037,
+      "invalid_rows": 0,
+      "segments": 2,
+      "duration_seconds": 59.944,
+      "median_dt_ms": 20.0,
+      "effective_hz": 50.0,
+      "windows_raw_128_stride64": 44,
+      "windows_resampled_50hz_128_stride64": 44
+    },
+    {
+      "folder_label": "standing",
+      "uci_label": "STANDING",
+      "files": 2,
+      "valid_rows": 3037,
+      "invalid_rows": 0,
+      "segments": 2,
+      "duration_seconds": 59.932,
+      "median_dt_ms": 20.0,
+      "effective_hz": 50.0,
+      "windows_raw_128_stride64": 44,
+      "windows_resampled_50hz_128_stride64": 44
+    },
+    {
+      "folder_label": "walking",
+      "uci_label": "WALKING",
+      "files": 2,
+      "valid_rows": 3036,
+      "invalid_rows": 0,
+      "segments": 2,
+      "duration_seconds": 59.935,
+      "median_dt_ms": 20.0,
+      "effective_hz": 50.0,
+      "windows_raw_128_stride64": 44,
+      "windows_resampled_50hz_128_stride64": 44
+    },
+    {
+      "folder_label": "walk_down",
+      "uci_label": "WALKING_DOWNSTAIRS",
+      "files": 10,
+      "valid_rows": 3031,
+      "invalid_rows": 2,
+      "segments": 10,
+      "duration_seconds": 59.688,
+      "median_dt_ms": 20.0,
+      "effective_hz": 50.0,
+      "windows_raw_128_stride64": 30,
+      "windows_resampled_50hz_128_stride64": 30
+    },
+    {
+      "folder_label": "walk_up",
+      "uci_label": "WALKING_UPSTAIRS",
+      "files": 10,
+      "valid_rows": 3031,
+      "invalid_rows": 0,
+      "segments": 10,
+      "duration_seconds": 59.691,
+      "median_dt_ms": 20.0,
+      "effective_hz": 50.0,
+      "windows_raw_128_stride64": 30,
+      "windows_resampled_50hz_128_stride64": 30
+    }
+  ],
+  "channel_stats_csv": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\docs\\tables\\arduino_collectdata_channel_stats.csv",
+  "warnings": [
+    "Current Arduino data has fewer than 100 resampled 128-sample/50%-overlap windows for: LAYING, SITTING, STANDING, WALKING, WALKING_DOWNSTAIRS, WALKING_UPSTAIRS.",
+    "Some capture rows were skipped because numeric fields were invalid; inspect walk_down/5s - r - 5.txt",
+    "Some capture files are empty and produced no windows; inspect walk_down/5s - l - 4.txt"
+  ],
+  "notes": [
+    "Labeled CSV files and semicolon-delimited Arduino TXT captures are supported.",
+    "When a capture has no label column, the folder name supplies the activity label.",
+    "Gyroscope channels are converted from deg/s to rad/s when writing the windowed NPZ.",
+    "Offline Arduino windows are resampled to 50 Hz to match the UCI HAR model input length."
+  ]
+}

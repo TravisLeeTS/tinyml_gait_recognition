@@ -1,0 +1,22 @@
+{
+  "selected_run_name": "m3_v2_1_mixed_6ch",
+  "selected_int8_path": "outputs\\deployment\\m3_retrained_with_v2_1\\models\\m3_v2_1_mixed_6ch_int8.tflite",
+  "candidate_status": "M3 candidate deployment build for live evidence collection; not fully scientifically validated.",
+  "selection_rule": [
+    "right_60s macro F1",
+    "left_30s macro F1",
+    "minimum right/left WALKING_DOWNSTAIRS recall",
+    "minimum right/left SITTING recall",
+    "Arduino V2 grouped macro F1",
+    "UCI-HAR official test macro F1"
+  ],
+  "anti_leakage": {
+    "normalization_fit": "UCI-HAR train + Arduino V2 train split + capped V2.1 long adaptation only",
+    "not_used_for_training_or_quantization": [
+      "right_60s",
+      "left_30s",
+      "UCI-HAR test",
+      "Arduino V2 grouped validation"
+    ]
+  }
+}
