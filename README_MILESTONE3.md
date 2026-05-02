@@ -89,16 +89,16 @@ This section tracks the professor's key M3 improvement advice from `M2_FEEDBACK.
 | R4 on-device accuracy | 10 | Returned right-pocket live Serial score: 0.9040 accuracy, 0.9089 macro F1 |
 | R5 robustness test | 15 | Returned left-pocket live Serial score: 0.8901 accuracy, 0.8826 macro F1 |
 | D4 code and repo quality | 10 | Mostly done: sketch, model file, conversion script, README present |
-| Report clarity | 5 | Consolidated into README_MILESTONE3.md and report draft; final PDF export still needed |
+| Report clarity | 5 | Final PDF report is available as `tinyml_milestone3.pdf`; README_MILESTONE3 remains the detailed evidence index |
 
 ## Handout Completion Checklist
 
 | Deliverable / Requirement | Current Status |
 |---|---|
-| D1 PDF report, 3-5 pages | Markdown draft exists at `docs/milestone3_report_draft.md`; export final PDF after attaching evidence |
+| D1 PDF report, 3-5 pages | Final report is available as `tinyml_milestone3.pdf` and covers R1-R7; submit it with the returned evidence files |
 | D2 working on-device demo | Returned Arduino compile/run evidence with candidate sketch and C-array model |
 | D3 demo evidence | Returned `2_30_stability_video.mp4`, `sitting_proof.mp4`, `standing_proof.mp4`, and `walking_proof.mp4` |
-| D4 updated code repository | Training, quantization, replay, Arduino sketch, model header, README, and handoff guide are present |
+| D4 updated code repository | Training, quantization, replay, Arduino sketch, model header, README, and final report are present |
 | R1 deployment pipeline | Candidate pipeline exists: Keras -> INT8 TFLite -> C array -> TFLite Micro |
 | R2 deployment metrics | Returned `.tflite` size, tensor arena, compile flash/RAM, and average Invoke latency |
 | R3 optimization | V2.1 mixed 6-channel candidate and INT8 package are documented |
@@ -826,7 +826,7 @@ The raw Serial logs are preserved in `outputs/live_evidence/raw_teammate_return/
 
 The teammate hardware evidence has been returned. Remaining submission steps:
 
-- Export the final PDF from `docs/milestone3_report_draft.md`.
+- Submit `tinyml_milestone3.pdf` with the returned videos/logs.
 - Attach or upload the returned videos/logs with the submission.
 - Keep live Serial logs separate from training data; do not retrain on them before reporting M3.
 

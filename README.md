@@ -9,7 +9,7 @@ Team:
 - Vineetha Addanki, G00111196
 
 > **Important for Milestone 3 grading:**  
-> M3 deployment prep and returned Arduino evidence are summarized in [`README_MILESTONE3.md`](README_MILESTONE3.md), with the report draft under [`docs/milestone3_report_draft.md`](docs/milestone3_report_draft.md) and the Arduino sketch under [`arduino/tinyml_har_m3/`](arduino/tinyml_har_m3/). Hardware metrics, proof videos, and live Serial confusion matrices have been integrated; final PDF export and evidence attachment remain submission tasks.
+> Use [`tinyml_milestone3.pdf`](tinyml_milestone3.pdf) as the main M3 report. M3 deployment prep and returned Arduino evidence are summarized in [`README_MILESTONE3.md`](README_MILESTONE3.md), with the Arduino sketch under [`arduino/tinyml_har_m3/`](arduino/tinyml_har_m3/). Hardware metrics, proof videos, and live Serial confusion matrices have been integrated; only the returned videos/logs still need to be attached with the submission.
 
 > **Milestone 2 background:**  
 > [`README_MILESTONE2.md`](README_MILESTONE2.md) remains available for the previous milestone's D2/D3/D4 details, preprocessing, dataset download, baseline scripts, held-out test results, and explanation of in-memory `x_train/y_train/x_val/x_test` arrays.
@@ -329,7 +329,7 @@ Arduino sketch:
 arduino/tinyml_har_m3/tinyml_har_m3.ino
 ```
 
-Open the sketch in Arduino IDE with the current candidate `model_data.h`. Returned hardware evidence shows the sketch compiles on Arduino Nano 33 BLE Sense, uses 177,504 bytes flash and 111,144 bytes RAM, reports a 61,440-byte tensor arena, and averages 34.113 ms per `Invoke()` over 50 windows. See `README_MILESTONE3.md` for the full M3 evidence table and remaining final PDF/video submission steps.
+Open the sketch in Arduino IDE with the current candidate `model_data.h`. Returned hardware evidence shows the sketch compiles on Arduino Nano 33 BLE Sense, uses 177,504 bytes flash and 111,144 bytes RAM, reports a 61,440-byte tensor arena, and averages 34.113 ms per `Invoke()` over 50 windows. See `tinyml_milestone3.pdf` and `README_MILESTONE3.md` for the full M3 evidence table and final video/log submission notes.
 
 ## Phase 2 Notebook Lab
 
@@ -351,7 +351,7 @@ The notebook imports `src.training.experiment_lab.run_keras_architecture`, so mo
 
 - `README_MILESTONE2.md`: handout-aligned Milestone 2 explanation and D2/D3/D4 mapping.
 - `README_MILESTONE3.md`: M3 deployment prep, commands, current artifacts, and returned hardware/live evidence.
-- `docs/milestone3_report_draft.md`: M3 report draft with R1-R7 evidence integrated.
+- `tinyml_milestone3.pdf`: final M3 PDF report with R1-R7 evidence integrated.
 - `docs/m3_submission_checklist.md`: final M3 submission checklist.
 - `docs/m3_handout_compliance_check.md`: handout-aligned D1-D4 and R1-R7 compliance table.
 - `docs/milestone3_live_trial_protocol.md`: live trial protocol used for returned Arduino evidence.
@@ -371,4 +371,4 @@ Main firmware file:
 
 - `src/main.cpp`
 
-Next-round plan: export the final PDF and submit the returned videos/logs for M3, then improve stair-direction robustness for M4 with more balanced upstairs/downstairs data and calibration/orientation-aware features.
+Next-round plan: submit `tinyml_milestone3.pdf` with the returned videos/logs for M3, then improve stair-direction robustness for M4 with more balanced upstairs/downstairs data and calibration/orientation-aware features.

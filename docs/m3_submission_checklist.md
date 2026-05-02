@@ -10,7 +10,7 @@ Important wording: this is the M3 candidate deployment build used for returned l
 
 | Item | Status |
 |---|---|
-| `docs/milestone3_report_draft.md` follows R1-R7 handout structure only | Done |
+| `tinyml_milestone3.pdf` follows the R1-R7 handout structure | Done |
 | R1 deployment pipeline included | Done |
 | R2 deployment metrics table included | Done, hardware values integrated |
 | R3 baseline vs improved comparison included | Done |
@@ -19,7 +19,7 @@ Important wording: this is the M3 candidate deployment build used for returned l
 | R6 challenges and lessons learned included | Done |
 | R7 M4 plan included | Done |
 | Placement/orientation limitations documented | Done |
-| PDF exported from `docs/milestone3_report_draft.md` | Pending |
+| PDF exported as `tinyml_milestone3.pdf` | Done |
 
 ## D2/D3 Arduino Demo Evidence
 
@@ -100,5 +100,5 @@ Important wording: this is the M3 candidate deployment build used for returned l
 | Receive teammate compile output, Serial logs, video, and completed trial sheet | Done |
 | Score live Serial logs with `python -m src.reporting.score_live_serial_trials ...` | Done |
 | Update R2/R4/R5 report placeholders with hardware/live results | Done |
-| Export final PDF report | Pending |
+| Export final PDF report as `tinyml_milestone3.pdf` | Done |
 | Submit zip/repo/report/video or Serial evidence | Pending |
