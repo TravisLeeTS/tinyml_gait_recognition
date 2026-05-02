@@ -1,0 +1,45 @@
+{
+  "standardizer_fit_scope": "UCI-HAR official training split only",
+  "arduino_root": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\data\\raw\\arduino_collectdata_v2",
+  "uci_test_standardized_mean": [
+    0.04227927327156067,
+    -0.06006122753024101,
+    0.0011225766502320766,
+    -0.0336451381444931,
+    0.006067455746233463,
+    0.014702200889587402
+  ],
+  "uci_test_standardized_std": [
+    0.9694254994392395,
+    1.0743522644042969,
+    0.8201579451560974,
+    0.972802460193634,
+    0.8662366271018982,
+    0.9343298673629761
+  ],
+  "arduino_v2_standardized_mean": [
+    -3.397655487060547,
+    0.1077420562505722,
+    0.47894805669784546,
+    0.1499265432357788,
+    -0.03671129420399666,
+    0.11346424371004105
+  ],
+  "arduino_v2_standardized_std": [
+    1.3673702478408813,
+    1.4084755182266235,
+    0.8258417248725891,
+    2.1349008083343506,
+    1.2483896017074585,
+    2.505605697631836
+  ],
+  "channel_order": [
+    "acc_x",
+    "acc_y",
+    "acc_z",
+    "gyro_x",
+    "gyro_y",
+    "gyro_z"
+  ],
+  "interpretation": "Large standardized offsets, especially on acceleration axes, indicate that the Arduino target domain should not use UCI-only normalization for final deployment."
+}

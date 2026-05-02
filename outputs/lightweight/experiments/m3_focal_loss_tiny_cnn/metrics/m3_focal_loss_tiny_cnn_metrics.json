@@ -1,0 +1,204 @@
+{
+  "model_name": "m3_focal_loss_tiny_cnn",
+  "accuracy": 0.9073634204275535,
+  "macro_f1": 0.907141364271661,
+  "weighted_f1": 0.9073283034351636,
+  "test_samples": 2947,
+  "class_names": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "classification_report": {
+    "WALKING": {
+      "precision": 0.9825708061002179,
+      "recall": 0.9092741935483871,
+      "f1-score": 0.9445026178010472,
+      "support": 496.0
+    },
+    "WALKING_UPSTAIRS": {
+      "precision": 0.9822222222222222,
+      "recall": 0.9384288747346072,
+      "f1-score": 0.9598262757871878,
+      "support": 471.0
+    },
+    "WALKING_DOWNSTAIRS": {
+      "precision": 0.845360824742268,
+      "recall": 0.9761904761904762,
+      "f1-score": 0.9060773480662984,
+      "support": 420.0
+    },
+    "SITTING": {
+      "precision": 0.8551401869158879,
+      "recall": 0.745417515274949,
+      "f1-score": 0.7965179542981502,
+      "support": 491.0
+    },
+    "STANDING": {
+      "precision": 0.7966101694915254,
+      "recall": 0.8834586466165414,
+      "f1-score": 0.8377896613190731,
+      "support": 532.0
+    },
+    "LAYING": {
+      "precision": 1.0,
+      "recall": 0.9962756052141527,
+      "f1-score": 0.9981343283582089,
+      "support": 537.0
+    },
+    "accuracy": 0.9073634204275535,
+    "macro avg": {
+      "precision": 0.9103173682453535,
+      "recall": 0.9081742185965189,
+      "f1-score": 0.907141364271661,
+      "support": 2947.0
+    },
+    "weighted avg": {
+      "precision": 0.9113348404578623,
+      "recall": 0.9073634204275535,
+      "f1-score": 0.9073283034351636,
+      "support": 2947.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      451,
+      0,
+      45,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      442,
+      29,
+      0,
+      0,
+      0
+    ],
+    [
+      3,
+      7,
+      410,
+      0,
+      0,
+      0
+    ],
+    [
+      5,
+      0,
+      0,
+      366,
+      120,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      62,
+      470,
+      0
+    ],
+    [
+      0,
+      1,
+      1,
+      0,
+      0,
+      535
+    ]
+  ],
+  "top_confusion_pairs": [
+    {
+      "true": "SITTING",
+      "predicted": "STANDING",
+      "count": 120
+    },
+    {
+      "true": "STANDING",
+      "predicted": "SITTING",
+      "count": 62
+    },
+    {
+      "true": "WALKING",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 45
+    },
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 29
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 7
+    }
+  ],
+  "model_info": {
+    "run_name": "m3_focal_loss_tiny_cnn",
+    "experiment": "focal_loss",
+    "model_note": "Same deployable 6-channel depthwise-separable CNN as M2/M3, trained with sparse focal loss.",
+    "input_shape": [
+      128,
+      6
+    ],
+    "output_classes": [
+      "WALKING",
+      "WALKING_UPSTAIRS",
+      "WALKING_DOWNSTAIRS",
+      "SITTING",
+      "STANDING",
+      "LAYING"
+    ],
+    "normalization": "per-channel standardization fit on training split only",
+    "loss": "sparse focal loss",
+    "focal_gamma": 2.0,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "learning_rate_decay": 0.01,
+    "batch_size": 50,
+    "epochs_requested": 40,
+    "early_stopping": {
+      "monitor": "val_loss",
+      "patience": 8
+    },
+    "best_epoch": 8,
+    "best_val_loss": 0.0487591475248336,
+    "trainable_parameters": 1786,
+    "keras_model_parameters": 1922,
+    "model_artifact_type": "Keras weights checkpoint; reconstruct with build_tiny_ds_cnn and load_weights.",
+    "weights_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\lightweight\\experiments\\m3_focal_loss_tiny_cnn\\models\\m3_focal_loss_tiny_cnn.weights.h5",
+    "runtime_note": "This is a Phase 2 loss/feature experiment. TFLite export and host latency are skipped by default; use src.deployment.quantization_experiment for deployable Phase 3 metrics.",
+    "tflite_size_bytes": 13460,
+    "dynamic_range_tflite_size_bytes": 13460,
+    "host_latency": {
+      "mean_ms": 46.88337999941723,
+      "median_ms": 46.63950000031036,
+      "p95_ms": 48.49672999880568,
+      "runs": 20,
+      "device_note": "Host CPU Keras predict latency; not an Arduino latency claim."
+    }
+  },
+  "baseline_comparison": {
+    "run_name": "m3_focal_loss_tiny_cnn",
+    "accuracy": 0.9073634204275535,
+    "macro_f1": 0.907141364271661,
+    "weighted_f1": 0.9073283034351636,
+    "sitting_to_standing": 120,
+    "standing_to_sitting": 62,
+    "static_confusion_total": 182,
+    "sitting_f1": 0.7965179542981502,
+    "standing_f1": 0.8377896613190731,
+    "baseline_accuracy": 0.9168646080760094,
+    "baseline_macro_f1": 0.9173051875969983,
+    "baseline_static_confusion_total": 184,
+    "macro_f1_change_vs_baseline": -0.010163823325337273,
+    "static_confusion_change_vs_baseline": -2
+  }
+}

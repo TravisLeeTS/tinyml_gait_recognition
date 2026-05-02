@@ -11,6 +11,8 @@
 
 namespace {
 constexpr uint32_t kSampleIntervalUs = 20000;  // 50 Hz
+constexpr uint32_t kRunTimerReportIntervalMs = 30000;
+constexpr uint32_t kStabilityTargetMs = 120000;
 constexpr int kLedPin = LED_BUILTIN;
 
 tflite::ErrorReporter* error_reporter = nullptr;
@@ -20,11 +22,14 @@ TfLiteTensor* input = nullptr;
 TfLiteTensor* output = nullptr;
 
 alignas(16) uint8_t tensor_arena[kTensorArenaSize];
-float imu_window[kWindowSize][kChannelCount];
+float imu_window[kWindowSize][6];
 int samples_in_window = 0;
 uint32_t next_sample_us = 0;
 uint32_t inference_count = 0;
 uint64_t latency_sum_us = 0;
+uint32_t run_start_ms = 0;
+uint32_t next_run_timer_report_ms = kRunTimerReportIntervalMs;
+bool stability_reported = false;
 }  // namespace
 
 bool addOpStatus(TfLiteStatus status, const char* op_name) {
@@ -48,11 +53,45 @@ int8_t quantizeInput(float value) {
 }
 
 void writeInputTensor() {
+  float gravity_dir_x = 0.0f;
+  float gravity_dir_y = 0.0f;
+  float gravity_dir_z = 0.0f;
+  float acc_magnitude = 0.0f;
+  if (kChannelCount >= 10) {
+    float mean_ax = 0.0f;
+    float mean_ay = 0.0f;
+    float mean_az = 0.0f;
+    for (int t = 0; t < kWindowSize; ++t) {
+      mean_ax += imu_window[t][0];
+      mean_ay += imu_window[t][1];
+      mean_az += imu_window[t][2];
+    }
+    mean_ax /= static_cast<float>(kWindowSize);
+    mean_ay /= static_cast<float>(kWindowSize);
+    mean_az /= static_cast<float>(kWindowSize);
+    acc_magnitude = sqrtf(mean_ax * mean_ax + mean_ay * mean_ay + mean_az * mean_az);
+    const float denom = acc_magnitude > 1.0e-6f ? acc_magnitude : 1.0e-6f;
+    gravity_dir_x = mean_ax / denom;
+    gravity_dir_y = mean_ay / denom;
+    gravity_dir_z = mean_az / denom;
+  }
+
   for (int t = 0; t < kWindowSize; ++t) {
     for (int c = 0; c < kChannelCount; ++c) {
-      float raw = imu_window[t][c];
-      if (c >= 3) {
+      float raw = 0.0f;
+      if (c < 3) {
+        raw = imu_window[t][c];
+      } else if (c < 6) {
+        raw = imu_window[t][c];
         raw *= kGyroDegToRad;
+      } else if (c == 6) {
+        raw = gravity_dir_x;
+      } else if (c == 7) {
+        raw = gravity_dir_y;
+      } else if (c == 8) {
+        raw = gravity_dir_z;
+      } else if (c == 9) {
+        raw = acc_magnitude;
       }
       const float normalized = (raw - kFeatureMean[c]) / kFeatureStd[c];
       const int idx = t * kChannelCount + c;
@@ -74,16 +113,45 @@ float outputScore(int class_index) {
 
 void shiftWindow() {
   for (int i = 0; i < kWindowStride; ++i) {
-    for (int c = 0; c < kChannelCount; ++c) {
+    for (int c = 0; c < 6; ++c) {
       imu_window[i][c] = imu_window[i + kWindowStride][c];
     }
   }
   samples_in_window = kWindowStride;
 }
 
+void updateLed(int predicted) {
+  // One built-in LED is available, so use a simple dynamic/static state.
+  digitalWrite(kLedPin, predicted <= 2 ? HIGH : LOW);
+}
+
+void reportRunTimer() {
+  const uint32_t elapsed_ms = millis() - run_start_ms;
+  if (elapsed_ms >= next_run_timer_report_ms) {
+    Serial.print("run_timer,elapsed_ms=");
+    Serial.print(elapsed_ms);
+    Serial.print(",elapsed_s=");
+    Serial.print(elapsed_ms / 1000);
+    Serial.print(",window_count=");
+    Serial.print(inference_count);
+    Serial.println(",status=running");
+    next_run_timer_report_ms += kRunTimerReportIntervalMs;
+  }
+
+  if (!stability_reported && elapsed_ms >= kStabilityTargetMs) {
+    stability_reported = true;
+    Serial.print("stability_check,elapsed_ms=");
+    Serial.print(elapsed_ms);
+    Serial.print(",window_count=");
+    Serial.print(inference_count);
+    Serial.println(",status=passed_2min_if_no_crash");
+  }
+}
+
 void runInference() {
   writeInputTensor();
 
+  const uint32_t timestamp_ms = millis();
   const uint32_t start_us = micros();
   const TfLiteStatus invoke_status = interpreter->Invoke();
   const uint32_t latency_us = micros() - start_us;
@@ -94,11 +162,24 @@ void runInference() {
 
   int predicted = 0;
   float best_score = outputScore(0);
-  for (int i = 1; i < kClassCount; ++i) {
+  int second_predicted = 1;
+  float second_score = outputScore(1);
+  if (second_score > best_score) {
+    second_predicted = 0;
+    second_score = best_score;
+    predicted = 1;
+    best_score = outputScore(1);
+  }
+  for (int i = 2; i < kClassCount; ++i) {
     const float score = outputScore(i);
     if (score > best_score) {
+      second_score = best_score;
+      second_predicted = predicted;
       best_score = score;
       predicted = i;
+    } else if (score > second_score) {
+      second_score = score;
+      second_predicted = i;
     }
   }
 
@@ -106,20 +187,35 @@ void runInference() {
   latency_sum_us += latency_us;
   const uint32_t avg_latency_us = static_cast<uint32_t>(latency_sum_us / inference_count);
 
-  digitalWrite(kLedPin, predicted <= 2 ? HIGH : LOW);
+  updateLed(predicted);
 
-  Serial.print("window=");
+  Serial.print(timestamp_ms);
+  Serial.print(",");
   Serial.print(inference_count);
-  Serial.print(",pred=");
+  Serial.print(",");
+  Serial.print(predicted);
+  Serial.print(",");
   Serial.print(kClassNames[predicted]);
-  Serial.print(",score=");
-  Serial.print(best_score, 3);
-  Serial.print(",latency_us=");
+  Serial.print(",");
+  Serial.print(best_score, 4);
+  Serial.print(",");
   Serial.print(latency_us);
-  Serial.print(",avg_latency_us=");
+  Serial.print(",");
+  Serial.print(best_score, 3);
+  Serial.print(",");
+  Serial.print(kClassNames[second_predicted]);
+  Serial.print(",");
+  Serial.print(second_score, 4);
+  Serial.print(",");
   Serial.print(avg_latency_us);
-  Serial.print(",arena_bytes=");
-  Serial.println(kTensorArenaSize);
+  Serial.println();
+
+  if (inference_count >= 50 && inference_count % 50 == 0) {
+    Serial.print("latency_summary,window_count=");
+    Serial.print(inference_count);
+    Serial.print(",avg_invoke_latency_us=");
+    Serial.println(avg_latency_us);
+  }
 }
 
 void appendSample(float ax, float ay, float az, float gx, float gy, float gz) {
@@ -185,6 +281,22 @@ void setupModel() {
   Serial.println(g_tinyml_har_model_len);
   Serial.print("tensor_arena_bytes=");
   Serial.println(kTensorArenaSize);
+  Serial.print("kChannelCount=");
+  Serial.println(kChannelCount);
+  Serial.print("kWindowSize=");
+  Serial.println(kWindowSize);
+  Serial.print("kStride=");
+  Serial.println(kStride);
+  Serial.print("normalization_source=");
+  Serial.println(kNormalizationSource);
+  Serial.print("input_scale=");
+  Serial.println(kInputScale, 9);
+  Serial.print("input_zero_point=");
+  Serial.println(kInputZeroPoint);
+  Serial.print("output_scale=");
+  Serial.println(kOutputScale, 9);
+  Serial.print("output_zero_point=");
+  Serial.println(kOutputZeroPoint);
 }
 
 void setup() {
@@ -206,11 +318,19 @@ void setup() {
   }
 
   setupModel();
+  run_start_ms = millis();
+  next_run_timer_report_ms = kRunTimerReportIntervalMs;
+  stability_reported = false;
   next_sample_us = micros();
   Serial.println("status=ready,sampling_hz=50,window=128,stride=64");
+  Serial.println("timer_output=run_timer every 30s; stability_check after 120s; inference continues until unplugged/reset");
+  Serial.println("placement_guidance=right pocket recommended; keep fixed orientation; stair direction may be confused; see README");
+  Serial.println("timestamp_ms,window_id,prediction_id,prediction_label,confidence,latency_us,top1_score,top2_label,top2_score,avg_latency_us");
 }
 
 void loop() {
+  reportRunTimer();
+
   const uint32_t now_us = micros();
   if (static_cast<int32_t>(now_us - next_sample_us) < 0) {
     return;

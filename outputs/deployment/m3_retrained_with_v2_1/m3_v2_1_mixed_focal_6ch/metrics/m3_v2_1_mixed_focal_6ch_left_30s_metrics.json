@@ -1,0 +1,143 @@
+{
+  "model_name": "m3_v2_1_mixed_focal_6ch_left_30s",
+  "accuracy": 0.45217391304347826,
+  "macro_f1": 0.407020202020202,
+  "weighted_f1": 0.37581291172595516,
+  "test_samples": 115,
+  "class_names": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "classification_report": {
+    "WALKING": {
+      "precision": 1.0,
+      "recall": 0.3157894736842105,
+      "f1-score": 0.48,
+      "support": 19.0
+    },
+    "WALKING_UPSTAIRS": {
+      "precision": 0.6,
+      "recall": 1.0,
+      "f1-score": 0.75,
+      "support": 15.0
+    },
+    "WALKING_DOWNSTAIRS": {
+      "precision": 0.5,
+      "recall": 0.6,
+      "f1-score": 0.5454545454545454,
+      "support": 15.0
+    },
+    "SITTING": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 22.0
+    },
+    "STANDING": {
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1-score": 0.6666666666666666,
+      "support": 22.0
+    },
+    "LAYING": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 22.0
+    },
+    "accuracy": 0.45217391304347826,
+    "macro avg": {
+      "precision": 0.43333333333333335,
+      "recall": 0.48596491228070177,
+      "f1-score": 0.407020202020202,
+      "support": 115.0
+    },
+    "weighted avg": {
+      "precision": 0.4043478260869565,
+      "recall": 0.45217391304347826,
+      "f1-score": 0.37581291172595516,
+      "support": 115.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      6,
+      4,
+      9,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      15,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      6,
+      9,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      22
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      22,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      22,
+      0
+    ]
+  ],
+  "top_confusion_pairs": [
+    {
+      "true": "SITTING",
+      "predicted": "LAYING",
+      "count": 22
+    },
+    {
+      "true": "LAYING",
+      "predicted": "STANDING",
+      "count": 22
+    },
+    {
+      "true": "WALKING",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 9
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 6
+    },
+    {
+      "true": "WALKING",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 4
+    }
+  ]
+}

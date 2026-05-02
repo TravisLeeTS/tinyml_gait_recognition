@@ -10,6 +10,7 @@ import tensorflow as tf
 from tensorflow import keras
 
 from src.config import DEFAULT_DEVICE, OUTPUTS_DIR, SEED
+from src.data.target_domain_features import GRAVITY_FEATURE_CHANNELS, append_gravity_features
 from src.data.uci_har import load_uci_har_sequence_dataset
 from src.models.lightweight.tiny_cnn import build_tiny_ds_cnn, count_trainable_parameters
 from src.training.tf_common import benchmark_latency_ms, predict_proba, save_tflite_model
@@ -50,12 +51,8 @@ class SparseCategoricalFocalLoss(keras.losses.Loss):
 
 def _append_gravity_features(x_standardized: np.ndarray, x_raw: np.ndarray) -> np.ndarray:
     """Append per-window mean acceleration direction and magnitude as constant channels."""
-    mean_acc = x_raw[:, :, :3].mean(axis=1).astype(np.float32)
-    magnitude = np.linalg.norm(mean_acc, axis=1, keepdims=True).astype(np.float32)
-    direction = mean_acc / np.maximum(magnitude, np.float32(1e-6))
-    features = np.concatenate([direction, magnitude], axis=1).astype(np.float32)
-    repeated = np.repeat(features[:, None, :], x_standardized.shape[1], axis=1)
-    return np.concatenate([x_standardized.astype(np.float32), repeated], axis=-1)
+    raw_with_gravity = append_gravity_features(x_raw)
+    return np.concatenate([x_standardized.astype(np.float32), raw_with_gravity[:, :, 6:]], axis=-1)
 
 
 def _train_model(
@@ -193,11 +190,12 @@ def run_experiment(args: argparse.Namespace, experiment: str, baseline: dict | N
     for path in [model_dir, metrics_dir, figures_dir, logs_dir]:
         path.mkdir(parents=True, exist_ok=True)
 
-    model_path = model_dir / f"{run_name}.keras"
+    weights_path = model_dir / f"{run_name}.weights.h5"
     if args.evaluate_existing:
-        if not model_path.exists():
-            raise FileNotFoundError(f"--evaluate-existing requested but model is missing: {model_path}")
-        model = keras.models.load_model(model_path, compile=False)
+        if not weights_path.exists():
+            raise FileNotFoundError(f"--evaluate-existing requested but weights are missing: {weights_path}")
+        model = build_tiny_ds_cnn(input_shape=tuple(x_train.shape[1:]), num_classes=len(data.class_names))
+        model.load_weights(weights_path)
         history_path = logs_dir / "training_history.csv"
         if not history_path.exists():
             history_path = logs_dir / "training_history_live.csv"
@@ -227,7 +225,7 @@ def run_experiment(args: argparse.Namespace, experiment: str, baseline: dict | N
             live_log_path=logs_dir / "training_history_live.csv",
         )
         history.to_csv(logs_dir / "training_history.csv", index=False)
-        model.save(model_path)
+        model.save_weights(weights_path)
 
     probs = predict_proba(model, x_test)
     y_pred = probs.argmax(axis=1)
@@ -255,7 +253,8 @@ def run_experiment(args: argparse.Namespace, experiment: str, baseline: dict | N
         "best_val_loss": best_val_loss,
         "trainable_parameters": count_trainable_parameters(model),
         "keras_model_parameters": int(model.count_params()),
-        "keras_model_path": str(model_path),
+        "model_artifact_type": "Keras weights checkpoint; reconstruct with build_tiny_ds_cnn and load_weights.",
+        "weights_path": str(weights_path),
         "runtime_note": (
             "This is a Phase 2 loss/feature experiment. TFLite export and host latency are skipped "
             "by default; use src.deployment.quantization_experiment for deployable Phase 3 metrics."
@@ -272,7 +271,7 @@ def run_experiment(args: argparse.Namespace, experiment: str, baseline: dict | N
         outputs["model_info"]["host_latency"] = benchmark_latency_ms(model, x_test, runs=20, warmup=3)
     if experiment == "gravity_feature":
         outputs["feature_spec"] = {
-            "added_channels": ["mean_acc_unit_x", "mean_acc_unit_y", "mean_acc_unit_z", "mean_acc_magnitude"],
+            "added_channels": GRAVITY_FEATURE_CHANNELS,
             "source": "Computed from raw total_acc_x/y/z before train-stat standardization.",
             "sequence_encoding": "Repeated across all 128 timesteps so the existing 1D CNN can consume it.",
         }

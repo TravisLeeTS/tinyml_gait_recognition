@@ -342,10 +342,10 @@ def main() -> None:
         "selected_quantization_variant": selected,
         "quantization_rows": rows,
         "data_quality_note": (
-            "Arduino v1 self-collected data is retained for audit but has suspect quality "
-            "because the observed cadence is about 37-38 Hz instead of 50 Hz and replay "
-            "collapses classes. A new collection round should supersede it before final "
-            "Arduino-live accuracy is claimed."
+            "Arduino V2 self-collected data is used as a small mixed-pocket adaptation "
+            "training supplement, not as live validation. Baseline laptop replay on V2 "
+            "still collapses to LAYING, so Table 4 live accuracy must come from separate "
+            "right-pocket and left-pocket Arduino Serial trials."
         ),
     }
 

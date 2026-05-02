@@ -1,0 +1,143 @@
+{
+  "model_name": "m3_target_arduino_only_uci_test",
+  "accuracy": 0.330844927044452,
+  "macro_f1": 0.21342011838504915,
+  "weighted_f1": 0.22814652654166281,
+  "test_samples": 2947,
+  "class_names": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "classification_report": {
+    "WALKING": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 496.0
+    },
+    "WALKING_UPSTAIRS": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 471.0
+    },
+    "WALKING_DOWNSTAIRS": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 420.0
+    },
+    "SITTING": {
+      "precision": 0.1993503857084856,
+      "recall": 1.0,
+      "f1-score": 0.3324306025727827,
+      "support": 491.0
+    },
+    "STANDING": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 532.0
+    },
+    "LAYING": {
+      "precision": 1.0,
+      "recall": 0.9013035381750466,
+      "f1-score": 0.9480901077375122,
+      "support": 537.0
+    },
+    "accuracy": 0.330844927044452,
+    "macro avg": {
+      "precision": 0.19989173095141424,
+      "recall": 0.31688392302917445,
+      "f1-score": 0.21342011838504915,
+      "support": 2947.0
+    },
+    "weighted avg": {
+      "precision": 0.2154329960579798,
+      "recall": 0.330844927044452,
+      "f1-score": 0.22814652654166281,
+      "support": 2947.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      0,
+      0,
+      0,
+      496,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      471,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      420,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      491,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      532,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      53,
+      0,
+      484
+    ]
+  ],
+  "top_confusion_pairs": [
+    {
+      "true": "STANDING",
+      "predicted": "SITTING",
+      "count": 532
+    },
+    {
+      "true": "WALKING",
+      "predicted": "SITTING",
+      "count": 496
+    },
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "SITTING",
+      "count": 471
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "SITTING",
+      "count": 420
+    },
+    {
+      "true": "LAYING",
+      "predicted": "SITTING",
+      "count": 53
+    }
+  ]
+}

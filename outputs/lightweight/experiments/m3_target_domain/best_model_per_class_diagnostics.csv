@@ -1,0 +1,7 @@
+class,precision,recall,f1,support,dominant_confusion_target,dominant_confusion_count,deployment_status
+WALKING,1.0,0.6818181818181818,0.8108108108108109,22,WALKING_UPSTAIRS,6,needs more data
+WALKING_UPSTAIRS,0.2857142857142857,1.0,0.4444444444444444,6,none,0,needs more data
+WALKING_DOWNSTAIRS,0.0,0.0,0.0,9,WALKING_UPSTAIRS,9,needs more data
+SITTING,0.0,0.0,0.0,22,LAYING,22,needs more data
+STANDING,1.0,1.0,1.0,22,none,0,provisionally ready for held-out live validation
+LAYING,0.5,1.0,0.6666666666666666,22,none,0,needs more data

@@ -1,0 +1,101 @@
+{
+  "run_name": "m3_target_mixed_6ch",
+  "experiment": "mixed_6ch",
+  "feature_mode": "base_6ch",
+  "input_shape": [
+    128,
+    6
+  ],
+  "channels": [
+    "acc_x",
+    "acc_y",
+    "acc_z",
+    "gyro_x",
+    "gyro_y",
+    "gyro_z"
+  ],
+  "selection_rule": "Prioritize held-out Arduino target-domain validation first; use UCI-HAR official test as source-domain retention second.",
+  "normalization": {
+    "fit_scope": "training/adaptation data only",
+    "standardizer_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\lightweight\\experiments\\m3_target_domain\\m3_target_mixed_6ch\\models\\m3_target_mixed_6ch_standardizer.json",
+    "excluded": [
+      "UCI-HAR official test",
+      "Arduino V2 validation split",
+      "future right-pocket live evidence",
+      "future left-pocket live evidence"
+    ]
+  },
+  "data_sources": {
+    "uci_train_windows": 5551,
+    "uci_val_windows": 1801,
+    "uci_test_windows": 2947,
+    "arduino_v2_train_windows": 133,
+    "arduino_v2_val_windows": 103,
+    "arduino_root": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\data\\raw\\arduino_collectdata_v2",
+    "target_val_fraction": 0.25,
+    "uci_loss_weight": 0.3,
+    "arduino_split": "group-aware by source capture file; overlapping windows from the same file stay in the same split",
+    "arduino_v2_train_groups": [
+      "laying/30s - r - 1.txt",
+      "sitting/30s - r - 1.txt",
+      "standing/30s - r - 1.txt",
+      "walk_down/5s - l - 1.txt",
+      "walk_down/5s - l - 2.txt",
+      "walk_down/5s - l - 3.txt",
+      "walk_down/5s - l - 5.txt",
+      "walk_down/5s - r - 1.txt",
+      "walk_down/5s - r - 2.txt",
+      "walk_down/5s - r - 4.txt",
+      "walk_up/5s - l - 1.txt",
+      "walk_up/5s - l - 2.txt",
+      "walk_up/5s - l - 3.txt",
+      "walk_up/5s - l - 4.txt",
+      "walk_up/5s - l - 5.txt",
+      "walk_up/5s - r - 1.txt",
+      "walk_up/5s - r - 4.txt",
+      "walk_up/5s - r - 5.txt",
+      "walking/30s - l - 1.txt"
+    ],
+    "arduino_v2_val_groups": [
+      "laying/30s - l - 1.txt",
+      "sitting/30s - l - 1.txt",
+      "standing/30s - l - 1.txt",
+      "walk_down/5s - r - 3.txt",
+      "walk_down/5s - r - 5.txt",
+      "walk_up/5s - r - 2.txt",
+      "walk_up/5s - r - 3.txt",
+      "walking/30s - r - 1.txt"
+    ]
+  },
+  "artifacts": {
+    "weights_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\lightweight\\experiments\\m3_target_domain\\m3_target_mixed_6ch\\models\\m3_target_mixed_6ch.weights.h5",
+    "histories": {
+      "mixed": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\lightweight\\experiments\\m3_target_domain\\m3_target_mixed_6ch\\logs\\mixed_history.csv"
+    }
+  },
+  "model": {
+    "parameters": 1922,
+    "trainable_parameters": 1786,
+    "loss": "sparse_categorical_crossentropy",
+    "fp32_tflite_size_bytes": 13460,
+    "host_latency_proxy": {
+      "mean_ms": 40.0712399999918,
+      "median_ms": 39.84374999998863,
+      "p95_ms": 42.01824500003397,
+      "runs": 20,
+      "device_note": "Host CPU Keras predict latency; not an Arduino latency claim."
+    }
+  },
+  "metrics": {
+    "uci_test_accuracy": 0.8076009501187649,
+    "uci_test_macro_f1": 0.7929035077697506,
+    "arduino_v2_val_accuracy": 0.5048543689320388,
+    "arduino_v2_val_macro_f1": 0.3543360433604336,
+    "arduino_v2_val_f1_walking": 0.16666666666666666,
+    "arduino_v2_val_f1_walking_upstairs": 0.2926829268292683,
+    "arduino_v2_val_f1_walking_downstairs": 0.0,
+    "arduino_v2_val_f1_sitting": 0.0,
+    "arduino_v2_val_f1_standing": 1.0,
+    "arduino_v2_val_f1_laying": 0.6666666666666666
+  }
+}

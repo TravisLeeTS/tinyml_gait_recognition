@@ -1,0 +1,24 @@
+{
+  "run_name": "m3_v2_1_mixed_focal_6ch",
+  "experiment": "mixed_focal_6ch_v2_1",
+  "feature_mode": "base_6ch",
+  "loss": "focal",
+  "input_shape": [
+    128,
+    6
+  ],
+  "channels": [
+    "acc_x",
+    "acc_y",
+    "acc_z",
+    "gyro_x",
+    "gyro_y",
+    "gyro_z"
+  ],
+  "standardizer_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\deployment\\m3_retrained_with_v2_1\\m3_v2_1_mixed_focal_6ch\\models\\m3_v2_1_mixed_focal_6ch_standardizer.json",
+  "weights_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\deployment\\m3_retrained_with_v2_1\\m3_v2_1_mixed_focal_6ch\\models\\m3_v2_1_mixed_focal_6ch.weights.h5",
+  "fp32_tflite_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\deployment\\m3_retrained_with_v2_1\\m3_v2_1_mixed_focal_6ch\\models\\m3_v2_1_mixed_focal_6ch.tflite",
+  "fp32_tflite_size_bytes": 13460,
+  "parameters": 1922,
+  "trainable_parameters": 1786
+}

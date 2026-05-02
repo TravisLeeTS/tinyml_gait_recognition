@@ -1,0 +1,61 @@
+{
+  "n_predictions": 125,
+  "accuracy": 0.904,
+  "macro_f1": 0.9089068825910931,
+  "weighted_f1": 0.899919028340081,
+  "per_class": {
+    "WALKING": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "WALKING_UPSTAIRS": {
+      "precision": 1.0,
+      "recall": 0.52,
+      "f1-score": 0.6842105263157895,
+      "support": 25.0
+    },
+    "WALKING_DOWNSTAIRS": {
+      "precision": 0.625,
+      "recall": 1.0,
+      "f1-score": 0.7692307692307693,
+      "support": 20.0
+    },
+    "SITTING": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "STANDING": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "LAYING": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "accuracy": 0.904,
+    "macro avg": {
+      "precision": 0.9375,
+      "recall": 0.9199999999999999,
+      "f1-score": 0.9089068825910931,
+      "support": 125.0
+    },
+    "weighted avg": {
+      "precision": 0.94,
+      "recall": 0.904,
+      "f1-score": 0.899919028340081,
+      "support": 125.0
+    }
+  },
+  "mean_confidence": 0.8021256,
+  "mean_latency_us": 34108.504,
+  "median_latency_us": 34113.0,
+  "source": "Arduino Serial predictions; not laptop replay."
+}

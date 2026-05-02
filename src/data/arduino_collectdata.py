@@ -12,17 +12,24 @@ import pandas as pd
 from src.config import DOCS_DIR, PROCESSED_DATA_DIR, RAW_DATA_DIR, OUTPUTS_DIR
 
 
-EXPECTED_COLUMNS = ["time_ms", "ax", "ay", "az", "gx", "gy", "gz", "label"]
+BASE_COLUMNS = ["time_ms", "ax", "ay", "az", "gx", "gy", "gz"]
+EXPECTED_COLUMNS = [*BASE_COLUMNS, "label"]
 SENSOR_COLUMNS = ["ax", "ay", "az", "gx", "gy", "gz"]
 NUMERIC_COLUMNS = ["time_ms", *SENSOR_COLUMNS]
 
 FOLDER_TO_UCI_CLASS = {
     "walking": "WALKING",
+    "walk": "WALKING",
     "walk_up": "WALKING_UPSTAIRS",
+    "upstairs": "WALKING_UPSTAIRS",
     "walk_down": "WALKING_DOWNSTAIRS",
+    "downstairs": "WALKING_DOWNSTAIRS",
     "sitting": "SITTING",
+    "sit": "SITTING",
     "standing": "STANDING",
+    "stand": "STANDING",
     "laying": "LAYING",
+    "lay": "LAYING",
 }
 UCI_CLASS_NAMES = [
     "WALKING",
@@ -54,23 +61,70 @@ class ArduinoCsvFile:
 
 
 def iter_csv_files(root: Path) -> list[Path]:
-    return sorted(path for path in root.rglob("*.csv") if path.is_file())
+    return sorted(
+        path for path in root.rglob("*") if path.is_file() and path.suffix.lower() in {".csv", ".txt"}
+    )
 
 
 def infer_pocket(path: Path) -> str:
+    path_text = path.as_posix().lower()
+    if "right" in path_text or "right_60s" in path_text:
+        return "right"
+    if "left" in path_text or "left_30s" in path_text:
+        return "left"
     match = re.search(r"-\s*([lr])\s*-", path.stem.lower())
     if not match:
         return "unknown"
     return {"l": "left", "r": "right"}[match.group(1)]
 
 
-def _valid_numeric_frame(path: Path) -> tuple[pd.DataFrame, int]:
-    raw = pd.read_csv(path)
-    missing = [column for column in EXPECTED_COLUMNS if column not in raw.columns]
-    if missing:
-        raise ValueError(f"{path} is missing expected columns: {missing}")
+def infer_label_key(path: Path, root: Path) -> str:
+    rel = path.relative_to(root)
+    tokens = [part.lower().replace("-", "_").strip() for part in rel.parts[:-1]]
+    tokens.append(path.stem.lower().replace("-", "_").strip())
+    joined = " ".join(tokens)
+    if re.search(r"(walk[_\s]*down|downstairs)", joined):
+        return "walk_down"
+    if re.search(r"(walk[_\s]*up|upstairs)", joined):
+        return "walk_up"
+    if re.search(r"\b(walking|walk)\b", joined):
+        return "walking"
+    if re.search(r"\b(sitting|sit)\b", joined):
+        return "sitting"
+    if re.search(r"\b(standing|stand)\b", joined):
+        return "standing"
+    if re.search(r"\b(laying|lay)\b", joined):
+        return "laying"
+    raise ValueError(f"Could not infer Arduino activity label from {path} under {root}")
 
-    df = raw[EXPECTED_COLUMNS].copy()
+
+def infer_condition(path: Path, root: Path) -> str:
+    rel = path.relative_to(root)
+    if len(rel.parts) <= 1:
+        return root.name
+    first = rel.parts[0].lower()
+    if first in FOLDER_TO_UCI_CLASS:
+        return root.name
+    return first
+
+
+def _valid_numeric_frame(path: Path, fallback_label: str) -> tuple[pd.DataFrame, int]:
+    delimiter = ";" if path.suffix.lower() == ".txt" else ","
+    raw = pd.read_csv(path, sep=delimiter)
+    raw.columns = [str(column).strip() for column in raw.columns]
+    missing = [column for column in BASE_COLUMNS if column not in raw.columns]
+    if missing:
+        raw = pd.read_csv(path, sep=delimiter, header=None, names=BASE_COLUMNS)
+        raw.columns = [str(column).strip() for column in raw.columns]
+        missing = [column for column in BASE_COLUMNS if column not in raw.columns]
+        if missing:
+            raise ValueError(f"{path} is missing expected columns: {missing}")
+
+    df = raw[BASE_COLUMNS].copy()
+    if "label" in raw.columns:
+        df["label"] = raw["label"]
+    else:
+        df["label"] = fallback_label
     for column in NUMERIC_COLUMNS:
         df[column] = pd.to_numeric(df[column], errors="coerce")
     df["label"] = df["label"].astype(str).str.strip().str.lower()
@@ -85,12 +139,30 @@ def _valid_numeric_frame(path: Path) -> tuple[pd.DataFrame, int]:
 
 
 def read_labeled_csv(path: Path, root: Path) -> tuple[pd.DataFrame, ArduinoCsvFile]:
-    folder_label = path.relative_to(root).parts[0].lower()
-    if folder_label not in FOLDER_TO_UCI_CLASS:
-        raise ValueError(f"Unknown Arduino label folder {folder_label!r} in {path}")
+    folder_label = infer_label_key(path, root)
 
-    df, invalid_rows = _valid_numeric_frame(path)
     uci_label = FOLDER_TO_UCI_CLASS[folder_label]
+    if path.stat().st_size == 0:
+        empty = pd.DataFrame(columns=[*EXPECTED_COLUMNS, "folder_label", "uci_label", "class_id", "source_file", "pocket", "segment_id"])
+        file_info = ArduinoCsvFile(
+            path=path,
+            folder_label=folder_label,
+            uci_label=uci_label,
+            pocket=infer_pocket(path),
+            rows_raw=0,
+            rows_valid=0,
+            rows_invalid=0,
+            timestamp_resets=0,
+            segments=0,
+            duration_seconds=0.0,
+            median_dt_ms=None,
+            effective_hz=None,
+            windows_raw_128_stride64=0,
+            windows_resampled_50hz_128_stride64=0,
+        )
+        return empty, file_info
+
+    df, invalid_rows = _valid_numeric_frame(path, folder_label)
     df["folder_label"] = folder_label
     df["uci_label"] = uci_label
     df["class_id"] = UCI_CLASS_TO_ID[uci_label]
@@ -188,7 +260,8 @@ def build_windowed_dataset(root: Path, hz: float = 50.0) -> tuple[np.ndarray, np
     if not frames:
         raise FileNotFoundError(f"No Arduino CSV files found under {root}")
 
-    all_rows = pd.concat(frames, ignore_index=True)
+    non_empty_frames = [frame for frame in frames if not frame.empty]
+    all_rows = pd.concat(non_empty_frames, ignore_index=True)
     xs = []
     ys = []
     sources = []
@@ -223,6 +296,7 @@ def summarize(root: Path, output_dir: Path, docs_tables_dir: Path) -> dict:
             {
                 **asdict(info),
                 "path": info.path.relative_to(root).as_posix(),
+                "condition": infer_condition(info.path, root),
             }
             for info in file_infos
         ]
@@ -243,7 +317,8 @@ def summarize(root: Path, output_dir: Path, docs_tables_dir: Path) -> dict:
         )
         .sort_values("uci_label")
     )
-    all_rows = pd.concat(frames, ignore_index=True)
+    non_empty_frames = [frame for frame in frames if not frame.empty]
+    all_rows = pd.concat(non_empty_frames, ignore_index=True)
     channel_stats = (
         all_rows.groupby(["folder_label", "uci_label"], as_index=False)[SENSOR_COLUMNS]
         .agg(["mean", "std", "min", "max"])
@@ -269,8 +344,14 @@ def summarize(root: Path, output_dir: Path, docs_tables_dir: Path) -> dict:
     bad_files = file_table[file_table["rows_invalid"] > 0]
     if not bad_files.empty:
         warnings.append(
-            "Some CSV rows were skipped because numeric fields were invalid; inspect "
+            "Some capture rows were skipped because numeric fields were invalid; inspect "
             + ", ".join(bad_files["path"].tolist())
+        )
+    empty_files = file_table[file_table["rows_valid"] == 0]
+    if not empty_files.empty:
+        warnings.append(
+            "Some capture files are empty and produced no windows; inspect "
+            + ", ".join(empty_files["path"].tolist())
         )
 
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -280,7 +361,7 @@ def summarize(root: Path, output_dir: Path, docs_tables_dir: Path) -> dict:
     channel_stats.to_csv(docs_tables_dir / "arduino_collectdata_channel_stats.csv", index=False)
 
     summary = {
-        "dataset": "TinyML_arduino_collectdata_v1",
+        "dataset": root.name,
         "root": str(root),
         "csv_files": int(len(file_infos)),
         "expected_columns": EXPECTED_COLUMNS,
@@ -292,7 +373,8 @@ def summarize(root: Path, output_dir: Path, docs_tables_dir: Path) -> dict:
         "channel_stats_csv": str(docs_tables_dir / "arduino_collectdata_channel_stats.csv"),
         "warnings": warnings,
         "notes": [
-            "Only CSV files are used; raw .txt files from the Arduino are intentionally ignored.",
+            "Labeled CSV files and semicolon-delimited Arduino TXT captures are supported.",
+            "When a capture has no label column, the folder name supplies the activity label.",
             "Gyroscope channels are converted from deg/s to rad/s when writing the windowed NPZ.",
             "Offline Arduino windows are resampled to 50 Hz to match the UCI HAR model input length.",
         ],
@@ -303,13 +385,13 @@ def summarize(root: Path, output_dir: Path, docs_tables_dir: Path) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Inspect and window the Arduino HAR CSV collection.")
-    parser.add_argument("--root", type=Path, default=RAW_DATA_DIR / "arduino_collectdata_v1")
+    parser.add_argument("--root", type=Path, default=RAW_DATA_DIR / "arduino_collectdata_v2")
     parser.add_argument("--output-dir", type=Path, default=OUTPUTS_DIR / "arduino_collectdata")
     parser.add_argument("--docs-tables-dir", type=Path, default=DOCS_DIR / "tables")
     parser.add_argument(
         "--windowed-output",
         type=Path,
-        default=PROCESSED_DATA_DIR / "arduino_collectdata_v1_windows_50hz.npz",
+        default=PROCESSED_DATA_DIR / "arduino_collectdata_v2_windows_50hz.npz",
     )
     parser.add_argument("--skip-windowed", action="store_true")
     args = parser.parse_args()

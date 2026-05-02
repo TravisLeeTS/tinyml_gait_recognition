@@ -1,0 +1,25 @@
+{
+  "run_name": "m3_v2_1_arduino_only",
+  "experiment": "arduino_only_v2_1",
+  "feature_mode": "base_6ch",
+  "loss": "cross_entropy",
+  "input_shape": [
+    128,
+    6
+  ],
+  "channels": [
+    "acc_x",
+    "acc_y",
+    "acc_z",
+    "gyro_x",
+    "gyro_y",
+    "gyro_z"
+  ],
+  "normalization_scope": "Arduino V2 train + capped V2.1 long adaptation only",
+  "parameters": 1922,
+  "trainable_parameters": 1786,
+  "fp32_tflite_size_bytes": 13460,
+  "fp32_tflite_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\deployment\\m3_retrained_with_v2_1\\m3_v2_1_arduino_only\\models\\m3_v2_1_arduino_only.tflite",
+  "standardizer_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\deployment\\m3_retrained_with_v2_1\\m3_v2_1_arduino_only\\models\\m3_v2_1_arduino_only_standardizer.json",
+  "weights_path": "C:\\Users\\tings\\tinyml-esp32-wokwi-starter\\outputs\\deployment\\m3_retrained_with_v2_1\\m3_v2_1_arduino_only\\models\\m3_v2_1_arduino_only.weights.h5"
+}

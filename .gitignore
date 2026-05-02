@@ -17,3 +17,18 @@ data/processed/*.npz
 
 # Local notebooks/runtime noise.
 .ipynb_checkpoints/
+.venv/
+
+# Local sharing/submission packages.
+*.zip
+outputs/share/
+
+# Large returned teammate evidence files. Keep these outside GitHub and submit
+# through the course evidence channel instead.
+outputs/live_evidence/raw_teammate_return/*.mp4
+outputs/live_evidence/raw_teammate_return/*.docx
+
+# Local raw Arduino captures are used to regenerate metrics, but should not be
+# uploaded accidentally as repository source.
+data/raw/arduino_collectdata_v*/
+data/raw/arduino_live_*/

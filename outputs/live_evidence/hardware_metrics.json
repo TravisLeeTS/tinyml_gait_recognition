@@ -1,0 +1,45 @@
+{
+  "compile": {
+    "sketch_flash_bytes": 177504,
+    "sketch_flash_kb": 173.34,
+    "sketch_flash_percent": 18,
+    "sketch_flash_total_bytes": 983040,
+    "dynamic_memory_bytes": 111144,
+    "dynamic_memory_kb": 108.56,
+    "dynamic_memory_percent": 42,
+    "dynamic_memory_total_bytes": 262144
+  },
+  "environment": {
+    "arduino_ide_version": "2.3.8",
+    "arduino_nano_33_ble_board_package": "Arduino Mbed OS Nano Boards 4.5.0",
+    "arduino_lsm9ds1_version": "1.1.1",
+    "tflite_micro_library": "Harvard_TinyMLx 1.2.4-Alpha"
+  },
+  "boot_metadata": {
+    "model_bytes": 10288,
+    "tensor_arena_bytes": 61440,
+    "kChannelCount": 6,
+    "kWindowSize": 128,
+    "kStride": 64,
+    "normalization_source": "UCI-HAR train + Arduino V2 train + capped V2.1 long adaptation",
+    "input_scale": 0.136206716,
+    "input_zero_point": 8,
+    "output_scale": 0.00390625,
+    "output_zero_point": -128
+  },
+  "latency": {
+    "window_count": 50,
+    "avg_invoke_latency_us": 34113,
+    "avg_invoke_latency_ms": 34.113
+  },
+  "stability": {
+    "video_file": "outputs/live_evidence/raw_teammate_return/2_30_stability_video.mp4",
+    "duration_seconds_about": 156,
+    "status": "2-minute stability evidence returned by teammate"
+  },
+  "demo_evidence": [
+    "outputs/live_evidence/raw_teammate_return/sitting_proof.mp4",
+    "outputs/live_evidence/raw_teammate_return/standing_proof.mp4",
+    "outputs/live_evidence/raw_teammate_return/walking_proof.mp4"
+  ]
+}

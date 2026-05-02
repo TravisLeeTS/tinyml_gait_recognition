@@ -23,9 +23,9 @@
     "macro_f1_drop_vs_phase2": -0.0025881017457427546,
     "tflite_size_bytes": 10288,
     "size_change_vs_phase2_fp32_tflite": -3172,
-    "host_latency_mean_ms": 0.0429699997039279,
-    "host_latency_median_ms": 0.043799998820759356,
-    "host_latency_p95_ms": 0.04918499780615093,
+    "host_latency_mean_ms": 0.019211999897379428,
+    "host_latency_median_ms": 0.01750000228639692,
+    "host_latency_p95_ms": 0.029990004259161606,
     "static_sitting_standing_confusions": 184,
     "representative_policy": "class_balanced_train_windows",
     "representative_samples": 512,
@@ -47,9 +47,9 @@
       "macro_f1_drop_vs_phase2": -0.0032217675404193624,
       "tflite_size_bytes": 10288,
       "size_change_vs_phase2_fp32_tflite": -3172,
-      "host_latency_mean_ms": 0.039092000006348826,
-      "host_latency_median_ms": 0.032800002372823656,
-      "host_latency_p95_ms": 0.05213999957049962,
+      "host_latency_mean_ms": 0.0167939999664668,
+      "host_latency_median_ms": 0.016250000044237822,
+      "host_latency_p95_ms": 0.018054999236483127,
       "static_sitting_standing_confusions": 186,
       "representative_policy": "random_train_windows",
       "representative_samples": 512,
@@ -70,9 +70,9 @@
       "macro_f1_drop_vs_phase2": -0.0025881017457427546,
       "tflite_size_bytes": 10288,
       "size_change_vs_phase2_fp32_tflite": -3172,
-      "host_latency_mean_ms": 0.0429699997039279,
-      "host_latency_median_ms": 0.043799998820759356,
-      "host_latency_p95_ms": 0.04918499780615093,
+      "host_latency_mean_ms": 0.019211999897379428,
+      "host_latency_median_ms": 0.01750000228639692,
+      "host_latency_p95_ms": 0.029990004259161606,
       "static_sitting_standing_confusions": 184,
       "representative_policy": "class_balanced_train_windows",
       "representative_samples": 512,
@@ -81,5 +81,5 @@
       "qat_status": "INT8 QAT not run in this pass because at least one PTQ variant stayed within 0.0100 macro F1 of the Phase 2 FP32 baseline."
     }
   ],
-  "data_quality_note": "Arduino v1 self-collected data is retained for audit but has suspect quality because the observed cadence is about 37-38 Hz instead of 50 Hz and replay collapses classes. A new collection round should supersede it before final Arduino-live accuracy is claimed."
+  "data_quality_note": "Arduino V2 self-collected data is used as a small mixed-pocket adaptation training supplement, not as live validation. Baseline laptop replay on V2 still collapses to LAYING, so Table 4 live accuracy must come from separate right-pocket and left-pocket Arduino Serial trials."
 }

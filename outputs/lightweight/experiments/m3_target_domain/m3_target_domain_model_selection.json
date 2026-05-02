@@ -1,0 +1,84 @@
+{
+  "selection_rule": [
+    "Arduino V2 validation macro F1",
+    "Arduino V2 confusion stability",
+    "UCI-HAR test macro F1",
+    "deployment simplicity and FP32 TFLite size"
+  ],
+  "selected_fp32_candidate": "m3_target_mixed_focal_6ch",
+  "caveat": "This is not live Arduino accuracy. Final deployment remains pending held-out right-pocket and left-pocket evidence.",
+  "ranking": [
+    {
+      "rank": 1,
+      "run_name": "m3_target_mixed_focal_6ch",
+      "experiment": "mixed_focal_6ch",
+      "arduino_v2_val_macro_f1": 0.48698698698698695,
+      "arduino_v2_val_accuracy": 0.6310679611650486,
+      "uci_test_macro_f1": 0.7981568831219225,
+      "uci_test_accuracy": 0.8137088564642009,
+      "fp32_tflite_size_bytes": 13460,
+      "host_latency_mean_ms": 40.60723499999597,
+      "selection_note": "Current FP32 candidate only; pending held-out right/left pocket live validation and quantization is deferred."
+    },
+    {
+      "rank": 2,
+      "run_name": "m3_target_mixed_6ch",
+      "experiment": "mixed_6ch",
+      "arduino_v2_val_macro_f1": 0.3543360433604336,
+      "arduino_v2_val_accuracy": 0.5048543689320388,
+      "uci_test_macro_f1": 0.7929035077697506,
+      "uci_test_accuracy": 0.8076009501187649,
+      "fp32_tflite_size_bytes": 13460,
+      "host_latency_mean_ms": 40.0712399999918,
+      "selection_note": ""
+    },
+    {
+      "rank": 3,
+      "run_name": "m3_target_mixed_gravity_10ch",
+      "experiment": "mixed_gravity_10ch",
+      "arduino_v2_val_macro_f1": 0.16428571428571428,
+      "arduino_v2_val_accuracy": 0.2815533980582524,
+      "uci_test_macro_f1": 0.5981300767809057,
+      "uci_test_accuracy": 0.6223277909738717,
+      "fp32_tflite_size_bytes": 14036,
+      "host_latency_mean_ms": 39.356574999996496,
+      "selection_note": ""
+    },
+    {
+      "rank": 4,
+      "run_name": "m3_target_finetune",
+      "experiment": "finetune",
+      "arduino_v2_val_macro_f1": 0.1111111111111111,
+      "arduino_v2_val_accuracy": 0.21359223300970873,
+      "uci_test_macro_f1": 0.5679207131897509,
+      "uci_test_accuracy": 0.6090939938920936,
+      "fp32_tflite_size_bytes": 13460,
+      "host_latency_mean_ms": 41.651499999997554,
+      "selection_note": ""
+    },
+    {
+      "rank": 5,
+      "run_name": "m3_target_uci_baseline",
+      "experiment": "uci_baseline",
+      "arduino_v2_val_macro_f1": 0.058666666666666666,
+      "arduino_v2_val_accuracy": 0.21359223300970873,
+      "uci_test_macro_f1": 0.9122874406990972,
+      "uci_test_accuracy": 0.9110960298608755,
+      "fp32_tflite_size_bytes": 13460,
+      "host_latency_mean_ms": 40.72664500000087,
+      "selection_note": ""
+    },
+    {
+      "rank": 6,
+      "run_name": "m3_target_arduino_only",
+      "experiment": "arduino_only",
+      "arduino_v2_val_macro_f1": 0.058666666666666666,
+      "arduino_v2_val_accuracy": 0.21359223300970873,
+      "uci_test_macro_f1": 0.21342011838504915,
+      "uci_test_accuracy": 0.330844927044452,
+      "fp32_tflite_size_bytes": 13460,
+      "host_latency_mean_ms": 39.83478000000247,
+      "selection_note": ""
+    }
+  ]
+}

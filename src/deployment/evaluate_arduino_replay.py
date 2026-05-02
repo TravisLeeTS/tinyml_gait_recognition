@@ -41,7 +41,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Replay collected Arduino CSV windows through the INT8 TFLite model offline."
     )
-    parser.add_argument("--root", type=Path, default=RAW_DATA_DIR / "arduino_collectdata_v1")
+    parser.add_argument("--root", type=Path, default=RAW_DATA_DIR / "arduino_collectdata_v2")
     parser.add_argument(
         "--standardizer",
         type=Path,
@@ -56,7 +56,7 @@ def main() -> None:
     parser.add_argument(
         "--windowed-output",
         type=Path,
-        default=PROCESSED_DATA_DIR / "arduino_collectdata_v1_windows_50hz.npz",
+        default=PROCESSED_DATA_DIR / "arduino_collectdata_v2_windows_50hz.npz",
     )
     args = parser.parse_args()
 

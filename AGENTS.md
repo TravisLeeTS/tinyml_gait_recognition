@@ -55,7 +55,7 @@ This does not replace the reproduction baseline.
 - Do not commit public dataset archives; use download scripts for UCI HAR and WISDM public data.
 
 ## M3 implementation status and constraints
-- Phase 2 covers model/feature experiments. Phase 3 is quantization strategy selection; do not reintroduce the removed accelerometer-only sensor-ablation phase.
+- Phase 2 covers model/feature experiments (depthwise CNN baseline, focal loss variant, gravity-direction feature). Phase 3 is quantized edge deployment; do not reintroduce accelerometer-only sensor ablation.
 - Primary M3 model path is the lightweight DS-CNN exported with class-balanced full-integer INT8 PTQ selected by `python -m src.deployment.quantization_experiment`.
 - Generated deployment artifacts live under `outputs/deployment/` and `arduino/tinyml_har_m3/`.
 - The attached Arduino CSV archive is kept as a first-class Track B M3 test dataset under `data/raw/arduino_collectdata_v1/`.

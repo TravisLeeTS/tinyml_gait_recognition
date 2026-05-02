@@ -8,15 +8,15 @@ Team:
 - Khalifa Alshamsi, B00078654
 - Vineetha Addanki, G00111196
 
-> **Important for Milestone 2 grading:**  
-> This file is the general project README. Please also read [`README_MILESTONE2.md`](README_MILESTONE2.md), which is organized around the Milestone 2 handout and explains D2, D3, D4, preprocessing, dataset download, baseline scripts, held-out test results, and why `x_train/y_train/x_val/x_test` are generated in memory. Please also refer to [`tinyml_milestone2.pdf`](tinyml_milestone2.pdf), the Milestone 2 handout PDF, as the main grading reference.
+> **Important for Milestone 3 grading:**  
+> M3 deployment prep and returned Arduino evidence are summarized in [`README_MILESTONE3.md`](README_MILESTONE3.md), with the report draft under [`docs/milestone3_report_draft.md`](docs/milestone3_report_draft.md) and the Arduino sketch under [`arduino/tinyml_har_m3/`](arduino/tinyml_har_m3/). Hardware metrics, proof videos, and live Serial confusion matrices have been integrated; final PDF export and evidence attachment remain submission tasks.
 
-> **Milestone 3 update:**  
-> M3 laptop-side deployment prep is summarized in [`README_MILESTONE3.md`](README_MILESTONE3.md), with the report draft under [`docs/milestone3_report_draft.md`](docs/milestone3_report_draft.md) and the Arduino sketch under [`arduino/tinyml_har_m3/`](arduino/tinyml_har_m3/). Hardware-only metrics, video evidence, and live confusion matrices are still pending because they must be measured on the Arduino.
+> **Milestone 2 background:**  
+> [`README_MILESTONE2.md`](README_MILESTONE2.md) remains available for the previous milestone's D2/D3/D4 details, preprocessing, dataset download, baseline scripts, held-out test results, and explanation of in-memory `x_train/y_train/x_val/x_test` arrays.
 
 This repository contains a TinyML human activity recognition implementation package targeting Arduino Nano 33 BLE Sense for edge deployment. The current benchmark track uses public/open datasets.
 
-Current status: The package is runnable with TensorFlow/Keras training code, generated UCI HAR held-out metrics, confusion matrices, dataset inspection outputs, INT8 TFLite conversion, and an Arduino Nano 33 BLE Sense sketch scaffold. The paper reproduction run included here is a bounded CPU reproduction artifact; the closer 64-epoch reproduction command is documented below.
+Current status: The package is runnable with TensorFlow/Keras training code, generated UCI HAR held-out metrics, confusion matrices, dataset inspection outputs, target-domain adaptation experiments, and an Arduino Nano 33 BLE Sense M3 candidate deployment build. The candidate INT8 model has returned Arduino hardware evidence: compile flash/RAM, boot metadata, 34.113 ms average `Invoke()` latency over 50 inferences, 2-minute stability video, and live Serial trial scores.
 
 ## Phase Framework
 
@@ -24,15 +24,15 @@ Current status: The package is runnable with TensorFlow/Keras training code, gen
 |---|---|---|---|---|
 | 1 | Rebuilding the Paper Baseline | Reproduce the reference HGAR pipeline as closely as feasible to establish a strong upper-bound baseline. | No intentional simplification. | Accuracy |
 | 2 | Lightweight Model Screening | Compare a small set of TinyML-friendly models under the same data pipeline and sensor setup, then select one winner. | Architecture only. | Accuracy + Latency |
-| 3 | Quantization Strategy Selection | Take the selected Phase 2 model and compare deployable quantization strategies before Arduino flashing. | Quantization only. | Accuracy + Latency + Size |
+| 3 | Target-Domain Adaptation Then Quantization | Use UCI-HAR as source knowledge, adapt to Arduino V2 target data, validate on held-out right/left pocket data, then quantize the selected model. | Preprocessing/model transfer first; quantization second. | Arduino-domain accuracy + UCI retention + latency + size |
 
-Current round scope: Phase 1, Phase 2, and the laptop-side Phase 3 quantization experiment are implemented in this repository. Hardware-only Arduino evidence is still pending because it must be measured on the physical board.
+Current round scope: Phase 1, Phase 2, V2 domain-gap auditing, target-domain adaptation scripts, candidate quantization, Arduino evidence templates, and returned teammate hardware/live Serial evidence are implemented in this repository.
 
 Phase 1, Rebuilding the Paper Baseline, is implemented under `outputs/reproduction/` with five level-0 hybrid learners (ConvLSTM, CNN-GRU, CNN-BiGRU, CNN-BiLSTM, CNN-LSTM) and XGBoost as the level-1 meta-learner.
 
-Phase 2, Lightweight Model Screening, is intentionally narrow in scope to avoid over-expanding the study. The shortlist is depthwise separable CNN, compact CNN-GRU, and small TCN-style architectures under the same pipeline.
+Phase 2, Lightweight Model Screening, is intentionally narrow in scope to avoid over-expanding the study. The main deployable family is the depthwise-separable CNN, with focal-loss and gravity/posture-feature probes added for M3 error analysis.
 
-Phase 3 replaces the earlier accelerometer-only sensor-ablation idea. That branch is removed from the current M3 plan so the work stays aligned with the rubric: choose the best Phase 2 model, quantize it properly, then measure real Arduino performance.
+Phase 3 replaces the earlier accelerometer-only sensor-ablation idea. The current M3 direction is: align Arduino preprocessing and target-domain model behavior first, then quantize the selected candidate for live evidence collection and measure real Arduino performance separately.
 
 Primary dataset:
 
@@ -41,6 +41,14 @@ Primary dataset:
 Secondary dataset:
 
 - Fordham WISDM Activity Prediction v1.1, used for inspection, timestamp regularity analysis, and domain-gap planning. Its label taxonomy differs from UCI HAR, so labels are not force-merged. Source: `https://www.cis.fordham.edu/wisdm/dataset.php`.
+
+Arduino M3 datasets:
+
+- `data/raw/arduino_collectdata_v2/`: corrected 50 Hz Arduino target-domain data used for adaptation and grouped validation.
+- `data/raw/arduino_collectdata_v2_1_long_adaptation/`: four 5-minute adaptation captures for `WALKING`, `SITTING`, `STANDING`, and `LAYING`.
+- `data/raw/arduino_live_validation/right_60s/`: held-out controlled raw sensor replay validation, not training.
+- `data/raw/arduino_live_validation/left_30s/`: held-out robustness raw sensor replay validation, not training.
+- Returned live Serial logs: final M3 hardware evidence only; do not train on them before reporting.
 
 ## Repository Layout
 
@@ -163,19 +171,40 @@ Current selected Phase 2 winner result on UCI HAR held-out test set:
 - TFLite size: 13,460 bytes
 - Host CPU Keras predict latency proxy: mean 62.65 ms over 20 runs. This is not an Arduino latency claim.
 
-All model-architecture or feature experiments belong in Phase 2. That includes focal loss, posture/gravity features, compact recurrent models, or TCN-style candidates. Phase 3 should not add new sensor-ablation branches; it should quantize the selected Phase 2 winner.
+All model-architecture or feature experiments belong in Phase 2 or the M3 target-domain comparison. For M3, the V2 replay result shows that the UCI-only winner is not enough for the demo environment, so the selected V2.1 mixed 6-channel candidate is quantized as the evidence-collection build and scored from returned live Arduino Serial logs.
 
-The M3 posture/gravity feature probe is recorded as a Phase 2 error-analysis experiment:
+### M3 Offline Improvement Candidates
+
+For the Milestone 3 Table 4 row `Offline test set (M3 improved)`, two DS-CNN variants were trained and evaluated on the same UCI-HAR held-out test split as the Phase 2 baseline. Phase 1 and the original Phase 2 baseline were not rerun because the main preprocessing path did not change.
 
 ```powershell
-python -m src.training.evaluate_posture_gravity_feature --device cpu
+python -m src.training.train_m3_second_improvements --experiment focal_loss --epochs 40 --patience 8 --device cpu
+python -m src.training.train_m3_second_improvements --experiment gravity_feature --epochs 40 --patience 8 --device cpu
+python -m src.training.train_m3_second_improvements --experiment all --evaluate-existing --epochs 40 --patience 8 --device cpu --export-tflite --benchmark-host
 ```
 
-Result: a mean-acceleration gravity feature did not improve the M2 `SITTING` <-> `STANDING` confusion. The DS-CNN baseline remains better (`0.9173` macro F1, 184 static confusions) than the gravity-rescue variant (`0.9117` macro F1, 201 static confusions), so the feature is documented but not adopted for M3 deployment.
+| Offline UCI-HAR Test Run | Input | Change | Accuracy | Macro F1 | Weighted F1 | FP32 TFLite Size | Host Keras Mean Latency | SITTING<->STANDING Confusions | Current Decision |
+|---|---:|---|---:|---:|---:|---:|---:|---:|---|
+| Phase 2 DS-CNN baseline | 128 x 6 | Cross entropy | 0.9169 | 0.9173 | 0.9168 | 13,460 bytes | 62.65 ms | 184 | UCI reference only; fails V2 replay |
+| M3 focal-loss DS-CNN | 128 x 6 | Sparse focal loss, gamma 2.0 | 0.9074 | 0.9071 | 0.9073 | 13,460 bytes | 46.88 ms | 182 | Reject |
+| M3 gravity-feature DS-CNN | 128 x 10 | Add mean acceleration unit vector XYZ + magnitude | 0.9179 | 0.9173 | 0.9167 | 14,036 bytes | 49.55 ms | 173 | Useful probe; needs V2 validation |
 
-## Phase 3: Quantization Strategy Selection
+Strict decision after V2: do not use the UCI-only Phase 2 DS-CNN as the deployment candidate. Focal loss is still rejected because it loses about 0.010 macro F1. The gravity-feature DS-CNN remains useful because it improves the static-posture failure mode, but any 10-channel model must be validated in the V2-like Arduino environment before it becomes the deployment candidate.
 
-Run the quantization comparison after the Phase 2 winner has been selected:
+Latency note: the host Keras latency numbers above are laptop proxy measurements, not Arduino latency. They were gathered in different runs, so they are useful for sanity checking only; final deployable latency must come from the selected quantized model on Arduino.
+
+Saved outputs:
+
+- `src/training/train_m3_second_improvements.py`
+- `outputs/lightweight/experiments/m3_second_improvements_summary.csv`
+- `outputs/lightweight/experiments/m3_focal_loss_tiny_cnn/metrics/m3_focal_loss_tiny_cnn_metrics.json`
+- `outputs/lightweight/experiments/m3_focal_loss_tiny_cnn/models/m3_focal_loss_tiny_cnn.tflite`
+- `outputs/lightweight/experiments/m3_gravity_feature_tiny_cnn/metrics/m3_gravity_feature_tiny_cnn_metrics.json`
+- `outputs/lightweight/experiments/m3_gravity_feature_tiny_cnn/models/m3_gravity_feature_tiny_cnn.tflite`
+
+## Phase 3: Prototype Quantization Strategy
+
+This section records the existing quantization proof-of-concept. It should be rerun after the V2-robust model is selected:
 
 ```powershell
 python -m src.deployment.quantization_experiment --representative-samples 512 --qat-trigger-drop 0.01
@@ -187,14 +216,14 @@ The experiment compares:
 - class-balanced full integer INT8 PTQ
 - INT8 QAT only if all PTQ variants drop macro F1 by more than `0.01`
 
-Current Phase 3 result:
+Prototype Phase 3 result on the UCI-trained DS-CNN:
 
-| Variant | Accuracy | Macro F1 | Size | Host TFLite Mean Latency | Selected |
+| Variant | Accuracy | Macro F1 | Size | Host TFLite Mean Latency | Prototype Selection |
 |---|---:|---:|---:|---:|---|
-| Full integer INT8 PTQ | 0.9138 | 0.9141 | 10,288 bytes | 0.0391 ms | No |
-| Class-balanced full integer INT8 PTQ | 0.9145 | 0.9147 | 10,288 bytes | 0.0430 ms | Yes |
+| Full integer INT8 PTQ | 0.9138 | 0.9141 | 10,288 bytes | 0.0168 ms | No |
+| Class-balanced full integer INT8 PTQ | 0.9145 | 0.9147 | 10,288 bytes | 0.0192 ms | Yes |
 
-QAT decision: not run in this pass because the selected PTQ variant is within `0.0026` macro F1 of the Phase 2 FP32 baseline, which is below the `0.01` trigger threshold.
+QAT decision for this prototype: not run because the selected PTQ variant is within `0.0026` macro F1 of the Phase 2 FP32 baseline, which is below the `0.01` trigger threshold. This decision must be revisited if the final V2-robust model has a larger PTQ drop.
 
 Outputs:
 
@@ -203,8 +232,8 @@ Outputs:
 - `outputs/deployment/quantization_experiments/metrics/quantization_experiment_summary.json`
 - `outputs/deployment/quantization_experiments/models/lightweight_tiny_cnn_full_integer_int8_ptq.tflite`
 - `outputs/deployment/quantization_experiments/models/lightweight_tiny_cnn_class_balanced_full_integer_int8_ptq.tflite`
-- selected deployment artifact copied to `outputs/deployment/models/lightweight_tiny_cnn_int8.tflite`
-- selected Arduino header regenerated at `arduino/tinyml_har_m3/model_data.h`
+- prototype deployment artifact copied to `outputs/deployment/models/lightweight_tiny_cnn_int8.tflite`
+- prototype Arduino header regenerated at `arduino/tinyml_har_m3/model_data.h`
 
 ## Milestone 3 Deployment Prep
 
@@ -212,12 +241,13 @@ Audit the teammate's Arduino CSV collection:
 
 ```powershell
 python -m src.data.arduino_collectdata
+python -m src.data.audit_arduino_domain
 ```
 
-Replay the collected Arduino CSV test data through the INT8 model on the laptop:
+Replay the collected Arduino V2 data through the current UCI-trained prototype on the laptop:
 
 ```powershell
-python -m src.deployment.evaluate_arduino_replay
+python -m src.deployment.evaluate_arduino_replay --root data\raw\arduino_collectdata_v2 --output-dir outputs\arduino_collectdata_v2_baseline_replay --windowed-output data\processed\arduino_collectdata_v2_baseline_replay_windows_50hz.npz
 ```
 
 Outputs:
@@ -225,12 +255,54 @@ Outputs:
 - `docs/tables/arduino_collectdata_class_counts.csv`
 - `docs/tables/arduino_collectdata_file_quality.csv`
 - `outputs/arduino_collectdata/arduino_collectdata_summary.json`
-- `outputs/arduino_collectdata/metrics/arduino_replay_int8_metrics.json`
-- `data/processed/arduino_collectdata_v1_windows_50hz.npz`
+- `outputs/arduino_collectdata_v2_baseline_replay/metrics/arduino_replay_int8_metrics.json`
+- `data/processed/arduino_collectdata_v2_windows_50hz.npz`
 
-The audit found the CSV data is labeled and usable as the Track B real Arduino test dataset, but the observed cadence is about 37-38 Hz rather than 50 Hz and the current data volume is below 100 windows per class after 50 Hz resampling. Offline replay of the selected INT8 model on this real Arduino dataset gives `0.1789` accuracy and `0.0582` macro F1, which indicates a severe domain gap and likely axis/orientation/timing mismatch. This replay result is not live on-device accuracy. The next self-collected dataset round should supersede v1 before final Arduino-live accuracy is claimed.
+The V2 audit found corrected 50 Hz timing and 236 usable windows, but each class is still below the earlier 100-window target. Offline replay of the current UCI-trained baseline on V2 gives `0.1864` accuracy and `0.0524` macro F1; all replay windows collapse to `LAYING`. This is a domain-gap diagnostic, not live on-device accuracy. A deeper replay check found the same collapse in FP32 and INT8, so this is not a quantization bug. The stronger cause is axis/orientation and placement shift: V2 upright/motion windows are centered near negative x-axis gravity, while UCI-HAR upright/motion classes are mostly positive x-axis after preprocessing.
 
-Regenerate the selected full-int8 TFLite model and Arduino C header:
+Because the demo will use the same Arduino/pocket/clothing environment family as V2, the current project strategy is model-first: use UCI-HAR as public source knowledge, use V2 and V2.1 as target-domain adaptation data, keep held-out right/left validation and future live Serial evidence separate, and quantize only the selected candidate for Arduino evidence collection.
+
+The domain audit saves `docs/tables/m3_domain_orientation_comparison.csv` and `outputs/arduino_domain_audit/m3_domain_standardized_shift.json`. Current finding: Arduino V2 `acc_x` is about `-3.40` standard deviations from the UCI-HAR train-only standardizer mean.
+
+Run the V2 mixed-training experiment for the deployable DS-CNN family:
+
+```powershell
+python -m src.training.train_m3_mixed_arduino --experiment all --epochs 40 --patience 8 --device cpu --export-tflite --benchmark-host
+```
+
+Run the earlier V2-only target-domain adaptation experiment suite:
+
+```powershell
+python -m src.training.train_m3_target_domain --experiment all --epochs 40 --patience 8 --device cpu --export-tflite --benchmark-host
+```
+
+Run the latest V2.1 long-adaptation retraining, held-out validation, INT8 packaging, and header regeneration workflow:
+
+```powershell
+python -m src.training.train_m3_retrained_with_v2_1 --experiment all --epochs 40 --patience 8 --device cpu --export-tflite --benchmark-host
+```
+
+Latest retrained result selects `m3_v2_1_mixed_6ch` as the current candidate:
+
+- Held-out right_60s raw replay accuracy: 0.8583
+- Held-out right_60s raw replay macro F1: 0.7647
+- Held-out left_30s raw replay accuracy: 0.4261
+- Held-out left_30s raw replay macro F1: 0.3721
+- Arduino V2 grouped validation accuracy: 0.7379
+- Arduino V2 grouped validation macro F1: 0.7097
+- UCI-HAR official test accuracy: 0.7957
+- UCI-HAR official test macro F1: 0.7932
+- INT8 TFLite size: 10,288 bytes
+
+The raw replay rows are not live Arduino accuracy. The returned true live Serial evidence for the same candidate gives `0.9040` accuracy / `0.9089` macro F1 for right-pocket controlled trials and `0.8901` accuracy / `0.8826` macro F1 for left-pocket robustness trials. Static postures are strong in the live logs; the main remaining live failure is `WALKING_UPSTAIRS -> WALKING_DOWNSTAIRS`.
+
+Deployment finding: the Arduino model is placement- and orientation-sensitive. Use right pocket for the controlled demo, keep the board orientation fixed, and align left-pocket placement to resemble right-pocket orientation if robustness testing is repeated. Static classes depend strongly on board angle, while stair direction remains the main dynamic-class weakness.
+
+Detailed results are saved in `outputs/deployment/m3_retrained_with_v2_1/`, `docs/tables/m3_retrained_model_comparison.md`, and `docs/tables/m3_live_validation_results.md`.
+
+The 10-channel feature computation is shared in `src/data/target_domain_features.py`. The Arduino sketch is also forward-compatible with a future `kChannelCount = 10` `model_data.h`: it computes gravity direction XYZ and acceleration magnitude from the 128-sample window before applying exported normalization constants.
+
+Prototype quantization command for the older UCI-trained DS-CNN, retained only as historical reference:
 
 ```powershell
 python -m src.deployment.quantization_experiment --representative-samples 512 --qat-trigger-drop 0.01
@@ -243,7 +315,7 @@ Outputs:
 - `outputs/deployment/metrics/m2_vs_m3_int8_comparison.csv`
 - `arduino/tinyml_har_m3/model_data.h`
 
-Current selected INT8 offline result on the UCI HAR held-out test set:
+Current prototype INT8 offline result on the UCI HAR held-out test set:
 
 - Quantization: class-balanced full integer INT8 PTQ
 - Accuracy: 0.9145
@@ -257,7 +329,7 @@ Arduino sketch:
 arduino/tinyml_har_m3/tinyml_har_m3.ino
 ```
 
-Open the sketch in Arduino IDE, select Arduino Nano 33 BLE Sense, install `Arduino_LSM9DS1` and Arduino TensorFlow Lite / TensorFlow Lite Micro, upload, and monitor Serial at 115200 baud. The teammate with the board must still provide the M3 hardware evidence: 2-minute stable run, video/serial log, average latency over at least 50 invokes, compile flash/RAM summary, live 20-trials/class confusion matrix, and 10-trials/class robustness test.
+Open the sketch in Arduino IDE with the current candidate `model_data.h`. Returned hardware evidence shows the sketch compiles on Arduino Nano 33 BLE Sense, uses 177,504 bytes flash and 111,144 bytes RAM, reports a 61,440-byte tensor arena, and averages 34.113 ms per `Invoke()` over 50 windows. See `README_MILESTONE3.md` for the full M3 evidence table and remaining final PDF/video submission steps.
 
 ## Phase 2 Notebook Lab
 
@@ -278,9 +350,12 @@ The notebook imports `src.training.experiment_lab.run_keras_architecture`, so mo
 ## Project Documentation
 
 - `README_MILESTONE2.md`: handout-aligned Milestone 2 explanation and D2/D3/D4 mapping.
-- `README_MILESTONE3.md`: M3 deployment prep, commands, current artifacts, and hardware tasks.
-- `docs/milestone3_report_draft.md`: M3 report draft with hardware-only fields marked pending.
-- `docs/milestone3_teammate_message.md`: message/checklist for the teammate holding the Arduino.
+- `README_MILESTONE3.md`: M3 deployment prep, commands, current artifacts, and returned hardware/live evidence.
+- `docs/milestone3_report_draft.md`: M3 report draft with R1-R7 evidence integrated.
+- `docs/m3_submission_checklist.md`: final M3 submission checklist.
+- `docs/m3_handout_compliance_check.md`: handout-aligned D1-D4 and R1-R7 compliance table.
+- `docs/milestone3_live_trial_protocol.md`: live trial protocol used for returned Arduino evidence.
+- `docs/tables/m3_live_serial_results.md`: scored right-pocket controlled and left-pocket robustness live Serial results.
 - `docs/tables/`: dataset inspection tables and class-count summaries.
 - `outputs/lightweight/` and `outputs/reproduction/`: generated models, metrics, logs, and figures.
 
@@ -296,4 +371,4 @@ Main firmware file:
 
 - `src/main.cpp`
 
-Next-round plan: collect a clean Arduino v2 dataset at verified 50 Hz, then execute the live on-device TFLM evaluation on Arduino Nano 33 BLE Sense using the selected class-balanced INT8 PTQ model.
+Next-round plan: export the final PDF and submit the returned videos/logs for M3, then improve stair-direction robustness for M4 with more balanced upstairs/downstairs data and calibration/orientation-aware features.

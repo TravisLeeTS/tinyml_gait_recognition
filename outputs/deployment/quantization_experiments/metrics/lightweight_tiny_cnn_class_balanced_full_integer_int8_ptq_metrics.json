@@ -189,9 +189,9 @@
       "host_delegate_ops": 3
     },
     "host_tflite_latency": {
-      "mean_ms": 0.0429699997039279,
-      "median_ms": 0.043799998820759356,
-      "p95_ms": 0.04918499780615093,
+      "mean_ms": 0.019211999897379428,
+      "median_ms": 0.01750000228639692,
+      "p95_ms": 0.029990004259161606,
       "runs": 50,
       "device_note": "Host TensorFlow Lite Interpreter latency only; M3 requires Arduino micros() latency."
     },

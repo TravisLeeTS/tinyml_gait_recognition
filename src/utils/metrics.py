@@ -24,6 +24,7 @@ def classification_outputs(
     report = classification_report(
         y_true,
         y_pred,
+        labels=list(range(len(class_names))),
         target_names=class_names,
         output_dict=True,
         zero_division=0,
