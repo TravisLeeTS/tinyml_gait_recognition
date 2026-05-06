@@ -24,7 +24,22 @@ Use Arduino IDE or Arduino CLI with:
 - Libraries: `Arduino_LSM9DS1` and Arduino TensorFlow Lite / TensorFlow Lite Micro
 - Serial monitor: `115200` baud
 
-Record the exact library and board-package versions from the teammate's machine in the M3 report after the first successful compile.
+Compile and upload with Arduino CLI, if available:
+
+```powershell
+arduino-cli compile --fqbn arduino:mbed_nano:nano33ble arduino\tinyml_har_m3
+arduino-cli upload -p COM_PORT --fqbn arduino:mbed_nano:nano33ble arduino\tinyml_har_m3
+```
+
+Replace `COM_PORT` with the board port shown by Arduino IDE or `arduino-cli board list`.
+
+The returned M3 evidence used Arduino IDE 2.3.8, Arduino Mbed OS Nano Boards 4.5.0, Arduino_LSM9DS1 1.1.1, and Harvard_TinyMLx 1.2.4-Alpha.
+
+## Quantization
+
+The current sketch uses a full-integer INT8 post-training-quantized TFLite model. The selected FP32 candidate is 13,460 bytes / 13.14 KiB as `.tflite`; the deployed INT8 `.tflite` is 10,288 bytes / 10.05 KiB. The generated `model_data.h` source file is 65,933 bytes / 64.39 KiB because it also stores C-array text and normalization constants.
+
+QAT was not used for M3 because INT8 PTQ did not create a material macro-F1 drop on the selected candidate. The main remaining failure is stair-direction confusion, not quantization loss.
 
 ## Demo Output
 

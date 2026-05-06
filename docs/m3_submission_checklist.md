@@ -11,6 +11,7 @@ Important wording: this is the M3 candidate deployment build used for returned l
 | Item | Status |
 |---|---|
 | `tinyml_milestone3.pdf` follows the R1-R7 handout structure | Done |
+| PDF page count checked against 3-5 page handout range | Attention: current PDF is 6 pages |
 | R1 deployment pipeline included | Done |
 | R2 deployment metrics table included | Done, hardware values integrated |
 | R3 baseline vs improved comparison included | Done |
@@ -39,7 +40,13 @@ Important wording: this is the M3 candidate deployment build used for returned l
 | Metric | Status |
 |---|---|
 | Selected INT8 `.tflite` size: 10,288 bytes | Done |
+| Selected INT8 `.tflite` size in KiB: 10.05 KiB | Done |
+| FP32 selected candidate size: 13,460 bytes / 13.14 KiB | Done |
+| Quantization type: full-integer INT8 PTQ | Done |
+| Representative calibration excludes UCI test, right/left validation, and live Serial logs | Done |
+| QAT decision documented | Done, not used because PTQ did not create a material macro-F1 drop |
 | `model_data.h` generated and included | Done |
+| Generated `model_data.h` source size: 65,933 bytes / 64.39 KiB | Done |
 | Tensor arena size: 61,440 bytes | Done, boot Serial metadata |
 | Arduino compile flash usage: 177,504 bytes / 18% | Done |
 | Arduino compile RAM usage: 111,144 bytes / 42% | Done |
@@ -102,3 +109,4 @@ Important wording: this is the M3 candidate deployment build used for returned l
 | Update R2/R4/R5 report placeholders with hardware/live results | Done |
 | Export final PDF report as `tinyml_milestone3.pdf` | Done |
 | Submit zip/repo/report/video or Serial evidence | Pending |
+| If the instructor enforces 3-5 pages strictly, shorten the 6-page PDF | Pending decision |

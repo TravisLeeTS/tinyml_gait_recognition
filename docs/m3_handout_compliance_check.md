@@ -6,12 +6,14 @@ Source of truth: `Project_Milestone3_Handout.pdf`. This check maps the current r
 
 | Requirement | Status | Evidence/File | Notes |
 |---|---|---|---|
-| D1 PDF report, 3-5 pages | Complete | `tinyml_milestone3.pdf` | Final PDF exists and follows the R1-R7 handout structure. |
+| D1 PDF report, 3-5 pages | Attention | `tinyml_milestone3.pdf` | Final PDF exists and follows the R1-R7 handout structure, but the current file is 6 pages. If the page limit is enforced strictly, compress it to 3-5 pages before submission. |
 | D2 working on-device demo with live sensor input | Complete | `arduino/tinyml_har_m3/tinyml_har_m3.ino`, `outputs/live_evidence/raw_teammate_return/` | Teammate returned Arduino compile/run evidence and live Serial prediction logs. |
 | D3 30-90 second video or Serial log showing live inference | Mostly complete | `outputs/live_evidence/raw_teammate_return/2_30_stability_video.mp4`, `sitting_proof.mp4`, `standing_proof.mp4`, `walking_proof.mp4` | Stability video is about 156 seconds, so it is useful supporting evidence but longer than the requested 30-90 seconds. Submit proof clips together or edit a 30-90 second demo clip from them. |
 | D4 updated code repository | Complete | `README.md`, `README_MILESTONE3.md`, `src/`, `arduino/tinyml_har_m3/`, `outputs/deployment/m3_retrained_with_v2_1/` | Repo contains training code, packaging/conversion code, Arduino sketch, model header, selected `.tflite`, README instructions, metrics, and final PDF report. |
 | R1 deployment pipeline | Complete | `tinyml_milestone3.pdf`, `arduino/tinyml_har_m3/README.md` | Report describes Keras -> INT8 TFLite -> C array -> TFLite Micro, LSM9DS1, 50 Hz, 128-sample windows, 64-sample stride, normalization, Serial/LED output. |
 | R2 deployment metrics: model size | Complete | `outputs/deployment/m3_retrained_with_v2_1/models/m3_v2_1_mixed_6ch_int8.tflite`, `outputs/live_evidence/hardware_metrics.json` | INT8 model size is 10,288 bytes. |
+| R1/R3 quantization method and decision | Complete | `README_MILESTONE3.md`, `outputs/deployment/m3_retrained_with_v2_1/m3_retrained_fp32_vs_int8_summary.csv` | Selected candidate uses full-integer INT8 PTQ. Representative data comes only from training/adaptation windows. QAT was not used because PTQ did not create a material macro-F1 drop. |
+| R3 before/after quantization comparison | Complete | `README_MILESTONE3.md`, `docs/tables/m3_retrained_model_comparison.md` | M3 README now reports FP32 candidate size 13,460 bytes / 13.14 KiB versus INT8 deployment size 10,288 bytes / 10.05 KiB, plus FP32 vs INT8 macro F1 by split. |
 | R2 deployment metrics: latency over >=50 Invoke calls | Complete | `outputs/live_evidence/hardware_metrics.json`, `filling_todolist.docx` | Average `Invoke()` latency is 34,113 us / 34.113 ms over 50 inferences. |
 | R2 deployment metrics: RAM/tensor arena | Complete | `outputs/live_evidence/hardware_metrics.json`, `docs/m3_hardware_metrics_template.md` | Tensor arena is 61,440 bytes; compile RAM usage is 111,144 bytes / 42%. |
 | R2 compile flash usage | Complete | `outputs/live_evidence/hardware_metrics.json`, `tinyml_milestone3.pdf` | Sketch uses 177,504 bytes / 18% of program storage. |
@@ -31,5 +33,6 @@ Source of truth: `Project_Milestone3_Handout.pdf`. This check maps the current r
 ## Remaining Action Items Before Submission
 
 - Attach or upload the returned demo videos and/or Serial logs with the submission.
+- Decide whether to compress `tinyml_milestone3.pdf` from 6 pages to the handout's 3-5 page range.
 - Decide whether to submit the 156-second stability video only as supporting evidence or edit/submit a shorter 30-90 second demo clip from the proof videos.
 - Ensure large video files are not committed to git if the course repository should stay lightweight.
