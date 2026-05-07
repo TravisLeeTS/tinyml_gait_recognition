@@ -6,6 +6,9 @@ This README is the Milestone 3 evidence index. The final submission report is
 `tinyml_milestone3.pdf`; use this file to find the code, datasets, commands,
 metrics, and returned Arduino evidence behind that report.
 
+> **Professor evidence files to open:**  
+> The small returned proof files are included directly in GitHub: [`walking_proof.mp4`](outputs/live_evidence/raw_teammate_return/walking_proof.mp4), [`standing_proof.mp4`](outputs/live_evidence/raw_teammate_return/standing_proof.mp4), [`sitting_proof.mp4`](outputs/live_evidence/raw_teammate_return/sitting_proof.mp4), and [`filling_todolist.docx`](outputs/live_evidence/raw_teammate_return/filling_todolist.docx). The larger `2_30_stability_video.mp4` is intentionally left for the course submission attachment because it is too large for a normal GitHub push.
+
 Current status: Milestone 3 submitted. On-device inference working.
 
 Milestone 3 storyline:
@@ -49,15 +52,13 @@ target-domain adaptation data, then quantized with full-integer INT8 PTQ.
 
 Returned proof evidence is under `outputs/live_evidence/raw_teammate_return/`:
 
-- `2_30_stability_video.mp4`
-- `sitting_proof.mp4`
-- `standing_proof.mp4`
-- `walking_proof.mp4`
+- `sitting_proof.mp4` (included in GitHub)
+- `standing_proof.mp4` (included in GitHub)
+- `walking_proof.mp4` (included in GitHub)
+- `filling_todolist.docx` (included in GitHub)
+- `2_30_stability_video.mp4` (too large for normal GitHub; attach separately)
 - `7_control_trials/`
 - `8_robust_trials/`
-
-Large video files should be attached with the submission rather than treated as
-normal source-code artifacts.
 
 ## Dataset Register
 

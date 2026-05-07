@@ -11,7 +11,7 @@ Team:
 - Vineetha Addanki, G00111196
 
 > **Important for Milestone 3 grading:**  
-> Use [`tinyml_milestone3.pdf`](tinyml_milestone3.pdf) as the main M3 report. M3 deployment prep and returned Arduino evidence are summarized in [`README_MILESTONE3.md`](README_MILESTONE3.md), with the Arduino sketch under [`arduino/tinyml_har_m3/`](arduino/tinyml_har_m3/). Hardware metrics, proof videos, and live Serial confusion matrices have been integrated; only the returned videos/logs still need to be attached with the submission.
+> Use [`tinyml_milestone3.pdf`](tinyml_milestone3.pdf) as the main M3 report. Please also open the GitHub evidence files [`walking_proof.mp4`](outputs/live_evidence/raw_teammate_return/walking_proof.mp4), [`standing_proof.mp4`](outputs/live_evidence/raw_teammate_return/standing_proof.mp4), [`sitting_proof.mp4`](outputs/live_evidence/raw_teammate_return/sitting_proof.mp4), and [`filling_todolist.docx`](outputs/live_evidence/raw_teammate_return/filling_todolist.docx). M3 deployment prep and returned Arduino evidence are summarized in [`README_MILESTONE3.md`](README_MILESTONE3.md), with the Arduino sketch under [`arduino/tinyml_har_m3/`](arduino/tinyml_har_m3/). Hardware metrics, proof videos, and live Serial confusion matrices have been integrated; the large `2_30_stability_video.mp4` is kept out of GitHub because of size and should be attached separately with the course submission.
 
 > **Milestone 2 background:**  
 > [`README_MILESTONE2.md`](README_MILESTONE2.md) remains available for the previous milestone's D2/D3/D4 details, preprocessing, dataset download, baseline scripts, held-out test results, and explanation of in-memory `x_train/y_train/x_val/x_test` arrays.

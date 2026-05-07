@@ -23,10 +23,10 @@ data/processed/*.npz
 *.zip
 outputs/share/
 
-# Large returned teammate evidence files. Keep these outside GitHub and submit
-# through the course evidence channel instead.
-outputs/live_evidence/raw_teammate_return/*.mp4
-outputs/live_evidence/raw_teammate_return/*.docx
+# Oversized returned teammate evidence. Small proof videos/docs in this folder
+# are intentionally committed for M3 grading; keep the large stability video in
+# the course submission attachment instead of GitHub.
+outputs/live_evidence/raw_teammate_return/2_30_stability_video.mp4
 
 # Local raw Arduino captures are used to regenerate metrics, but should not be
 # uploaded accidentally as repository source.
