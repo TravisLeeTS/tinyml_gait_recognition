@@ -1,0 +1,157 @@
+{
+  "model_name": "m4_session3_4_base_6ch_int8_session1_right_pocket_int8",
+  "accuracy": 0.9745762711864406,
+  "macro_f1": 0.9663299663299663,
+  "weighted_f1": 0.9743194658448896,
+  "test_samples": 118,
+  "class_names": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "classification_report": {
+    "WALKING": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 22.0
+    },
+    "WALKING_UPSTAIRS": {
+      "precision": 0.8333333333333334,
+      "recall": 1.0,
+      "f1-score": 0.9090909090909091,
+      "support": 15.0
+    },
+    "WALKING_DOWNSTAIRS": {
+      "precision": 1.0,
+      "recall": 0.8,
+      "f1-score": 0.8888888888888888,
+      "support": 15.0
+    },
+    "SITTING": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 22.0
+    },
+    "STANDING": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 22.0
+    },
+    "LAYING": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 22.0
+    },
+    "accuracy": 0.9745762711864406,
+    "macro avg": {
+      "precision": 0.9722222222222223,
+      "recall": 0.9666666666666667,
+      "f1-score": 0.9663299663299663,
+      "support": 118.0
+    },
+    "weighted avg": {
+      "precision": 0.9788135593220338,
+      "recall": 0.9745762711864406,
+      "f1-score": 0.9743194658448896,
+      "support": 118.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      22,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      15,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      3,
+      12,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      22,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      22,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      22
+    ]
+  ],
+  "top_confusion_pairs": [
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 3
+    }
+  ],
+  "model_info": {
+    "tflite_path": "outputs/m4_live_handoff_candidate_base6_compare/models/m4_session3_4_base_6ch_int8.tflite",
+    "tflite_size_bytes": 10288,
+    "tflite_metadata": {
+      "input_dtype": "<class 'numpy.int8'>",
+      "output_dtype": "<class 'numpy.int8'>",
+      "input_scale": 0.1477741301059723,
+      "input_zero_point": 11,
+      "output_scale": 0.00390625,
+      "output_zero_point": -128,
+      "ops": [
+        "RESHAPE",
+        "CONV_2D",
+        "DEPTHWISE_CONV_2D",
+        "CONV_2D",
+        "AVERAGE_POOL_2D",
+        "DEPTHWISE_CONV_2D",
+        "CONV_2D",
+        "RESHAPE",
+        "MEAN",
+        "FULLY_CONNECTED",
+        "SOFTMAX"
+      ],
+      "host_delegate_ops": 3
+    },
+    "host_tflite_latency": {
+      "mean_ms": 0.017648000011831755,
+      "median_ms": 0.017500000467407517,
+      "p95_ms": 0.018274999820278026,
+      "runs": 50,
+      "device_note": "Host TensorFlow Lite Interpreter latency only; M3 requires Arduino micros() latency."
+    },
+    "device_note": "Host TFLite latency is not an Arduino latency claim."
+  }
+}

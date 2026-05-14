@@ -1,0 +1,4 @@
+condition_key,condition,person,placement,n_predictions,accuracy,macro_f1,weighted_f1,mean_latency_us,median_latency_us,mean_confidence,top_confusions
+person_a_controlled_right,Person A controlled right pocket,Person A,right pocket,132,1.0,1.0,1.0,35644.0,35641.0,0.9570090909090909,none
+person_a_robustness_left,Person A robustness left pocket,Person A,left pocket,137,1.0,1.0,1.0,35642.16058394161,35641.0,0.9642510948905109,none
+person_b_robustness_right,Person B robustness right pocket,Person B,right pocket,145,0.993103448275862,0.9927501970055163,0.993106709056819,35643.86896551724,35641.0,0.9471531034482759,WALKING_DOWNSTAIRS->WALKING_UPSTAIRS (1)

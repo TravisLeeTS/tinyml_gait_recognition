@@ -1,0 +1,41 @@
+{
+  "input_name": "TINYML_HAR_DATA_STANDARDIZED_v2.zip",
+  "input_kind": "zip",
+  "sensor_columns": [
+    "time_ms",
+    "ax",
+    "ay",
+    "az",
+    "gx",
+    "gy",
+    "gz"
+  ],
+  "format": "semicolon-separated text files with header time_ms; ax; ay; az; gx; gy; gz",
+  "files": 84,
+  "sessions": [
+    "session_01_1person_allclass_30s",
+    "session_03_1person_4class_5min",
+    "session_04_2person_allclass_mixed_duration"
+  ],
+  "persons": [
+    "person_A",
+    "person_B"
+  ],
+  "placements": [
+    "left_pocket",
+    "right_pocket"
+  ],
+  "classes": [
+    "LAYING",
+    "SITTING",
+    "STANDING",
+    "WALKING",
+    "WALKING_DOWNSTAIRS",
+    "WALKING_UPSTAIRS"
+  ],
+  "rows_valid": 275174,
+  "duration_seconds": 5442.451,
+  "windows_128_stride64": 4170,
+  "invalid_rows": 0,
+  "median_effective_hz": 50.0
+}

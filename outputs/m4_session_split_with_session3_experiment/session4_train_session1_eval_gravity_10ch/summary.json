@@ -1,0 +1,47 @@
+{
+  "run_name": "session4_train_session1_eval_gravity_10ch",
+  "feature_mode": "gravity_10ch",
+  "algorithm_mitigation": "Orientation-aware repeated gravity direction and acceleration magnitude features.",
+  "calibration_pose_note": "No explicit calibration-pose samples are used in this run.",
+  "train_windows_before_augmentation": 10962,
+  "train_windows_effective": 21924,
+  "internal_validation_windows": 1801,
+  "session1_right_windows": 118,
+  "session1_left_windows": 115,
+  "augmentation": {
+    "enabled": true,
+    "copies": 1,
+    "noise_std": 0.02,
+    "scale_min": 0.95,
+    "scale_max": 1.05,
+    "max_shift": 4,
+    "guardrail": "Only training windows were augmented. Session 1 right/left evaluations were unchanged."
+  },
+  "parameters": 2066,
+  "trainable_parameters": 1930,
+  "uci_internal_val_accuracy": 0.9455857856746253,
+  "uci_internal_val_macro_f1": 0.9454997221329929,
+  "session1_right_accuracy": 0.788135593220339,
+  "session1_right_macro_f1": 0.744107744107744,
+  "session1_left_accuracy": 0.9826086956521739,
+  "session1_left_macro_f1": 0.9752747252747254,
+  "session1_right_top_confusions": [
+    {
+      "true": "LAYING",
+      "predicted": "SITTING",
+      "count": 22
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 3
+    }
+  ],
+  "session1_left_top_confusions": [
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 2
+    }
+  ]
+}

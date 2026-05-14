@@ -1,0 +1,23 @@
+{
+  "condition_key": "person_a_controlled_right",
+  "condition": "Person A controlled right pocket",
+  "person": "Person A",
+  "placement": "right pocket",
+  "n_predictions": 132,
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "weighted_f1": 1.0,
+  "mean_latency_us": 35644.0,
+  "median_latency_us": 35641.0,
+  "mean_confidence": 0.9570090909090909,
+  "row_counts_by_class": {
+    "WALKING": 22,
+    "WALKING_UPSTAIRS": 22,
+    "WALKING_DOWNSTAIRS": 22,
+    "SITTING": 22,
+    "STANDING": 22,
+    "LAYING": 22
+  },
+  "top_confusions": [],
+  "source": "Live Arduino Serial predictions from Session05_live_may14.zip; not laptop replay."
+}

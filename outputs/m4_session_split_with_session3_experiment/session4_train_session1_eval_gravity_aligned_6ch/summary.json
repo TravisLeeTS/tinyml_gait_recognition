@@ -1,0 +1,72 @@
+{
+  "run_name": "session4_train_session1_eval_gravity_aligned_6ch",
+  "feature_mode": "gravity_aligned_6ch",
+  "algorithm_mitigation": "Offline gravity-frame alignment by rotating each window to align mean acceleration with +Z.",
+  "calibration_pose_note": "A real calibration-pose workflow is still a hardware protocol requirement. This experiment approximates calibration algorithmically from each window's mean acceleration.",
+  "train_windows_before_augmentation": 10962,
+  "train_windows_effective": 21924,
+  "internal_validation_windows": 1801,
+  "session1_right_windows": 118,
+  "session1_left_windows": 115,
+  "augmentation": {
+    "enabled": true,
+    "copies": 1,
+    "noise_std": 0.02,
+    "scale_min": 0.95,
+    "scale_max": 1.05,
+    "max_shift": 4,
+    "guardrail": "Only training windows were augmented. Session 1 right/left evaluations were unchanged."
+  },
+  "parameters": 1922,
+  "trainable_parameters": 1786,
+  "uci_internal_val_accuracy": 0.8650749583564686,
+  "uci_internal_val_macro_f1": 0.8632442854709805,
+  "session1_right_accuracy": 0.7711864406779662,
+  "session1_right_macro_f1": 0.7248397597234807,
+  "session1_left_accuracy": 0.6086956521739131,
+  "session1_left_macro_f1": 0.6468601708743266,
+  "session1_right_top_confusions": [
+    {
+      "true": "LAYING",
+      "predicted": "SITTING",
+      "count": 22
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 3
+    },
+    {
+      "true": "WALKING",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 1
+    },
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 1
+    }
+  ],
+  "session1_left_top_confusions": [
+    {
+      "true": "LAYING",
+      "predicted": "SITTING",
+      "count": 22
+    },
+    {
+      "true": "SITTING",
+      "predicted": "LAYING",
+      "count": 20
+    },
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 2
+    },
+    {
+      "true": "WALKING",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 1
+    }
+  ]
+}

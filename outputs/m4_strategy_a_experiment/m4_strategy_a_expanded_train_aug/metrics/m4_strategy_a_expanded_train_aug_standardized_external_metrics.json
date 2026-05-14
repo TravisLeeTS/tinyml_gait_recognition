@@ -1,0 +1,143 @@
+{
+  "model_name": "m4_strategy_a_expanded_train_aug_standardized_external",
+  "accuracy": 0.7663188546469304,
+  "macro_f1": 0.6509337715684306,
+  "weighted_f1": 0.7520825899821052,
+  "test_samples": 4121,
+  "class_names": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "classification_report": {
+    "WALKING": {
+      "precision": 0.8455188679245284,
+      "recall": 0.8607442977190877,
+      "f1-score": 0.8530636525877454,
+      "support": 833.0
+    },
+    "WALKING_UPSTAIRS": {
+      "precision": 0.9814814814814815,
+      "recall": 0.21115537848605578,
+      "f1-score": 0.3475409836065574,
+      "support": 251.0
+    },
+    "WALKING_DOWNSTAIRS": {
+      "precision": 0.25333333333333335,
+      "recall": 0.4418604651162791,
+      "f1-score": 0.3220338983050847,
+      "support": 215.0
+    },
+    "SITTING": {
+      "precision": 1.0,
+      "recall": 0.4268689057421452,
+      "f1-score": 0.59832953682612,
+      "support": 923.0
+    },
+    "STANDING": {
+      "precision": 0.9876265466816648,
+      "recall": 1.0,
+      "f1-score": 0.9937747594793436,
+      "support": 878.0
+    },
+    "LAYING": {
+      "precision": 0.6540679051889814,
+      "recall": 1.0,
+      "f1-score": 0.790859798605732,
+      "support": 1021.0
+    },
+    "accuracy": 0.7663188546469304,
+    "macro avg": {
+      "precision": 0.7870046891016648,
+      "recall": 0.6567715078439279,
+      "f1-score": 0.6509337715684306,
+      "support": 4121.0
+    },
+    "weighted avg": {
+      "precision": 0.8403482588410829,
+      "recall": 0.7663188546469304,
+      "f1-score": 0.7520825899821052,
+      "support": 4121.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      717,
+      0,
+      107,
+      0,
+      0,
+      9
+    ],
+    [
+      24,
+      53,
+      173,
+      0,
+      1,
+      0
+    ],
+    [
+      107,
+      1,
+      95,
+      0,
+      10,
+      2
+    ],
+    [
+      0,
+      0,
+      0,
+      394,
+      0,
+      529
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      878,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1021
+    ]
+  ],
+  "top_confusion_pairs": [
+    {
+      "true": "SITTING",
+      "predicted": "LAYING",
+      "count": 529
+    },
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 173
+    },
+    {
+      "true": "WALKING",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 107
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING",
+      "count": 107
+    },
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "WALKING",
+      "count": 24
+    }
+  ]
+}

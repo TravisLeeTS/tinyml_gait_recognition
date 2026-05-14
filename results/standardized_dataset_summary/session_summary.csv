@@ -1,0 +1,4 @@
+session,files,rows_valid,duration_seconds,windows_128_stride64
+session_01_1person_allclass_30s,27,17905,353.18,233
+session_03_1person_4class_5min,4,60759,1199.884,944
+session_04_2person_allclass_mixed_duration,53,196510,3889.387,2993

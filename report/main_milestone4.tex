@@ -1,0 +1,570 @@
+\documentclass[11pt,a4paper]{article}
+
+% Lightweight report version: no figures, no TikZ, no external image files.
+\usepackage[margin=0.82in]{geometry}
+\usepackage{array}
+\usepackage[table]{xcolor}
+\usepackage{enumitem}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlist[itemize]{leftmargin=*,topsep=3pt,itemsep=2pt}
+\renewcommand{\arraystretch}{1.18}
+\definecolor{headergray}{gray}{0.88}
+\definecolor{softblue}{RGB}{236,244,252}
+\newcommand{\metric}[1]{\textbf{#1}}
+\newcommand{\term}[1]{\textbf{#1}}
+
+\begin{document}
+\normalsize
+
+\begin{center}
+{\Large \textbf{TinyML Project -- Milestone 4 Final Report}}\\
+{\large \textbf{Energy-Efficient Human Activity Recognition on the Edge}}\\
+Group 3, Track B: Arduino-collected TinyML HAR with public and self-collected data\\
+Lee Ting Sen (B00103724), Khalifa Alshamsi (B00078654), Vineetha Addanki (G00111196)\\
+May 2026
+\end{center}
+
+\begin{center}
+\fcolorbox{black}{softblue}{
+\begin{minipage}{0.94\textwidth}
+\textbf{At-a-glance status.} M3 produced completed live Arduino evidence with a 6-channel INT8 DS-CNN. M4 adds standardized Arduino data, leakage-safe session splits, training-only augmentation, gravity/orientation features, and a packaged 10-channel INT8 model. The May 14 Session05 live Arduino run contains 414 scored prediction rows across Person A controlled right pocket, Person A robustness left pocket, and Person B right-pocket robustness. Aggregate M4 live accuracy is 0.9976 and macro-F1 is 0.9974, with one total stair-direction error.
+\end{minipage}}
+\end{center}
+
+\section{R1. Problem Statement and Motivation}
+
+This project implements six-class Human Activity Recognition (HAR) on Arduino Nano 33 BLE Sense using the onboard LSM9DS1 accelerometer and gyroscope. The classes are \texttt{LAYING}, \texttt{SITTING}, \texttt{STANDING}, \texttt{WALKING}, \texttt{WALKING\_UPSTAIRS}, and \texttt{WALKING\_DOWNSTAIRS}. TinyML is suitable because the model runs locally with low latency, avoids continuous raw-motion upload, does not require cloud connectivity, and can provide immediate Serial/LED feedback.
+
+The main engineering constraints are MCU memory, model size, inference latency, sensor noise, pocket placement, board angle, stair-direction ambiguity, and limited user diversity. M3 established a working live Arduino system. M4 extends the work with standardized Arduino data, leakage-aware session splitting, training-only augmentation, orientation-aware features, and a packaged 10-channel INT8 model that has now been tested in a May 14 live Arduino run. The report separates live hardware evidence from offline replay evidence so that no result is overstated.
+
+\subsection*{Technical Terms Used in This Report}
+
+\begin{itemize}
+\item \term{Windowing:} the IMU stream is divided into 128-sample windows at 50 Hz. A stride of 64 samples means consecutive windows overlap by 50 percent.
+\item \term{Session-aware split:} all windows from a raw recording session stay on one side of the split. This prevents overlapping windows from the same recording leaking into both training and testing. This is the leakage-prevention step.
+\item \term{Feature standardization:} each input channel is normalized using training-side mean and standard deviation values. This is different from the session-aware split and also different from the standardized HAR v2 dataset name. In short: session-aware split controls which recordings are used for train/test; feature standardization controls the numeric scale of each channel.
+\item \term{Training-only augmentation:} synthetic noise, scaling, and mild time shifts are applied only to training windows. Validation, test, live logs, and standardized session 1 holdouts are never augmented.
+\item \term{Offline replay vs. live Serial evidence:} replay means evaluating saved sensor recordings on a computer or exported INT8 model. Live Serial evidence means the Arduino reads the sensor and prints predictions during a real run.
+\item \term{INT8 post-training quantization (PTQ):} a trained floating-point model is converted to 8-bit integer operations for TensorFlow Lite Micro. Calibration windows are taken from training-side data only.
+\item \term{Tensor arena:} the fixed RAM buffer used by TensorFlow Lite Micro for intermediate tensors during inference.
+\item \term{Gravity-frame alignment:} a preprocessing experiment that estimates the gravity direction from each window and rotates IMU axes toward a common vertical frame.
+\item \term{10-channel gravity/orientation features:} the final model keeps the six raw accelerometer/gyroscope channels and adds gravity direction x/y/z plus acceleration magnitude.
+\item \term{Macro-F1:} the average of per-class F1 scores. It is useful for imbalanced classes, but live macro-F1 must still be interpreted carefully when row counts differ by class.
+\end{itemize}
+
+\section{R2. Data}
+
+The project uses four different kinds of data: public UCI-HAR data, earlier Arduino recordings, the new standardized Arduino recordings, and live Arduino Serial logs. These are not interchangeable. Training data are used to fit the model, held-out replay data are used to test saved recordings after the split is fixed, and live Serial logs are post-deployment hardware evidence after the model is already packaged.
+
+The central leakage rule is that windows from the same raw recording or session must not appear on both sides of a train/evaluation split. Augmented windows are used only for training. Live Arduino logs are never used for training, augmentation, representative INT8 calibration, or model packaging.
+
+\textbf{Final data card and data-flow policy}
+
+\begin{center}
+\small
+\begin{tabular}{|p{2.5cm}|p{3.6cm}|p{3.2cm}|p{4.1cm}|}
+\hline
+\rowcolor{headergray}
+\textbf{Stage} & \textbf{Data source} & \textbf{M4 use} & \textbf{Transparency / leakage rule}\\
+\hline
+Public source data & UCI-HAR six-class IMU benchmark. & Source-domain training and comparison. & Official UCI-HAR test split is excluded from training and INT8 calibration. Public accuracy does not guarantee Arduino pocket accuracy.\\
+\hline
+Earlier Arduino training data & Arduino V2/V2.1 50 Hz captures plus old M3 raw replay recordings. & Target-domain adaptation; reduces UCI-to-Arduino deployment shift. & Training-side only in M4. Old raw replay data are not live evidence and are not mixed with scored live Serial logs.\\
+\hline
+New standardized training data & Standardized session 3 and session 4. Session 3 is one-person, four-class, 5 min, right pocket. Session 4 is the largest all-class right/left-pocket set with two inferable people. & Added to final M4 training because a separate standardized holdout remained available. & Session 3/4 windows are training-side only. Session 2 is not used because it was removed from v2 and described as non-50 Hz.\\
+\hline
+Internal validation & Validation windows selected only from training-side sources. & Model selection during training. & No standardized session 1 windows and no live Serial rows are used here.\\
+\hline
+Offline replay holdout & Standardized session 1 right pocket and left pocket. & M4 right-pocket and left-pocket replay robustness checks before live deployment. & Fully held out from training, augmentation, model selection, and INT8 representative calibration. This is session-level validation, not strict unseen-person validation.\\
+\hline
+Live hardware evidence & Returned M3 live Serial logs and Session05 M4 live Serial logs. Session05 contains Person A controlled right, Person A robustness left, and Person B right-pocket robustness. & Final hardware evidence after the model is flashed to Arduino. & Post-deployment scoring only. These rows are never used to tune or retrain the model.\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+The standardized HAR v2 parser found 84 files, 275,174 valid rows, three sessions, two inferable people, right/left-pocket placements, and about 4,170 raw-row-estimated 128-sample/64-stride windows. The final M4 model trains with UCI-HAR training data, Arduino V2/V2.1, old M3 raw replay recordings, and standardized sessions 3 and 4. Standardized session 1 remains held out for right/left-pocket replay evaluation. Session05 is then used only after deployment as live Arduino evidence. This prevents session/window leakage, but the standardized replay evaluation is session-level validation rather than strict unseen-person validation.
+
+\textbf{Standardized HAR v2 class distribution}
+
+\begin{center}
+\small
+\begin{tabular}{|p{3.7cm}|p{1.2cm}|p{2.0cm}|p{2.0cm}|p{2.0cm}|}
+\hline
+\rowcolor{headergray}
+\textbf{Class} & \textbf{Files} & \textbf{Rows} & \textbf{Seconds} & \textbf{Est. windows}\\
+\hline
+LAYING & 7 & 66,818 & 1,319.8 & 1,034\\
+\hline
+SITTING & 9 & 60,716 & 1,199.7 & 936\\
+\hline
+STANDING & 8 & 57,704 & 1,139.7 & 890\\
+\hline
+WALKING & 7 & 54,646 & 1,079.8 & 844\\
+\hline
+WALKING\_DOWNSTAIRS & 26 & 16,461 & 328.0 & 215\\
+\hline
+WALKING\_UPSTAIRS & 27 & 18,829 & 375.3 & 251\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+\textbf{M4 split sizes}
+
+\begin{center}
+\small
+\begin{tabular}{|p{4.6cm}|p{2.2cm}|p{6.0cm}|}
+\hline
+\rowcolor{headergray}
+\textbf{Split} & \textbf{Windows} & \textbf{Purpose}\\
+\hline
+Training before augmentation & 10,962 & Real training windows from allowed training-side data.\\
+\hline
+Training after augmentation & 21,924 & One augmented copy of training windows only.\\
+\hline
+Internal validation & 1,801 & Model selection during training; no session-1 holdout windows.\\
+\hline
+Held-out session 1 right pocket & 118 & M4 right-pocket replay robustness check.\\
+\hline
+Held-out session 1 left pocket & 115 & M4 left-pocket replay robustness check.\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+The held-out session-1 windows are never augmented, used for representative INT8 calibration, or used to package the model.
+
+\textbf{Post-deployment live evidence counts}
+
+The live Arduino logs are counted separately because they are prediction rows from the flashed device, not training windows.
+
+\begin{center}
+\small
+\begin{tabular}{|p{4.1cm}|p{3.2cm}|p{2.0cm}|p{4.1cm}|}
+\hline
+\rowcolor{headergray}
+\textbf{Live condition} & \textbf{Person / placement} & \textbf{Rows} & \textbf{Role}\\
+\hline
+M4 controlled run & Person A, right pocket & 132 & Primary controlled live evidence.\\
+\hline
+M4 placement robustness run & Person A, left pocket & 137 & Same person, changed pocket placement.\\
+\hline
+M4 new-person robustness run & Person B, right pocket & 145 & Additional user live evidence.\\
+\hline
+\rowcolor{softblue}
+M4 Session05 aggregate & All three live runs & 414 & Final live Arduino result set.\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+\textbf{Data collection lesson.} The M3 feedback showed that short or imbalanced stair trials make \texttt{WALKING\_UPSTAIRS} and \texttt{WALKING\_DOWNSTAIRS} hard to separate. For future collection, stair data should be longer, balanced by direction, recorded with a fixed pocket protocol, and collected from more users before windowing.
+
+\section{R3. Models and Optimization}
+
+The model progression is incremental. M2 used a heavier offline baseline. M3 moved to a deployable depthwise-separable CNN (DS-CNN), showed that a UCI-only model shifted poorly on Arduino pocket data, and improved deployment using mixed UCI plus Arduino training and full-integer INT8 post-training quantization. M4 tested training-only augmentation, session-aware splits for the standardized dataset, gravity-frame alignment, and 10-channel gravity/orientation features.
+
+\textbf{Training data summary}
+
+\begin{itemize}
+\item \term{M2 baseline:} trained and evaluated on UCI-HAR as an offline baseline.
+\item \term{M3 deployed model:} trained with mixed UCI-HAR plus Arduino V2/V2.1 data, then deployed as a 6-channel INT8 DS-CNN.
+\item \term{M4 broad diagnostic:} tested whether the M3-style training setup transferred to the new standardized HAR v2 archive when that archive was kept fully outside training.
+\item \term{Final M4 model:} trained with UCI-HAR, Arduino V2/V2.1, old M3 raw replay recordings, and standardized sessions 3 and 4. Standardized session 1 remains held out for replay evaluation, and Session05 live logs are used only after deployment as hardware evidence.
+\end{itemize}
+
+\textbf{Model progression and evidence status}
+
+\begin{center}
+\small
+\begin{tabular}{|p{2.9cm}|p{3.2cm}|p{1.7cm}|p{1.7cm}|p{4.1cm}|}
+\hline
+\rowcolor{headergray}
+\textbf{Version} & \textbf{Evaluation evidence} & \textbf{Accuracy} & \textbf{Macro-F1} & \textbf{Deployment status}\\
+\hline
+M2 baseline & UCI-HAR held-out test & 0.9135 & 0.9128 & Offline baseline only; not deployed.\\
+\hline
+M3 deployed 6ch INT8 DS-CNN & Right-pocket live Arduino Serial & 0.9040 & 0.9089 & 10.05 KiB; 34.113 ms; 60 KB arena.\\
+\hline
+M4 broad external replay diagnostic & Standardized HAR v2 fully held-out replay & 0.7692 & 0.6538 & Diagnostic only; not selected because stair and posture confusion remained.\\
+\hline
+Final M4 10ch INT8 model & Session 1 right-pocket INT8 replay & 0.9576 & 0.9472 & Same packaged model; 10.19 KiB; 72 KB arena.\\
+\hline
+Final M4 10ch INT8 model & Session 1 left-pocket INT8 replay & 0.9913 & 0.9876 & Same packaged model; offline replay evidence.\\
+\hline
+Final M4 10ch INT8 model & Session05 live Arduino Serial, all supplied conditions & 0.9976 & 0.9974 & 10.19 KiB; 35.64 ms mean \texttt{Invoke()} latency; 72 KB arena.\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+This table separates training setup from evaluation evidence. The M4 broad diagnostic row asks whether the M3-style model generalizes to the new archive when that archive is fully held out. The final M4 replay rows use a different, session-aware training policy: standardized sessions 3 and 4 move into training, while standardized session 1 remains held out for right-pocket and left-pocket replay checks. The Session05 row is different again: it is live Arduino Serial evidence collected after the model was packaged.
+
+\textbf{M4 same-holdout model-selection comparison}
+
+\begin{center}
+\small
+\begin{tabular}{|p{3.4cm}|p{2.0cm}|p{2.0cm}|p{5.7cm}|}
+\hline
+\rowcolor{headergray}
+\textbf{Variant} & \textbf{Right Acc./F1} & \textbf{Left Acc./F1} & \textbf{Result and decision}\\
+\hline
+Base 6ch + augmentation & 0.9746 / 0.9663 & 0.7565 / 0.7181 & Strong right-pocket replay, but weak left-pocket transfer. Placement sensitivity remained.\\
+\hline
+Gravity-frame aligned 6ch + augmentation & 0.7712 / 0.7248 & 0.6087 / 0.6469 & Tested algorithmic placement mitigation, but it did not improve this split. Not selected.\\
+\hline
+10ch gravity/orientation + augmentation, FP32 & 0.7881 / 0.7441 & 0.9826 / 0.9753 & Strong left-pocket replay, but right-pocket replay was weaker before INT8 packaging.\\
+\hline
+Packaged 10ch INT8 model & 0.9576 / 0.9472 & 0.9913 / 0.9876 & Selected from replay evidence and then used for Session05 live Arduino testing.\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+The variants above were constructed as follows. The base 6-channel model uses only \texttt{ax}, \texttt{ay}, \texttt{az}, \texttt{gx}, \texttt{gy}, and \texttt{gz}. The gravity-frame aligned model still uses six channels, but rotates each window toward an estimated vertical axis before inference. The 10-channel model keeps the six raw IMU channels and appends gravity direction x/y/z plus acceleration magnitude. The packaged INT8 model is the deployable TFLite Micro version exported to \texttt{model\_data.h}.
+
+\textbf{What changed in M4}
+
+\begin{itemize}
+\item \term{More Arduino data:} standardized session 3 adds a long right-pocket four-class recording, and standardized session 4 adds the latest all-class right/left-pocket recordings.
+\item \term{Controlled augmentation:} only training windows receive small Gaussian noise, per-channel scaling, and mild time shifts.
+\item \term{Placement mitigation:} gravity-frame alignment was tested directly, and the selected model adds explicit gravity/orientation features.
+\end{itemize}
+
+The selected M4 model is \texttt{m4\_session3\_4\_gravity\_10ch\_int8}. In plain language, this is the final standardized-session 10-channel INT8 model: it uses six IMU channels plus gravity direction x/y/z and acceleration magnitude computed per 128-sample window. The Arduino sketch computes these four extra features on-device when \texttt{kChannelCount = 10}.
+
+\textbf{Quantization details.} The M4 model uses full-integer INT8 post-training quantization for TensorFlow Lite Micro. Representative calibration windows come from training-side data only; standardized session 1 right/left holdouts and returned live Serial logs are excluded. The packaged \texttt{.tflite} is 10,432 bytes / 10.19 KiB, and the header uses a 73,728-byte tensor arena.
+
+The 10-channel model is not claimed to be generally robust. It was selected because it had the strongest combined INT8 replay performance across the held-out standardized session 1 right-pocket and left-pocket checks. The replay scores are valid only under the documented session split; the separate Session05 results are the live deployment evidence.
+
+\section{R4. Deployment Details}
+
+The Arduino sketch is \texttt{arduino/tinyml\_har\_m3/tinyml\_har\_m3.ino}; the model header is \texttt{arduino/tinyml\_har\_m3/model\_data.h}. The live path is:
+
+\begin{center}
+\small
+\begin{tabular}{|p{2.7cm}|p{10.4cm}|}
+\hline
+\rowcolor{headergray}
+\textbf{Stage} & \textbf{What happens on the Arduino}\\
+\hline
+Sensor read & LSM9DS1 accelerometer and gyroscope samples are read at 50 Hz.\\
+\hline
+Window buffer & A 128-sample window is maintained, with inference every 64 samples.\\
+\hline
+Feature tensor & The M4 model computes six IMU channels plus four gravity/orientation channels.\\
+\hline
+Preprocessing & Channels are standardized using exported training-side constants, then quantized to INT8.\\
+\hline
+Inference & TensorFlow Lite Micro invokes the INT8 model using the fixed tensor arena.\\
+\hline
+Output & Serial CSV rows report prediction, confidence, and latency; the built-in LED gives simple feedback.\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+The sketch reads accelerometer and gyroscope samples at 50 Hz, runs inference every 64 samples, converts gyroscope data to radians/second, standardizes with exported constants, invokes TFLite Micro, prints Serial CSV at 115200 baud, and updates the built-in LED.
+
+\textbf{Deployment metrics}
+
+\begin{center}
+\small
+\begin{tabular}{|p{4.0cm}|p{9.2cm}|}
+\hline
+\rowcolor{headergray}
+\textbf{Metric} & \textbf{Value and evidence status}\\
+\hline
+Completed M3 live model & 6-channel INT8 DS-CNN; 10,288 bytes / 10.05 KiB; tensor arena 61,440 bytes / 60.00 KiB.\\
+\hline
+M3 hardware compile & 177,504 flash bytes / 18 percent; 111,144 dynamic-memory bytes / 42 percent.\\
+\hline
+M3 measured latency & 34.113 ms \texttt{Invoke()} latency averaged over 50 inferences using \texttt{micros()} timing.\\
+\hline
+M3 stability evidence & About 156 seconds of continuous returned video evidence.\\
+\hline
+Current M4 model & \texttt{m4\_session3\_4\_gravity\_10ch\_int8.tflite}; 10,432 bytes / 10.19 KiB; input 128 samples by 10 channels; tensor arena 73,728 bytes / 72.00 KiB.\\
+\hline
+Serial output & 115200 baud; CSV prediction rows plus latency and stability summaries.\\
+\hline
+M4 flash / dynamic memory & 178,264 flash bytes / 18 percent; 123,432 dynamic-memory bytes / 47 percent.\\
+\hline
+M4 live latency / stability & Mean \texttt{Invoke()} latency 35.64 ms over 414 scored rows. Supplied logs include 30-second \texttt{run\_timer} rows; no 120-second \texttt{stability\_check} row was present in the imported logs.\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+\section{R5. Final Evaluation}
+
+M4 now has live Arduino evidence from the May 14 Session05 run. The imported logs contain Person A controlled right-pocket data, Person A robustness left-pocket data, and Person B right-pocket robustness data. Across all supplied M4 live logs there are 414 scored prediction rows, 0.9976 accuracy, and 0.9974 macro-F1. The only error is one \texttt{WALKING\_DOWNSTAIRS -> WALKING\_UPSTAIRS} prediction in the Person B robustness folder. The parsed evidence files are stored in \texttt{outputs/live\_evidence/session05\_m4\_may14/}.
+
+M3 remains useful historical evidence: right-pocket live Serial accuracy 0.9040 / macro-F1 0.9089 over 125 rows, and left-pocket live accuracy 0.8901 / macro-F1 0.8826 over 91 rows. The main M3 live failure was \texttt{WALKING\_UPSTAIRS -> WALKING\_DOWNSTAIRS}. The M3 live row counts were asymmetric: right had 25 upstairs rows and 20 for other classes; left had 10/12/22/22/15/10 rows across walking/upstairs/downstairs/sitting/standing/laying. Therefore macro-F1 is useful but should not be interpreted as a balanced population estimate.
+
+\textbf{Primary M4 live Arduino results}
+
+These are the final live hardware results for the packaged 10-channel INT8 model. The repeated data source is omitted from the table because every row is from live Arduino Serial logs in Session05.
+
+\begin{center}
+\small
+\begin{tabular}{|p{3.4cm}|p{2.8cm}|p{0.9cm}|p{1.1cm}|p{1.1cm}|p{3.8cm}|}
+\hline
+\rowcolor{headergray}
+\textbf{Live condition} & \textbf{Person / placement} & \textbf{Rows} & \textbf{Acc.} & \textbf{F1} & \textbf{Main observation}\\
+\hline
+Controlled pocket run & Person A, right pocket & 132 & 1.0000 & 1.0000 & No errors in supplied rows.\\
+\hline
+Placement robustness run & Person A, left pocket & 137 & 1.0000 & 1.0000 & No errors in supplied rows.\\
+\hline
+New-person robustness run & Person B, right pocket & 145 & 0.9931 & 0.9928 & One \texttt{DOWNSTAIRS -> UPSTAIRS}.\\
+\hline
+\rowcolor{softblue}
+Session05 aggregate & All three live runs & 414 & 0.9976 & 0.9974 & One total stair-direction error.\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+\textbf{M4 offline replay holdouts}
+
+These rows are not live claims. They show the held-out standardized session 1 replay checks that were used before the final live run.
+
+\begin{center}
+\small
+\begin{tabular}{|p{4.2cm}|p{1.0cm}|p{1.2cm}|p{1.2cm}|p{5.1cm}|}
+\hline
+\rowcolor{headergray}
+\textbf{Holdout condition} & \textbf{Rows} & \textbf{Acc.} & \textbf{F1} & \textbf{Main error pattern}\\
+\hline
+Session 1 right-pocket INT8 replay & 118 & 0.9576 & 0.9472 & Four \texttt{DOWNSTAIRS -> UPSTAIRS}; one \texttt{LAYING -> SITTING}.\\
+\hline
+Session 1 left-pocket INT8 replay & 115 & 0.9913 & 0.9876 & One \texttt{UPSTAIRS -> DOWNSTAIRS}.\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+\textbf{Prior M3 live baseline}
+
+These rows are historical live Arduino evidence from M3. They are included to show the improvement path and the original stair-class weakness.
+
+\begin{center}
+\small
+\begin{tabular}{|p{3.6cm}|p{0.9cm}|p{1.1cm}|p{1.1cm}|p{6.1cm}|}
+\hline
+\rowcolor{headergray}
+\textbf{M3 condition} & \textbf{Rows} & \textbf{Acc.} & \textbf{F1} & \textbf{Main error pattern}\\
+\hline
+Right-pocket controlled live Serial & 125 & 0.9040 & 0.9089 & Twelve \texttt{UPSTAIRS -> DOWNSTAIRS}; other classes were correct.\\
+\hline
+Left-pocket robustness live Serial & 91 & 0.8901 & 0.8826 & Six \texttt{UPSTAIRS -> DOWNSTAIRS}; two \texttt{DOWNSTAIRS -> WALKING}; two \texttt{DOWNSTAIRS -> STANDING}.\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+\textbf{M4 replay confusion matrices}
+
+Rows are true labels and columns are predicted labels. These are offline INT8 replay results on held-out standardized session 1, not live Arduino results.
+In the matrix headers, Up means \texttt{WALKING\_UPSTAIRS} and Down means \texttt{WALKING\_DOWNSTAIRS}.
+
+\begin{center}
+\scriptsize
+\begin{tabular}{|p{2.2cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|}
+\hline
+\multicolumn{7}{|c|}{\cellcolor{headergray}\textbf{Session 1 right-pocket replay}}\\
+\hline
+\rowcolor{headergray}
+\textbf{True} & \textbf{Walk} & \textbf{Up} & \textbf{Down} & \textbf{Sit} & \textbf{Stand} & \textbf{Lay}\\
+\hline
+Walk & 22 & 0 & 0 & 0 & 0 & 0\\
+\hline
+Upstairs & 0 & 15 & 0 & 0 & 0 & 0\\
+\hline
+Downstairs & 0 & 4 & 11 & 0 & 0 & 0\\
+\hline
+Sit & 0 & 0 & 0 & 22 & 0 & 0\\
+\hline
+Stand & 0 & 0 & 0 & 0 & 22 & 0\\
+\hline
+Lay & 0 & 0 & 0 & 1 & 0 & 21\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+\begin{center}
+\scriptsize
+\begin{tabular}{|p{2.2cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|}
+\hline
+\multicolumn{7}{|c|}{\cellcolor{headergray}\textbf{Session 1 left-pocket replay}}\\
+\hline
+\rowcolor{headergray}
+\textbf{True} & \textbf{Walk} & \textbf{Up} & \textbf{Down} & \textbf{Sit} & \textbf{Stand} & \textbf{Lay}\\
+\hline
+Walk & 22 & 0 & 0 & 0 & 0 & 0\\
+\hline
+Upstairs & 0 & 14 & 1 & 0 & 0 & 0\\
+\hline
+Downstairs & 0 & 0 & 12 & 0 & 0 & 0\\
+\hline
+Sit & 0 & 0 & 0 & 22 & 0 & 0\\
+\hline
+Stand & 0 & 0 & 0 & 0 & 22 & 0\\
+\hline
+Lay & 0 & 0 & 0 & 0 & 0 & 22\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+\textbf{M4 live Arduino confusion-matrix summary}
+
+The full M4 live CSV confusion matrices are stored under \texttt{outputs/live\_evidence/session05\_m4\_may14/metrics/}. The compact summary below shows diagonal row counts and off-diagonal errors using the same class order: Walk, Up, Down, Sit, Stand, Lay.
+
+\begin{center}
+\small
+\begin{tabular}{|p{3.6cm}|p{4.4cm}|p{5.1cm}|}
+\hline
+\rowcolor{headergray}
+\textbf{Live condition} & \textbf{Correct diagonal counts} & \textbf{Off-diagonal errors}\\
+\hline
+Person A controlled right & 22 / 22 / 22 / 22 / 22 / 22 & None.\\
+\hline
+Person A robustness left & 22 / 20 / 20 / 22 / 31 / 22 & None.\\
+\hline
+Person B robustness right & 22 / 22 / 23 / 26 / 26 / 25 & One \texttt{WALKING\_DOWNSTAIRS -> WALKING\_UPSTAIRS}.\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+\textbf{Prior M3 live Arduino confusion matrices}
+
+These are completed M3 live Serial results, kept separate from the M4 live and replay evidence.
+
+\begin{center}
+\scriptsize
+\begin{tabular}{|p{2.2cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|}
+\hline
+\multicolumn{7}{|c|}{\cellcolor{headergray}\textbf{M3 right-pocket live Arduino Serial}}\\
+\hline
+\rowcolor{headergray}
+\textbf{True} & \textbf{Walk} & \textbf{Up} & \textbf{Down} & \textbf{Sit} & \textbf{Stand} & \textbf{Lay}\\
+\hline
+Walk & 20 & 0 & 0 & 0 & 0 & 0\\
+\hline
+Upstairs & 0 & 13 & 12 & 0 & 0 & 0\\
+\hline
+Downstairs & 0 & 0 & 20 & 0 & 0 & 0\\
+\hline
+Sit & 0 & 0 & 0 & 20 & 0 & 0\\
+\hline
+Stand & 0 & 0 & 0 & 0 & 20 & 0\\
+\hline
+Lay & 0 & 0 & 0 & 0 & 0 & 20\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+\begin{center}
+\scriptsize
+\begin{tabular}{|p{2.2cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|p{1.0cm}|}
+\hline
+\multicolumn{7}{|c|}{\cellcolor{headergray}\textbf{M3 left-pocket live Arduino Serial}}\\
+\hline
+\rowcolor{headergray}
+\textbf{True} & \textbf{Walk} & \textbf{Up} & \textbf{Down} & \textbf{Sit} & \textbf{Stand} & \textbf{Lay}\\
+\hline
+Walk & 10 & 0 & 0 & 0 & 0 & 0\\
+\hline
+Upstairs & 0 & 6 & 6 & 0 & 0 & 0\\
+\hline
+Downstairs & 2 & 0 & 18 & 0 & 2 & 0\\
+\hline
+Sit & 0 & 0 & 0 & 22 & 0 & 0\\
+\hline
+Stand & 0 & 0 & 0 & 0 & 15 & 0\\
+\hline
+Lay & 0 & 0 & 0 & 0 & 0 & 10\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+\textbf{Final M4 holdout per-class precision/recall/F1}
+
+\begin{center}
+\scriptsize
+\begin{tabular}{|p{2.9cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+\rowcolor{headergray}
+\textbf{Class} & \textbf{Right P} & \textbf{Right R} & \textbf{Right F1} & \textbf{Left P} & \textbf{Left R} & \textbf{Left F1}\\
+\hline
+WALKING & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 & 1.000\\
+\hline
+WALKING\_UPSTAIRS & 0.789 & 1.000 & 0.882 & 1.000 & 0.933 & 0.966\\
+\hline
+WALKING\_DOWNSTAIRS & 1.000 & 0.733 & 0.846 & 0.923 & 1.000 & 0.960\\
+\hline
+SITTING & 0.957 & 1.000 & 0.978 & 1.000 & 1.000 & 1.000\\
+\hline
+STANDING & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 & 1.000\\
+\hline
+LAYING & 1.000 & 0.955 & 0.977 & 1.000 & 1.000 & 1.000\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
+
+\textbf{Improvement over M2 and M3.} The M2 baseline reached 0.9135 accuracy and 0.9128 macro-F1 on UCI-HAR. The M3 deployed 6-channel model reached 0.9040 / 0.9089 on right-pocket live Arduino Serial and 0.8901 / 0.8826 on left-pocket live robustness. The final M4 10-channel INT8 model reaches 0.9576 / 0.9472 on held-out session-1 right-pocket replay, 0.9913 / 0.9876 on held-out session-1 left-pocket replay, and 0.9976 / 0.9974 over 414 scored Session05 live Arduino rows. The improvement is attributed to target-domain Arduino training data, session-aware standardized data use, training-only augmentation, and explicit gravity/orientation features.
+
+This is still not a guarantee of broad real-world robustness. The M4 live evidence covers two people and three supplied conditions, with different row counts by condition and class. It is stronger than the M3 evidence for this controlled setup, but it does not replace the need for more users, longer stair recordings, and more uncontrolled placements before making production claims.
+
+The M4 model addresses M3 feedback by adding standardized Arduino data, revisiting the 10-channel gravity model that previously reached 0.6856 left-pocket replay F1, testing two offline placement holdouts, and adding new live Arduino evidence. Placement sensitivity is addressed at protocol and algorithm levels: controlled pocket placement, fixed board angle, gravity/orientation features, and future calibration-pose or gravity-frame alignment.
+
+\section{R6. Ethics and Limitations}
+
+This system is not a medical device and must not be used for clinical decisions. Movement patterns can reveal sensitive behavior. On-device inference improves privacy because raw IMU streams do not need to leave the board during normal use, but misuse through surveillance, profiling, or unauthorized monitoring remains possible.
+
+The main fairness limitation is user diversity. The standardized data adds sessions and two inferable people, but it does not represent broad body types, gait styles, mobility differences, pocket geometry, or long-term real-world variation. Technical limitations include stair-direction confusion, placement and board-angle sensitivity, controlled-demo conditions, small subject count, session-level rather than strict unseen-person validation, and MCU memory constraints.
+
+\section{R7. Lessons Learned and Future Work}
+
+The three main lessons are: public HAR accuracy does not guarantee Arduino deployment accuracy; mixed source plus target-domain training can matter more than only changing architecture; and TinyML success requires accuracy, latency, memory, reproducibility, and live evidence together.
+
+The immediate remaining task is to review the final PDF and attach the Session05 evidence package with the submission. Further work should collect more users, more stair data, more placement conditions, and longer continuous runs, and should evaluate calibration-pose or gravity-frame alignment directly in the Arduino preprocessing path. Advice for future teams: preserve session-level splits before windowing; random overlapping-window splits can make HAR results look much stronger than they really are.
+
+\section*{Publication Intent Disclaimer}
+
+Each team member below has individually selected one of the two options regarding future publication of this work:
+
+A. Continue: I am interested in continuing as a co-author toward publishing this work beyond the course.
+
+B. Permission granted: I am not continuing, but I give permission to remaining team members and/or the instructor (Prof. M. Hassan) to continue toward publication, including in revised form, with appropriate acknowledgment of my contribution.
+
+\begin{center}
+\begin{tabular}{|p{4.0cm}|p{3.0cm}|p{6.0cm}|}
+\hline
+\textbf{Student name} & \textbf{Choice (A or B)} & \textbf{Signature / Date}\\
+\hline
+[Name 1] & & \\
+\hline
+[Name 2] & & \\
+\hline
+[Name 3] & & \\
+\hline
+[Name 4] & & \\
+\hline
+[Name 5] & & \\
+\hline
+[Name 6] & & \\
+\hline
+\end{tabular}
+\end{center}
+
+\end{document}

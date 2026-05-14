@@ -1,0 +1,85 @@
+{
+  "candidate_name": "m4_strategy_a_aug_int8",
+  "candidate_status": "Latest packaged Arduino candidate. It improves offline standardized external validation, but it is not a new live-result claim until flashed and rescored on hardware.",
+  "source_run_dir": "outputs/m4_strategy_a_experiment/m4_strategy_a_expanded_train_aug",
+  "source_weights": "outputs/m4_strategy_a_experiment/m4_strategy_a_expanded_train_aug/models/m4_strategy_a_expanded_train_aug.weights.h5",
+  "selected_int8_tflite": "outputs/m4_strategy_a_deployment_candidate/models/m4_strategy_a_aug_int8.tflite",
+  "arduino_header": "arduino/tinyml_har_m3/model_data.h",
+  "standardized_input_name": "TINYML_HAR_DATA_STANDARDIZED_v2.zip",
+  "standardized_external_sources": 84,
+  "standardized_external_windows": 4121,
+  "standardized_external_int8_accuracy": 0.7692307692307693,
+  "standardized_external_int8_macro_f1": 0.6538232207643931,
+  "standardized_external_top_confusions": [
+    {
+      "true": "SITTING",
+      "predicted": "LAYING",
+      "count": 484
+    },
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 180
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING",
+      "count": 107
+    },
+    {
+      "true": "WALKING",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 70
+    },
+    {
+      "true": "LAYING",
+      "predicted": "SITTING",
+      "count": 66
+    }
+  ],
+  "tflite_size_bytes": 10288,
+  "representative_dataset": {
+    "policy": "class-balanced samples from training-side windows only",
+    "samples": 512,
+    "excluded": [
+      "standardized HAR v2 external validation",
+      "returned live Serial logs",
+      "UCI-HAR official test"
+    ]
+  },
+  "source_offline_summary": {
+    "standardized_external_accuracy": 0.7663188546469304,
+    "standardized_external_macro_f1": 0.6509337715684306,
+    "augmentation": {
+      "enabled": true,
+      "copies": 1,
+      "noise_std": 0.02,
+      "scale_min": 0.95,
+      "scale_max": 1.05,
+      "max_shift": 4,
+      "guardrail": "Only training windows were augmented. Internal validation and Strategy A external test were unchanged."
+    }
+  },
+  "tflite_metadata": {
+    "input_dtype": "<class 'numpy.int8'>",
+    "output_dtype": "<class 'numpy.int8'>",
+    "input_scale": 0.12984924018383026,
+    "input_zero_point": -32,
+    "output_scale": 0.00390625,
+    "output_zero_point": -128,
+    "ops": [
+      "RESHAPE",
+      "CONV_2D",
+      "DEPTHWISE_CONV_2D",
+      "CONV_2D",
+      "AVERAGE_POOL_2D",
+      "DEPTHWISE_CONV_2D",
+      "CONV_2D",
+      "RESHAPE",
+      "MEAN",
+      "FULLY_CONNECTED",
+      "SOFTMAX"
+    ],
+    "host_delegate_ops": 3
+  }
+}

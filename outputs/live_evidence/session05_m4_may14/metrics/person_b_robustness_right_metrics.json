@@ -1,0 +1,29 @@
+{
+  "condition_key": "person_b_robustness_right",
+  "condition": "Person B robustness right pocket",
+  "person": "Person B",
+  "placement": "right pocket",
+  "n_predictions": 145,
+  "accuracy": 0.993103448275862,
+  "macro_f1": 0.9927501970055163,
+  "weighted_f1": 0.993106709056819,
+  "mean_latency_us": 35643.86896551724,
+  "median_latency_us": 35641.0,
+  "mean_confidence": 0.9471531034482759,
+  "row_counts_by_class": {
+    "WALKING": 22,
+    "WALKING_UPSTAIRS": 22,
+    "WALKING_DOWNSTAIRS": 24,
+    "SITTING": 26,
+    "STANDING": 26,
+    "LAYING": 25
+  },
+  "top_confusions": [
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 1
+    }
+  ],
+  "source": "Live Arduino Serial predictions from Session05_live_may14.zip; not laptop replay."
+}

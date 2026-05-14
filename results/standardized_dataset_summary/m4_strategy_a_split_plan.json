@@ -1,0 +1,13 @@
+{
+  "strategy": "A",
+  "leakage_rule": "The atomic unit is a raw recording file/session path; overlapping windows must be generated after this split and must not cross splits.",
+  "holdout_person": null,
+  "holdout_session": null,
+  "holdout_placement": null,
+  "counts_by_split": {
+    "external_holdout": 84
+  },
+  "windows_by_split": {
+    "external_holdout": 4170
+  }
+}

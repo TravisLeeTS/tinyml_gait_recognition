@@ -1,0 +1,52 @@
+{
+  "n_predictions": 414,
+  "accuracy": 0.9975845410628019,
+  "macro_f1": 0.9974357457048741,
+  "weighted_f1": 0.997584683997824,
+  "mean_latency_us": 35643.34541062802,
+  "median_latency_us": 35641.0,
+  "conditions": [
+    {
+      "condition_key": "person_a_controlled_right",
+      "condition": "Person A controlled right pocket",
+      "person": "Person A",
+      "placement": "right pocket",
+      "n_predictions": 132,
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "weighted_f1": 1.0,
+      "mean_latency_us": 35644.0,
+      "median_latency_us": 35641.0,
+      "mean_confidence": 0.9570090909090909,
+      "top_confusions": "none"
+    },
+    {
+      "condition_key": "person_a_robustness_left",
+      "condition": "Person A robustness left pocket",
+      "person": "Person A",
+      "placement": "left pocket",
+      "n_predictions": 137,
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "weighted_f1": 1.0,
+      "mean_latency_us": 35642.16058394161,
+      "median_latency_us": 35641.0,
+      "mean_confidence": 0.9642510948905109,
+      "top_confusions": "none"
+    },
+    {
+      "condition_key": "person_b_robustness_right",
+      "condition": "Person B robustness right pocket",
+      "person": "Person B",
+      "placement": "right pocket",
+      "n_predictions": 145,
+      "accuracy": 0.993103448275862,
+      "macro_f1": 0.9927501970055163,
+      "weighted_f1": 0.993106709056819,
+      "mean_latency_us": 35643.86896551724,
+      "median_latency_us": 35641.0,
+      "mean_confidence": 0.9471531034482759,
+      "top_confusions": "WALKING_DOWNSTAIRS->WALKING_UPSTAIRS (1)"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+evidence,data_source,accuracy,macro_f1,model_size_bytes,latency_ms,ram_kb,notes
+M2 paper-style baseline,UCI-HAR held-out test,0.9135,0.9128,,,,Heavy offline baseline; not direct Arduino deployment
+Phase 2 DS-CNN,UCI-HAR held-out test,0.9169,0.9173,13460,,,Lightweight reference before Arduino domain adaptation
+Final INT8 mixed 6-channel candidate,UCI-HAR held-out test,0.7984,0.7960,10288,34.113,60.00,Mixed UCI plus Arduino training; deployed candidate
+Arduino V2 grouped replay,Arduino raw replay,0.7573,0.7309,10288,,,Offline replay validation; not live Arduino accuracy
+Right-pocket controlled live,Arduino Serial live evidence,0.9040,0.9089,10288,34.113,60.00,125 live rows; main failure WALKING_UPSTAIRS to WALKING_DOWNSTAIRS
+Left-pocket robustness live,Arduino Serial live evidence,0.8901,0.8826,10288,34.113,60.00,91 live rows; placement robustness condition
+M4 expanded train no augmentation,Standardized HAR v2 external validation,0.7256,0.6347,,,,Offline Strategy A experiment; not deployed
+M4 expanded train training-only augmentation,Standardized HAR v2 external validation,0.7663,0.6509,,,,Offline Strategy A experiment; augmentation helped modestly but stair confusion remains
+M4 packaged INT8 candidate,Standardized HAR v2 external validation,0.7692,0.6538,10288,,,Latest Arduino header; requires flash and live re-test before any live claim
+M4 session split base 6ch,Session 1 right pocket holdout,0.7881,0.7441,,,,Session 4 standardized data added to training; session 1 held out
+M4 session split base 6ch,Session 1 left pocket holdout,0.7652,0.7169,,,,Session 4 standardized data added to training; session 1 held out
+M4 session split gravity aligned 6ch,Session 1 right pocket holdout,0.7881,0.7441,,,,Offline gravity-frame alignment experiment; not in Arduino sketch yet
+M4 session split gravity aligned 6ch,Session 1 left pocket holdout,0.7913,0.7649,,,,Best session-1 left-pocket result; approximates calibration/gravity-frame alignment
+M4 session split gravity 10ch,Session 1 right pocket holdout,0.7797,0.7349,,,,10-channel orientation-aware experiment
+M4 session split gravity 10ch,Session 1 left pocket holdout,0.7130,0.6289,,,,10-channel did not win session-1 left-pocket holdout
+M4 session3+4 split base 6ch,Session 1 right pocket holdout,0.9746,0.9663,,,,Session 3 and 4 added to training; best session-1 right-pocket result
+M4 session3+4 split base 6ch,Session 1 left pocket holdout,0.7565,0.7181,,,,Session 3 and 4 added to training; session 1 held out
+M4 session3+4 split gravity aligned 6ch,Session 1 right pocket holdout,0.7712,0.7248,,,,Gravity-frame alignment worsened this session3+4 split
+M4 session3+4 split gravity aligned 6ch,Session 1 left pocket holdout,0.6087,0.6469,,,,Gravity-frame alignment worsened this session3+4 split
+M4 session3+4 split gravity 10ch,Session 1 right pocket holdout,0.7881,0.7441,,,,10-channel orientation-aware experiment
+M4 session3+4 split gravity 10ch,Session 1 left pocket holdout,0.9826,0.9753,,,,Best session-1 left-pocket result with session 3 included
+M4 packaged session3+4 gravity 10ch INT8,Session 1 right pocket holdout,0.9576,0.9472,10432,,,Latest model_data.h; session-level holdout replay not live evidence
+M4 packaged session3+4 gravity 10ch INT8,Session 1 left pocket holdout,0.9913,0.9876,10432,,,Latest model_data.h; high score requires live Arduino confirmation

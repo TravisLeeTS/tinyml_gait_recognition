@@ -1,0 +1,3 @@
+person,files,rows_valid,duration_seconds,windows_128_stride64
+person_A,58,184704,3651.21,2794
+person_B,26,90470,1791.241,1376

@@ -1,0 +1,120 @@
+{
+  "candidate_name": "m4_session3_4_gravity_10ch_int8",
+  "feature_mode": "gravity_10ch",
+  "candidate_status": "Arduino live-test candidate; not a new live claim until flashed and rescored.",
+  "selection_reason": "Best average offline macro-F1 across session-1 right and left pocket holdouts among the session3+4 experiments.",
+  "source_run_dir": "outputs/m4_session_split_with_session3_experiment/session4_train_session1_eval_gravity_10ch",
+  "source_weights": "outputs/m4_session_split_with_session3_experiment/session4_train_session1_eval_gravity_10ch/models/session4_train_session1_eval_gravity_10ch.weights.h5",
+  "selected_int8_tflite": "outputs/m4_live_handoff_candidate/models/m4_session3_4_gravity_10ch_int8.tflite",
+  "arduino_header": "arduino/tinyml_har_m3/model_data.h",
+  "tflite_size_bytes": 10432,
+  "channel_count": 10,
+  "standardized_training_sessions": [
+    "session_03_1person_4class_5min",
+    "session_04_2person_allclass_mixed_duration"
+  ],
+  "standardized_holdout_session": "session_01_1person_allclass_30s",
+  "leakage_guardrail": "No standardized session 1 windows are used for training, validation, augmentation, representative quantization, or model selection inside this packager.",
+  "important_caveat": "The holdout is session-level, not a strict unseen-person result. High offline scores must be confirmed with new live Arduino logs.",
+  "session1_right_int8_accuracy": 0.9576271186440678,
+  "session1_right_int8_macro_f1": 0.9471714585257677,
+  "session1_left_int8_accuracy": 0.991304347826087,
+  "session1_left_int8_macro_f1": 0.9875862068965517,
+  "session1_right_top_confusions": [
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 4
+    },
+    {
+      "true": "LAYING",
+      "predicted": "SITTING",
+      "count": 1
+    }
+  ],
+  "session1_left_top_confusions": [
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 1
+    }
+  ],
+  "representative_dataset": {
+    "policy": "class-balanced samples from training-side windows only",
+    "samples": 512,
+    "excluded": [
+      "standardized session 1 holdout",
+      "returned live Serial logs",
+      "UCI-HAR official test"
+    ]
+  },
+  "source_fp32_summary": {
+    "run_name": "session4_train_session1_eval_gravity_10ch",
+    "feature_mode": "gravity_10ch",
+    "algorithm_mitigation": "Orientation-aware repeated gravity direction and acceleration magnitude features.",
+    "calibration_pose_note": "No explicit calibration-pose samples are used in this run.",
+    "train_windows_before_augmentation": 10962,
+    "train_windows_effective": 21924,
+    "internal_validation_windows": 1801,
+    "session1_right_windows": 118,
+    "session1_left_windows": 115,
+    "augmentation": {
+      "enabled": true,
+      "copies": 1,
+      "noise_std": 0.02,
+      "scale_min": 0.95,
+      "scale_max": 1.05,
+      "max_shift": 4,
+      "guardrail": "Only training windows were augmented. Session 1 right/left evaluations were unchanged."
+    },
+    "parameters": 2066,
+    "trainable_parameters": 1930,
+    "uci_internal_val_accuracy": 0.9455857856746253,
+    "uci_internal_val_macro_f1": 0.9454997221329929,
+    "session1_right_accuracy": 0.788135593220339,
+    "session1_right_macro_f1": 0.744107744107744,
+    "session1_left_accuracy": 0.9826086956521739,
+    "session1_left_macro_f1": 0.9752747252747254,
+    "session1_right_top_confusions": [
+      {
+        "true": "LAYING",
+        "predicted": "SITTING",
+        "count": 22
+      },
+      {
+        "true": "WALKING_DOWNSTAIRS",
+        "predicted": "WALKING_UPSTAIRS",
+        "count": 3
+      }
+    ],
+    "session1_left_top_confusions": [
+      {
+        "true": "WALKING_UPSTAIRS",
+        "predicted": "WALKING_DOWNSTAIRS",
+        "count": 2
+      }
+    ]
+  },
+  "tflite_metadata": {
+    "input_dtype": "<class 'numpy.int8'>",
+    "output_dtype": "<class 'numpy.int8'>",
+    "input_scale": 0.1477741301059723,
+    "input_zero_point": 11,
+    "output_scale": 0.00390625,
+    "output_zero_point": -128,
+    "ops": [
+      "RESHAPE",
+      "CONV_2D",
+      "DEPTHWISE_CONV_2D",
+      "CONV_2D",
+      "AVERAGE_POOL_2D",
+      "DEPTHWISE_CONV_2D",
+      "CONV_2D",
+      "RESHAPE",
+      "MEAN",
+      "FULLY_CONNECTED",
+      "SOFTMAX"
+    ],
+    "host_delegate_ops": 3
+  }
+}

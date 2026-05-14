@@ -1,0 +1,34 @@
+M4 Arduino Live-Test Package
+
+Use this package only to flash and test the latest M4 Arduino model.
+
+Model:
+- Candidate: m4_session3_4_gravity_10ch_int8
+- Header: arduino/tinyml_har_m3/model_data.h
+- Sketch: arduino/tinyml_har_m3/tinyml_har_m3.ino
+- Input: 10 channels computed on-board from accelerometer, gyroscope, gravity direction, and acceleration magnitude.
+
+Arduino setup:
+- Board: Arduino Nano 33 BLE Sense
+- Board package: Arduino Mbed OS Nano Boards
+- Libraries: Arduino_LSM9DS1 and TensorFlow Lite Micro / Arduino TensorFlow Lite
+- Serial monitor baud: 115200
+
+Arduino CLI commands, if available:
+arduino-cli compile --fqbn arduino:mbed_nano:nano33ble arduino/tinyml_har_m3
+arduino-cli upload -p COM_PORT --fqbn arduino:mbed_nano:nano33ble arduino/tinyml_har_m3
+
+Replace COM_PORT with the detected board port.
+
+Collect these logs:
+- Boot lines showing model_bytes, tensor_arena_bytes, kChannelCount, input_scale, and input_zero_point.
+- At least 50 inference rows for average latency.
+- Right-pocket live trials for all six classes.
+- Left-pocket or other robustness live trials for all six classes.
+- Arduino IDE compile output for flash/RAM usage.
+
+Serial prediction format:
+timestamp_ms,window_id,prediction_id,prediction_label,confidence,latency_us,top1_score,top2_label,top2_score,avg_latency_us
+
+Important:
+The offline session-1 holdout scores are not live demo results. Do not report new live M4 accuracy until these Arduino Serial logs are collected and scored.

@@ -1,0 +1,45 @@
+{
+  "run_name": "m4_strategy_a_expanded_train_no_aug",
+  "strategy": "A: standardized dataset fully held out for external validation",
+  "train_windows_before_augmentation": 7074,
+  "train_windows_effective": 7074,
+  "internal_validation_windows": 1801,
+  "standardized_external_windows": 4121,
+  "augmentation": {
+    "enabled": false
+  },
+  "parameters": 1922,
+  "trainable_parameters": 1786,
+  "tflite_size_bytes": null,
+  "internal_val_accuracy": 0.9478067740144365,
+  "internal_val_macro_f1": 0.9486796527183129,
+  "standardized_external_accuracy": 0.7255520504731862,
+  "standardized_external_macro_f1": 0.6347242544863337,
+  "standardized_external_top_confusions": [
+    {
+      "true": "SITTING",
+      "predicted": "LAYING",
+      "count": 483
+    },
+    {
+      "true": "LAYING",
+      "predicted": "SITTING",
+      "count": 160
+    },
+    {
+      "true": "WALKING",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 141
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING",
+      "count": 119
+    },
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "WALKING_DOWNSTAIRS",
+      "count": 82
+    }
+  ]
+}

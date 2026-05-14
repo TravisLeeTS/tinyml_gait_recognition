@@ -1,0 +1,57 @@
+{
+  "run_name": "session4_train_session1_eval_gravity_aligned_6ch",
+  "feature_mode": "gravity_aligned_6ch",
+  "algorithm_mitigation": "Offline gravity-frame alignment by rotating each window to align mean acceleration with +Z.",
+  "calibration_pose_note": "A real calibration-pose workflow is still a hardware protocol requirement. This experiment approximates calibration algorithmically from each window's mean acceleration.",
+  "train_windows_before_augmentation": 10030,
+  "train_windows_effective": 20060,
+  "internal_validation_windows": 1801,
+  "session1_right_windows": 118,
+  "session1_left_windows": 115,
+  "augmentation": {
+    "enabled": true,
+    "copies": 1,
+    "noise_std": 0.02,
+    "scale_min": 0.95,
+    "scale_max": 1.05,
+    "max_shift": 4,
+    "guardrail": "Only training windows were augmented. Session 1 right/left evaluations were unchanged."
+  },
+  "parameters": 1922,
+  "trainable_parameters": 1786,
+  "uci_internal_val_accuracy": 0.82176568573015,
+  "uci_internal_val_macro_f1": 0.817441165488843,
+  "session1_right_accuracy": 0.788135593220339,
+  "session1_right_macro_f1": 0.744107744107744,
+  "session1_left_accuracy": 0.7913043478260869,
+  "session1_left_macro_f1": 0.7649081442184892,
+  "session1_right_top_confusions": [
+    {
+      "true": "LAYING",
+      "predicted": "SITTING",
+      "count": 22
+    },
+    {
+      "true": "WALKING_DOWNSTAIRS",
+      "predicted": "WALKING_UPSTAIRS",
+      "count": 3
+    }
+  ],
+  "session1_left_top_confusions": [
+    {
+      "true": "LAYING",
+      "predicted": "SITTING",
+      "count": 22
+    },
+    {
+      "true": "WALKING_UPSTAIRS",
+      "predicted": "WALKING",
+      "count": 1
+    },
+    {
+      "true": "SITTING",
+      "predicted": "LAYING",
+      "count": 1
+    }
+  ]
+}
