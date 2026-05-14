@@ -9,7 +9,6 @@ This package contains the M4 Arduino model that was handed off for live testing.
 - INT8 TFLite model: `outputs/m4_live_handoff_candidate/models/m4_session3_4_gravity_10ch_int8.tflite`
 - Packaging metadata: `outputs/m4_live_handoff_candidate/m4_live_candidate_metadata.json`
 - Session-1 holdout metrics and confusion matrices under `outputs/m4_live_handoff_candidate/metrics/`
-- M4 report TeX source: `report/main_milestone4.tex`
 
 ## Current Candidate
 

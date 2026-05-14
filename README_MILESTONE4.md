@@ -7,14 +7,12 @@ This file is the M4 roadmap for graders and teammates. It explains what was comp
 
 ## Files To Open First
 
-- `report/main_milestone4.tex`: lightweight Overleaf-ready report source.
 - `tinyml_milestone4.pdf`: compiled final M4 report PDF.
 - `arduino/tinyml_har_m3/`: Arduino sketch and current `model_data.h`.
 - `outputs/live_evidence/session05_m4_may14/`: May 14 M4 live Arduino logs, metrics, confusion matrices, and compile metadata.
 - `outputs/live_evidence/session05_m4_may14/Session05_live_may14.zip`: Session05 evidence package to attach with the course submission and keep available in GitHub for checking.
 - `outputs/m4_live_handoff_candidate/m4_group3_live_handoff.zip`: lean teammate package for live testing.
 - `data/README_STANDARDIZED_HAR.md`: standardized dataset documentation.
-- `M4_SUBMISSION_CHECKLIST.md`: final submission checklist.
 
 M3 live evidence remains in `tinyml_milestone3.pdf`, `README_MILESTONE3.md`, and `outputs/live_evidence/`.
 
@@ -34,14 +32,14 @@ M3 live evidence remains in `tinyml_milestone3.pdf`, `README_MILESTONE3.md`, and
   - Person A controlled right pocket
   - Person A robustness left pocket
   - Person B right-pocket robustness
-- M4 report source rewritten as a minimal no-package LaTeX file for Overleaf.
+- Final M4 report PDF prepared for grading.
 - Publication Intent Disclaimer added with blank student rows.
 
 ## M3 Feedback Addressed
 
 | Feedback | M4 response |
 |---|---|
-| Compress report | `report/main_milestone4.tex` is concise and uses no heavy packages. |
+| Compress report | `tinyml_milestone4.pdf` is the grading-facing final report. |
 | Remove long appendices | No long review appendix is included. |
 | Discuss stair weakness | `WALKING_UPSTAIRS` / `WALKING_DOWNSTAIRS` remains explicitly discussed. |
 | Revisit 10-channel gravity model | A final 10-channel gravity/orientation INT8 model is packaged and has Session05 live Arduino evidence. |
@@ -216,4 +214,4 @@ Serial baud: `115200`.
 
 - Each student must fill their own publication choice.
 - Each student must sign and date their own row.
-- Review the final PDF after compiling `report/main_milestone4.tex`.
+- Review the final PDF before submission.

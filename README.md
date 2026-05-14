@@ -200,7 +200,6 @@ Current packaged M4 model:
 
 - M4 report PDF: `tinyml_milestone4.pdf`
 - M4 evidence index: `README_MILESTONE4.md`
-- M4 checklist: `M4_SUBMISSION_CHECKLIST.md`
 - Standardized dataset documentation: `data/README_STANDARDIZED_HAR.md`
 - Latest Arduino model header: `arduino/tinyml_har_m3/model_data.h`
 - Live-test handoff zip: `outputs/m4_live_handoff_candidate/m4_group3_live_handoff.zip`
