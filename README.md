@@ -13,7 +13,6 @@ Team members:
 For Milestone 4, start with:
 
 - `tinyml_milestone4.pdf`: final compiled M4 report PDF for grading.
-- `report/main_milestone4.tex`: lightweight Overleaf-ready final report source.
 - `README_MILESTONE4.md`: M4 evidence index and grading map.
 - `data/README_STANDARDIZED_HAR.md`: standardized Arduino dataset documentation.
 - `arduino/tinyml_har_m3/`: Arduino sketch and latest packaged model header.
@@ -56,7 +55,6 @@ outputs/live_evidence/session05_m4_may14/
 outputs/m4_live_handoff_candidate/     Latest M4 packaged model and replay metrics
 outputs/m4_session_split_with_session3_experiment/
                                        M4 session-aware training/evaluation artifacts
-report/main_milestone4.tex             Lightweight M4 report source
 README_MILESTONE2.md                   M2 background
 README_MILESTONE3.md                   M3 evidence index
 README_MILESTONE4.md                   M4 evidence index
@@ -200,7 +198,6 @@ Current packaged M4 model:
 
 ## M4 Deliverables
 
-- M4 report source: `report/main_milestone4.tex`
 - M4 report PDF: `tinyml_milestone4.pdf`
 - M4 evidence index: `README_MILESTONE4.md`
 - M4 checklist: `M4_SUBMISSION_CHECKLIST.md`
