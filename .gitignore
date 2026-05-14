@@ -24,7 +24,9 @@ data/processed/*.npz
 # Local sharing/submission packages.
 *.zip
 !outputs/m4_live_handoff_candidate/m4_group3_live_handoff.zip
-!outputs/live_evidence/session05_m4_may14/Session05_live_may14.zip
+# Live Arduino evidence is professor-facing submission evidence. Keep these
+# files commit-eligible by default, including Session05 and future live logs.
+!outputs/live_evidence/**
 outputs/share/
 
 # Oversized returned teammate evidence. Small proof videos/docs in this folder
